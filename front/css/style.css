@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 body {
     background-color: #5cc251; /* Couleur de fond de la page par défaut */
 }
@@ -17,6 +16,10 @@ body.compte {
     height: auto; /* Laisser la hauteur ajustable en fonction de la largeur */
   }
   
+  .info-container{
+    margin-top: 40px;
+  }
+
   .connexion-image {
     width: 50px; /* Largeur souhaitée */
     height: auto; /* Hauteur automatique pour conserver les proportions */
@@ -68,6 +71,27 @@ body.compte {
     background-color: rgb(121, 161, 255);
 }
 
+.card{
+  background-color: rgb(121, 161, 255);
+}
+
+#background2{
+  background-color: rgb(255, 159, 95);
+  border-radius: 20px;
+}
+
+.carousel-inner{
+  border-radius: 20px;
+}
+
+.custom-form {
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.hidden {
+  display: none;
+}
 
 @media screen and (max-width: 768px) {
     .container {
@@ -81,293 +105,3 @@ body.compte {
     }
 }
   
-=======
-        
-        body {
-            background-color: rgb(78, 181, 78); /* Fond vert */
-        }
-        .carousel-container {
-            padding: -40px 90px 40px 90px; /* Conserver le rembourrage existant, mais supprimer le padding-top */
-            position: relative; /* Ajout d'un positionnement relatif */
-        }
-        .container-fluid.carousel-container {
-            padding-top: 0; /* Supprimer complètement le padding-top */
-        }
-        .logo {
-            position: absolute; /* Positionnement absolu */
-            top: 90px; /* 10px du haut */
-            left: 55px; /* 10px de la gauche */
-            z-index: 1; /* Pour placer le logo au-dessus du carousel */
-        }
-        .carousel-item img {
-            border-top-left-radius: 50px; /* Coin arrondi en haut à gauche */
-            border-top-right-radius: 50px; /* Coin arrondi en haut à droite */
-        }
-        .navbar {
-            background-color: #6098ea; /* Couleur bleue */
-            color: white; /* Couleur du texte en blanc */
-            display: block; /* Afficher la barre de navigation */
-            border-radius: 50px; /* Arrondir les coins de la navbar */
-            max-width: 51%; /* Définir une largeur maximale */
-            left: 200px;
-            top: 120px; /* 10px du haut */
-            z-index: 1; /* Pour placer le logo au-dessus du carousel */
-            display: flex; /* Utilisation de flexbox */
-            align-items: center; /* Aligner les éléments verticalement au centre */
-            height: 70px; /* Augmenter la hauteur de la navbar */
-        }
-        .navbar-brand {
-            display: none; /* Masquer le texte de la navbar-brand */
-        }
-        .nav-link {
-            color: white !important; /* Couleur du texte en blanc avec !important */
-        }
-
-        .service-image {
-            width: 30px; /* Définir la largeur de l'image */
-            margin-right: 10px; /* Ajouter de la marge à droite de l'image */
-        }
-        .nav-link {
-            margin-left: 40px; /* Ajouter une marge à gauche pour chaque titre de la navbar */
-            color: black; /* Couleur du texte en noir */
-            font-weight: bold; /* Mettre le texte en gras */
-            font-family: 'Inter', sans-serif; /* Utiliser la police Inter */
-        }
-        .nav-item {
-            display: flex; /* Utilisation de flexbox */
-            align-items: center; /* Aligner les éléments verticalement au centre */
-        }
-        .nav-link:hover + .service-image {
-            display: block; /* Afficher l'image lorsque le lien est survolé */
-        }
-        .service-image {
-            display: none; /* Masquer l'image par défaut */
-        }
-        .connexion-button {
-            background-color: rgb(78, 181, 78); /* Couleur de fond verte */
-            border: none; /* Supprimer la bordure */
-            border-radius: 50px; /* Arrondir les coins */
-            color: white; /* Couleur du texte en blanc */
-            padding: 10px 20px; /* Ajouter un espacement interne */
-            display: flex; /* Utilisation de flexbox */
-            align-items: center; /* Aligner les éléments verticalement au centre */
-            position: absolute; /* Positionnement absolu */
-            top: 115px; /* 10px du haut du carrousel */
-            right: 70px; /* 40px de la droite du carrousel */
-            z-index: 1; /* Pour placer le bouton au-dessus du carousel */
-            height: 70px;
-        }
-        .connexion-button img {
-            width: 70px; /* Définir la largeur de l'image */
-            margin-right: 10px; /* Ajouter de la marge à droite de l'image */
-        }
-        .connexion-text {
-            line-height: 0.8; /* Diminuer l'interligne */
-            text-align: left; /* Aligner le texte à gauche */
-        }
-        .info-container {
-            position: absolute; /* Positionnement absolu */
-            top: 55%; /* Centrer verticalement */
-            left: 50%; /* Centrer horizontalement */
-            transform: translate(-50%, -50%); /* Centrer horizontalement et verticalement */
-            background-color: #6098ea; /* Fond bleu */
-            color: white; /* Couleur du texte en blanc */
-            padding: 20px; /* Espacement interne */
-            border-radius: 20px; /* Coins arrondis */
-            max-width: 1100px; /* Largeur maximale en pixels */
-            width: 1100px; /* Nouvelle largeur en pixels */
-            text-align: left; /* Alignement du texte au centre */
-        }
-        .info-container h2 {
-            margin-bottom: 20px; /* Marge en bas */
-        }
-        .info-container p {
-            font-size: 18px; /* Taille de la police */
-            line-height: 1.6; /* Hauteur de ligne */
-        }
-        .photos-button {
-            position: absolute;
-            top: 6%;
-            left: 35%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-        .photos-button button {
-            margin-top: 20px;
-        }
-        /* Style pour le pied de page */
-        .footer {
-            position: relative; /* Positionnement relatif */
-            margin-top: -60px; /* Marge supérieure pour séparer du contenu précédent */
-            margin-left: 12px; /* Marge supérieure pour séparer du contenu précédent */
-            margin-right: 12px; /* Marge supérieure pour séparer du contenu précédent */
-            margin-bottom: 40px; /* Marge supérieure pour séparer du contenu précédent */
-            background-color: #6098ea; /* Couleur de fond bleue */
-            color: white; /* Couleur du texte en blanc */
-            border-bottom-left-radius: 50px; /* Coin arrondi en bas à gauche */
-            border-bottom-right-radius: 50px; /* Coin arrondi en bas à droite */
-        }
-        .social-icon {
-            width: 70px; /* Définir la largeur de l'image */
-        }
-        .text-black {
-            color: black;
-        }
-        .transparent-bg {
-            background-color: transparent;
-        /* Style pour le titre */
-        }
-        .container {
-            position: relative;
-        }
-        
-        .top-container {
-            width: 302%; 
-            height: 90px; /* Augmentez la hauteur du conteneur au-dessus */
-            margin: 20px auto; /* Ajoutez une marge de 20px en haut et en bas et auto sur les côtés pour centrer */
-            border-radius: 50px; /* Arrondir les coins */
-            display: flex; /* Utilisation de flexbox pour centrer le contenu */
-            justify-content: center; /* Centrer horizontalement */
-            align-items: center; /* Centrer verticalement */
-            width: 100%; /* La largeur de l'image est de 100% de la largeur du conteneur */
-        }
-        
-        .video-container {
-            width: 100%; 
-            border-radius: 50px; /* Arrondir les coins */
-        }
-        .video-title1 {
-            position: absolute;
-            top: 40px;
-            left: 80px;
-            right: 200px;
-            margin: 0;
-            padding: 0;
-            color: rgb(255, 255, 255);
-            font-size: 55px;
-            text-shadow: 2px 2px 2px black; /* Ajouter un contour noir autour des lettres */
-        }
-        .video-title2 {
-            position: absolute;
-            top: 40px;
-            left: 80px;
-            right: 200px;
-            margin: 0;
-            padding: 0;
-            color: rgb(255, 255, 255);
-            font-size: 55px;
-            text-shadow: 2px 2px 2px black; /* Ajouter un contour noir autour des lettres */
-        }
-        .video-title3 {
-            position: absolute;
-            top: 40px;
-            left: 80px;
-            right: 200px;
-            margin: 0;
-            padding: 0;
-            color: rgb(255, 255, 255);
-            font-size: 55px;
-            text-shadow: 2px 2px 2px black; /* Ajouter un contour noir autour des lettres */
-        }
-        
-        .top-container h2 {
-            text-shadow: 2px 2px 2px black; /* Ajouter un contour noir autour des lettres */
-        }
-        .card-img-top {
-            width: auto; /* La largeur de l'image est de 100% de la largeur du conteneur */
-            height: 498px; /* La hauteur s'ajustera automatiquement pour conserver les proportions de l'image */
-        }
-        .bg-custom {
-            background-color: rgb(78, 181, 78);
-        }
-        .custom-title {
-            font-size: 50px; /* Taille de police personnalisée */
-        }           
-        .black-label {
-            color: black;
-        }
-        .connexion-form {
-            background-color: #6098ea; /* Changer la couleur de fond à bleu */
-        }
-        
-        .video-container1 {
-            background-color: rgb(78, 181, 78);
-            height: 650px;
-        }
-
-        .video-container2 {
-            background-color: rgb(78, 181, 78);
-            height: 650px;
-        }
-
-        .video-container3 {
-            background-color: rgb(78, 181, 78);
-            height: 650px;
-        }
-        
-        .video-container.white-background {
-            background-color: #ffffff; /* Blanc */
-        }
-        
-        .video-container1 video {
-            transition: transform 1s ease-in-out; /* Ajout de la transition */
-        }
-
-        .video-container2 video {
-            transition: transform 1s ease-in-out; /* Ajout de la transition */
-        }
-
-        .video-container3 video {
-            transition: transform 1s ease-in-out; /* Ajout de la transition */
-        }
-        
-        .clicked video {
-            transform: translateY(100%); /* Faire disparaître la vidéo vers le bas */
-        }
-        
-        .object-fit-cover {
-            overflow: hidden; /* Empêche les éléments enfants de déborder du conteneur */
-        }
-
-        /* Styles pour le texte en noir */
-        .black-text {
-            color: black;
-        }
-        
-        .video-container video {
-            transition: transform 0.5s ease-in-out;
-            transform-origin: top;
-        }
-        
-        .video-container video.clicked {
-            transform: translateY(-100%);
-        }
-        
-        .details-container {
-            width: 600px; /* Vous pouvez ajuster la largeur selon vos besoins */
-            margin-left: 210px; /* Ajoutez un espace de 10px entre les conteneurs */
-        }
-        
-        .animal-image {
-            max-width: 15%; /* Garantir que l'image ne dépasse pas la largeur du conteneur */
-            height: auto; /* Ajuster la hauteur de l'image proportionnellement à sa largeur */
-            border-radius: 10px; /* Ajouter des coins arrondis à l'image */
-            margin-top: 10px; /* Espacement supérieur pour l'image */
-        }
-        .custom-btn {
-            background-color: rgb(78, 181, 78);
-            margin-bottom: 20px;
-          }
-        .img_pre{
-            width: 180%;
-            height: 50%;
-        }
-        .img_sui{
-            width: 180%;
-            height: 50%;
-        }
-        .modal-content {
-            background-color: rgb(78, 181, 78);
-        }
-
->>>>>>> 54d25e1ccebbdf612c1ee9a6ad64fbe4b3b867e4

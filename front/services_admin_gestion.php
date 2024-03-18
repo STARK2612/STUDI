@@ -112,13 +112,12 @@ $sql = "SELECT * FROM service LIMIT $premierService, $servicesParPage";
 $result = $connexion->query($sql);
 ?>
 
-<div class="container">
+<div class="container" id="background2">
     <div class="row">
         <div class="col-md-6">
-            <h2 class="text-center">Gestion des Services</h2>
-            <hr>
+            <br>
+            <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" onsubmit="return checkFileSize()">
             <h3>Ajouter un Nouveau Service</h3>
-            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" onsubmit="return checkFileSize()">
                 <div class="form-group">
                     <label for="nom">Nom du Service:</label>
                     <input type="text" class="form-control" id="nom" name="nom" required>
@@ -135,11 +134,13 @@ $result = $connexion->query($sql);
                 </div>
                 <br>
                 <button type="submit" class="btn btn-primary" name="ajouter">Ajouter</button>
+                <br><br>
+            <a href="admin.php" class="btn btn-secondary btn-block">Retour</a>
             </form>
             <br>
-            <a href="admin.php" class="btn btn-secondary btn-block">Retour</a>
         </div>
         <div class="col-md-6">
+            <br>
             <h3>Modifier/Supprimer un Service</h3>
             <table class="table">
                 <thead>

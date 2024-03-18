@@ -67,12 +67,13 @@ $resultAvisValidesEtRejetes = $connexion->query($sqlAvisValidesEtRejetes);
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="background2">
         <div class="row">
             <div class="column left">
+                <br>
                 <h2>Avis en attente de validation</h2>
                 <?php if ($resultAttenteValidation->num_rows > 0) : ?>
-                    <table class="table">
+                    <table class="table" class="custom-form">
                         <thead>
                             <tr>
                                 <th>Pseudo</th>
