@@ -186,7 +186,9 @@ $result = $connexion->query($sql);
 
             echo "<ul class='pagination'>";
             for ($i = 1; $i <= $totalPages; $i++) {
-                echo "<li class='page-item'><a class='page-link' href='?page=$i'>$i</a></li>";
+                // Vérifie si la page actuelle correspond à $i et ajoute la classe "active" si c'est le cas
+                $activeClass = ($page == $i) ? "active" : "";
+                echo "<li class='page-item $activeClass'><a class='page-link' href='?page=$i'>$i</a></li>";
             }
             echo "</ul>";
             ?>
