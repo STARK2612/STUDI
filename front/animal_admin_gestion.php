@@ -155,6 +155,7 @@ $result_animaux = $connexion->query($sql_animaux);
                 <div class="form-group">
                     <label for="habitat">Habitat de l'Animal:</label>
                     <select class="form-control" id="habitat" name="habitat">
+                        <option value="" disabled selected>Choisir un habitacle</option>
                         <?php
                         // Récupération de la liste des habitats
                         $sql_habitats = "SELECT habitat_id, nom FROM habitat";

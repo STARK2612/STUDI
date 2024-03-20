@@ -58,6 +58,7 @@ mysqli_close($connexion);
             <div class="form-group">
                 <label for="animal">Animal:</label>
                 <select class="form-control" id="animal" name="animal">
+                <option value="" disabled selected>Choisir l'animal à nourrir</option>
                     <?php
                     foreach ($liste_animaux as $prenom => $animal) {
                         echo "<option value='$prenom'>" . $animal['prenom'] . " - Race: " . $animal['race_label'] . "</option>";
@@ -68,6 +69,7 @@ mysqli_close($connexion);
             <div class="form-group">
                 <label for="etat_animal">État de l'animal:</label>
                 <select class="form-control" id="etat_animal" name="etat_animal">
+                    <option value="" disabled selected>Choisir un état</option>
                     <option value="Bonne santé">En bonne santé</option>
                     <option value="Maladie légère">Maladie légère</option>
                     <option value="Blessure mineure">Blessure mineure</option>
@@ -79,6 +81,7 @@ mysqli_close($connexion);
             <div class="form-group">
                 <label for="nourriture_proposee">Nourriture proposée:</label>
                 <select class="form-control" id="nourriture_proposee" name="nourriture_proposee">
+                    <option value="" disabled selected>Choisir une nourriture</option>
                     <option value="Fruits frais">Fruits frais</option>
                     <option value="Légumes frais">Légumes frais</option>
                     <option value="Viande crue">Viande crue</option>

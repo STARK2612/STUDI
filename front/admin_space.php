@@ -2,12 +2,11 @@
   <br>
   <h1 class="text-center">Espace Administrateur <a href="back/logout.php" class="btn btn-danger">Déconnexion</a></h1>
   <br>
-  <br>
   <div class="row justify-content-center align-items-center">
     <div class="col-md-6">
       <div class="d-flex flex-column align-items-center">
         <a href="compte.php" class="btn btn-primary custom-btn">Créer un compte</a>
-        <p class="text-center">Crée un nouveau compte utilisateur (Employé ou Vétérinaire).</p>
+        <p class="text-center">Crée un nouveau compte utilisateur(Employé ou Vétérinaire).</p>
       </div>
     </div>
     <div class="col-md-6">
