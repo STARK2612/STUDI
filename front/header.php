@@ -77,6 +77,8 @@ $masquerBoutonConnexion = ($role == 'Administrateur' || $role == 'Vétérinaire'
                 require 'front/veterinaire_admin_gestion.php'; // Inclure le contenu de habitats_admin.php
             } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'employe_gestion.php') {
                 require 'front/employe_admin_gestion.php'; // Inclure le contenu de habitats_admin.php  
+            } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'les_habitats_gestion.php') {
+                require 'front/habitats_admin_gestion.php'; // Inclure le contenu de habitats_admin.php
             } else {
                 require 'front/article_accueil.php'; // Sinon, inclure le contenu par défaut
             }

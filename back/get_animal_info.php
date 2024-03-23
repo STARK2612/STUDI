@@ -2,49 +2,44 @@
 // Inclusion du fichier de connexion à la base de données
 include_once "connect_bdd.php";
 
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    // Vérification si le paramètre prénom est défini
-    if (isset($_GET['prenom'])) {
-        $prenom = $_GET['prenom'];
+// Vérifier si le prénom de l'animal a été transmis
+if(isset($_POST['prenom'])) {
+    // Échapper les valeurs pour éviter les injections SQL
+    $prenom = $connexion->real_escape_string($_POST['prenom']);
+
+    // Requête SQL pour récupérer les informations sur l'animal
+    $sql = "SELECT animal.etat, animal.nour, animal.qte_nour, animal.date_nour, animal.heure_nour, habitat.nom AS nom_habitat, habitat.commentaire_habitat
+            FROM animal
+            INNER JOIN habitat ON animal.habitat_id = habitat.habitat_id
+            WHERE animal.prenom = '$prenom'";
+
+    $result = $connexion->query($sql);
+
+    // Vérifier si la requête a renvoyé des résultats
+    if ($result->num_rows > 0) {
+        // Récupérer les données de l'animal
+        $row = $result->fetch_assoc();
         
-        // Préparation de la requête pour récupérer les informations de l'animal
-        $sql = "SELECT etat, nour, qte_nour, DATE_FORMAT(date_nour, '%d/%m/%Y') as date_nour, heure_nour FROM animal WHERE prenom = ?";
-        
-        // Préparation de la déclaration
-        $stmt = mysqli_prepare($connexion, $sql);
-        
-        // Liaison des paramètres
-        mysqli_stmt_bind_param($stmt, "s", $prenom);
-        
-        // Exécution de la requête
-        mysqli_stmt_execute($stmt);
-        
-        // Récupération des résultats
-        mysqli_stmt_bind_result($stmt, $etat, $nour, $qte_nour, $date_nour, $heure_nour);
-        
-        // Création d'un tableau associatif avec les informations de l'animal
-        $animalInfo = array();
-        
-        if (mysqli_stmt_fetch($stmt)) {
-            $animalInfo['etat'] = $etat;
-            $animalInfo['nour'] = $nour;
-            $animalInfo['qte_nour'] = $qte_nour;
-            $animalInfo['date_nour'] = $date_nour;
-            $animalInfo['heure_nour'] = $heure_nour;
-        }
-        
-        // Fermeture du statement
-        mysqli_stmt_close($stmt);
-        
-        // Fermeture de la connexion à la base de données
-        mysqli_close($connexion);
-        
-        // Encodage des informations en JSON
+        // Créer un tableau associatif avec les données de l'animal
+        $animalInfo = array(
+            'etat' => $row['etat'],
+            'nour' => $row['nour'],
+            'qte_nour' => $row['qte_nour'],
+            'date_nour' => $row['date_nour'],
+            'heure_nour' => $row['heure_nour'],
+            'nom_habitat' => $row['nom_habitat'],
+            'commentaire_habitat' => $row['commentaire_habitat']
+        );
+
+        // Retourner les données au format JSON
         echo json_encode($animalInfo);
     } else {
-        echo "Erreur: Paramètre prénom non spécifié.";
+        echo "Aucune information trouvée pour cet animal.";
     }
+
+    // Fermer la connexion à la base de données
+    $connexion->close();
 } else {
-    echo "Erreur: Méthode de requête non autorisée.";
+    echo "Erreur : prénom de l'animal non spécifié.";
 }
 ?>

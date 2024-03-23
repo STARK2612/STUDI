@@ -13,61 +13,13 @@ if ($connexion->connect_error) {
     die("La connexion a échoué : " . $connexion->connect_error);
 }
 
-// Récupération de la liste des animaux avec leur race depuis la base de données
-$liste_animaux = array();
-$sql_animaux = "SELECT a.prenom, r.label as race_label, a.date_nour, a.heure_nour FROM animal a JOIN race r ON a.race_id = r.race_id";
-$resultat_animaux = mysqli_query($connexion, $sql_animaux);
-if (mysqli_num_rows($resultat_animaux) > 0) {
-    while ($row = mysqli_fetch_assoc($resultat_animaux)) {
-        $liste_animaux[$row['prenom']] = $row;
-    }
-} else {
-    echo "Aucun animal trouvé dans la base de données.";
-}
+// Exécuter la requête SQL pour récupérer les animaux
+$sql = "SELECT animal.prenom, race.label AS race_label
+        FROM animal
+        INNER JOIN race ON animal.race_id = race.race_id";
+$result = $connexion->query($sql);
 
-// Initialisation des variables pour les données de l'animal sélectionné
-$etat_animal = $nourriture_proposee = $quantite_nourriture = $date_passage = $heure_passage = "";
-
-// Vérifier si un animal est sélectionné et récupérer ses informations
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['animal'])) {
-    $animal = $_POST['animal'];
-
-    // Récupérer les informations de l'animal depuis la base de données
-    $sql_info_animal = "SELECT etat, nour, qte_nour, date_nour, heure_nour FROM animal WHERE prenom = '$animal'";
-    $resultat_info_animal = mysqli_query($connexion, $sql_info_animal);
-    if ($resultat_info_animal && mysqli_num_rows($resultat_info_animal) > 0) {
-        $row = mysqli_fetch_assoc($resultat_info_animal);
-        $etat_animal = $row['etat'];
-        $nourriture_proposee = $row['nour'];
-        $quantite_nourriture = $row['qte_nour'];
-        $date_passage = $row['date_nour'];
-        $heure_passage = $row['heure_nour'];
-    } else {
-        echo "Aucune information sur l'animal sélectionné.";
-    }
-}
-
-// Mise à jour de la table rapport_veterinaire si le formulaire est soumis
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['date_bilan']) && isset($_POST['rapport_veterinaire'])) {
-    // Vérification des données du formulaire avant de les utiliser
-    $date_bilan = $_POST['date_bilan'];
-    $rapport_veterinaire = $_POST['rapport_veterinaire'];
-
-    // Insérer les données dans la table rapport_veterinaire
-    $sql_rapport_veterinaire = "INSERT INTO rapport_veterinaire (date, detail) VALUES ('$date_bilan', '$rapport_veterinaire')";
-    if (mysqli_query($connexion, $sql_rapport_veterinaire)) {
-        // Succès
-        // echo "Les données ont été enregistrées avec succès."; // Supprimer cette ligne
-    } else {
-        // Erreur lors de l'insertion dans la table rapport_veterinaire
-        echo "Erreur lors de l'enregistrement des données dans la table rapport_veterinaire: " . mysqli_error($connexion);
-    }
-}
-
-// Fermeture de la connexion à la base de données
-mysqli_close($connexion);
 ?>
-
 
 <div class="container my-4" id="background2">
     <br>
@@ -75,14 +27,17 @@ mysqli_close($connexion);
         <h2 class="mb-4">Bilan vétérinaire</h2>
     </div>
     <div class="mx-auto" style="max-width: 750px;">
-        <form id="updateForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form id="updateForm" action="javascript:void(0);" onsubmit="updateHabitatComment(); return false;" method="post">
             <div class="form-group">
                 <label for="animal">Animal:</label>
                 <select class="form-control" id="animal" name="animal" onchange="getAnimalInfo(this.value)">
                     <option value="" disabled selected>Choisir l'animal visité</option>
                     <?php
-                    foreach ($liste_animaux as $prenom => $animal) {
-                        echo "<option value='$prenom'>" . $animal['prenom'] . " - Race: " . $animal['race_label'] . "</option>";
+                    // Parcourir les résultats de la requête et générer les options du menu déroulant
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<option value='" . $row['prenom'] . "'>" . $row['prenom'] . " - Race: " . $row['race_label'] . "</option>";
+                        }
                     }
                     ?>
                 </select>
@@ -95,7 +50,7 @@ mysqli_close($connexion);
                     </div>
                     <div class="form-group">
                         <label for="nourriture_proposee">Nourriture proposée:</label>
-                        <input type="text" class="form-control" id="nourriture_proposee" name="nourriture_proposee" readonly>
+                        <input type="text" class="form-control"id="nourriture_proposee" name="nourriture_proposee" readonly>
                     </div>
                     <div class="form-group">
                         <label for="quantite_nourriture">Quantité nourriture proposée:</label>
@@ -114,6 +69,10 @@ mysqli_close($connexion);
                         <label for="heure_passage">Heure de passage:</label>
                         <input type="text" class="form-control" id="heure_passage" name="heure_passage" readonly>
                     </div>
+                    <div class="form-group">
+                        <label for="habitat_animal">Habitat de l'animal:</label>
+                        <input type="text" class="form-control" id="habitat_animal" name="habitat_animal" readonly>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
@@ -122,7 +81,11 @@ mysqli_close($connexion);
                     </div>
                     <div class="form-group">
                         <label for="rapport_veterinaire">Rapport vétérinaire:</label>
-                        <textarea class="form-control" id="rapport_veterinaire" name="rapport_veterinaire" rows="4"></textarea>
+                        <textarea class="form-control" id="rapport_veterinaire" name="rapport_veterinaire" rows="8"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="commentaire_habitat">Commentaire sur l'habitat:</label>
+                        <textarea class="form-control" id="commentaire_habitat" name="commentaire_habitat" rows="8"></textarea>
                     </div>
                 </div>
             <div class="text-center">
@@ -132,30 +95,35 @@ mysqli_close($connexion);
             </div>
         </form>
         <br><br><br>
-    </div> <!-- Fin de la div avec une largeur maximale de 500px -->
+    </div>
 </div>
 
 <script>
-    // Fonction pour récupérer les informations de l'animal sélectionné
     function getAnimalInfo(prenom) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                var animalInfo = JSON.parse(this.responseText);
-                document.getElementById("etat_animal").value = animalInfo.etat;
-                document.getElementById("nourriture_proposee").value = animalInfo.nour;
-                document.getElementById("quantite_nourriture").value = animalInfo.qte_nour;
-                document.getElementById("date_passage").value = animalInfo.date_nour;
-                document.getElementById("heure_passage").value = animalInfo.heure_nour;
+        // Effectuer une requête AJAX pour récupérer les informations sur l'animal
+        $.ajax({
+            type: 'POST',
+            url: 'back/get_animal_info.php', // Chemin vers le script PHP pour récupérer les informations sur l'animal
+            data: { prenom: prenom },
+            success: function(data) {
+                // Log des données récupérées depuis le script PHP
+                console.log("Données récupérées depuis le script PHP :", data);
+
+                // Mettre à jour les champs du formulaire avec les données récupérées
+                $('#etat_animal').val(data.etat);
+                $('#nourriture_proposee').val(data.nour);
+                $('#quantite_nourriture').val(data.qte_nour);
+                $('#date_passage').val(data.date_nour);
+                $('#heure_passage').val(data.heure_nour);
+                $('#habitat_animal').val(data.nom_habitat);
+                $('#commentaire_habitat').val(data.commentaire_habitat);
             }
-        };
-        xhttp.open("GET", "back/get_animal_info.php?prenom=" + prenom, true);
-        xhttp.send();
+        });
     }
 </script>
-<script>
-// Fonction pour afficher un message de succès dans une fenêtre popup
-    function showSuccessMessage() {
-        alert("Les données ont été enregistrées avec succès.");
-    }
-</script>
+
+
+<?php
+// Fermer la connexion à la base de données
+$connexion->close();
+?>

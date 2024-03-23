@@ -17,7 +17,7 @@
     </div>
     <div class="col-md-6">
       <div class="d-flex flex-column align-items-center">
-        <button type="button" class="btn btn-primary custom-btn">Gestion des habitats</button>
+      <a href="les_habitats_gestion.php" class="btn btn-primary custom-btn">Gestion des habitats</a>
         <p class="text-center">Gère les informations relatives aux habitats.</p>
       </div>
     </div>
