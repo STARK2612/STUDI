@@ -133,7 +133,7 @@ $result_animaux = $connexion->query($sql_animaux);
 
 <div class="container" id="background2">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <br>
             <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" onsubmit="return checkFileSize()">
             <h3>Ajouter un Nouvel Animal</h3>

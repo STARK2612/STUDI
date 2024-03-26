@@ -114,7 +114,7 @@ $result = $connexion->query($sql);
 
 <div class="container" id="background2">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <br>
             <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" onsubmit="return checkFileSize()">
             <h3>Ajouter un Nouveau Service</h3>
@@ -124,7 +124,7 @@ $result = $connexion->query($sql);
                 </div>
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <input type="text" class="form-control" id="description" name="description" required>
+                    <textarea type="text" class="form-control" id="description" name="description" rows="17" required></textarea>
                 </div>
                 <div class="form-group">
                     <br>
@@ -139,7 +139,7 @@ $result = $connexion->query($sql);
             </form>
             <br>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-8">
             <br>
             <h3>Modifier/Supprimer un Service</h3>
             <table class="table">
@@ -158,7 +158,7 @@ $result = $connexion->query($sql);
                     echo "<tr>";
                     echo "<td class='service_id hidden'>" . $row['service_id'] . "</td>";
                     echo "<td class='nom'>" . $row['nom'] . "</td>";
-                    echo "<td class='description description-cell'>" . $row['description'] . "</td>";
+                    echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
                     // Ajouter des boutons pour modifier et supprimer chaque service
                     echo "<td>";
                     echo "<div class='btn-group' role='group'>";
@@ -218,7 +218,7 @@ $result = $connexion->query($sql);
                     </div>
                     <div class="form-group">
                         <label for="description">Description:</label>
-                        <input type="text" class="form-control" id="description2" name="description" required>
+                        <textarea class="form-control" id="description2" name="description" rows="15" required></textarea>
                     </div>
                     <br>
                     <button type="submit" class="btn btn-primary" onclick="showSuccessMessage()">Modifier</button>

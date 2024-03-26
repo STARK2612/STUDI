@@ -13,7 +13,7 @@ $masquerBoutonConnexion = ($role == 'Administrateur' || $role == 'Vétérinaire'
         // Vérifier si l'utilisateur est connecté et n'est pas sur les pages spécifiques
         if (!isset($_SESSION['username']) && !in_array(basename($_SERVER['SCRIPT_FILENAME']), ['admin.php', 'veto.php', 'empl.php'])) {
         echo '
-        <nav class="navbar navbar-dark bg-bark" style="width: 80px;"> <!-- Ajustez la hauteur selon vos besoins -->
+        <nav class="navbar navbar-dark bg-bark" style="width: 80px;">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">ZOOArcadia</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">

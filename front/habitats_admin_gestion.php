@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier'])) {
     $sql = "UPDATE habitat SET nom='$nom', description='$description' WHERE habitat_id=$habitat_id";
 
     if ($connexion->query($sql) === TRUE) {
-        echo "Habitat mis à jour avec succès";
+        echo "";
     } else {
         echo "Erreur : " . $sql . "<br>" . $connexion->error;
     }
@@ -120,7 +120,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
 
 <div class="container" id="background2">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <br>
             <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
                 <h3>Ajouter un Nouvel Habitat</h3>
@@ -130,7 +130,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                 </div>
                 <div class="form-group">
                     <label for="description">Description de l'Habitat:</label>
-                    <input type="text" class="form-control" id="description" name="description" required>
+                    <textarea type="text" class="form-control" id="description" name="description" rows="17" required></textarea>
                 </div>
                 <div class="form-group">
                     <br>
@@ -144,7 +144,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
             </form>
             <br>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-7">
             <br>
             <h3>Modifier/Supprimer un Habitat</h3>
             <!-- Tableau pour afficher les habitats -->
@@ -165,9 +165,9 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                         echo "<tr>";
                         echo "<td class='habitat_id hidden'>" . $row['habitat_id'] . "</td>";
                         echo "<td class='nom'>" . $row['nom'] . "</td>";
-                        echo "<td class='description'>" . $row['description'] . "</td>";
+                        echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
                         // Vérifier si la clé 'commentaire_habitat' existe dans le tableau $row avant de l'utiliser
-                        echo "<td class='commentaire'>" . (isset($row['commentaire_habitat']) ? $row['commentaire_habitat'] : "") . "</td>";
+                        echo "<td class='commentaire description-cell'>" . (isset($row['commentaire_habitat']) ? $row['commentaire_habitat'] : "") . "</td>";
                         // Ajouter des boutons pour modifier et supprimer chaque habitat
                         echo "<td>";
                         echo "<div class='btn-group' role='group'>";
@@ -198,6 +198,34 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div id="myModal" class="modal">
+<div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modifier Service</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+        <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+            <input type="hidden" id="habitat_id" name="habitat_id">
+            <div class="form-group">
+                <label for="habitat_id">ID de l'habitat:</label>
+                <input type="text" class="form-control" id="habitat_id2" name="habitat_id" readonly>
+            </div>
+            <div class="form-group">
+                <label for="nom2">Nom de l'Habitat:</label>
+                <input type="text" class="form-control" id="nom2" name="nom" required>
+            </div>
+            <div class="form-group">
+                <label for="description2">Description de l'Habitat:</label>
+                <textarea type="text" class="form-control" id="description2" name="description" rows="17" required></textarea>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary" name="modifier" onclick="showSuccessMessage()">Modifier</button>
+        </form>
+    </div>
+</div>
 
 <!-- Inclure la bibliothèque jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -216,14 +244,14 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
             // Récupérer le formulaire parent
             var form = button.closest('tr');
             // Récupérer les valeurs des champs
-            var service_id = form.querySelector('.service_id').innerText;
+            var habitat_id = form.querySelector('.habitat_id').innerText;
             var nom = form.querySelector('.nom').innerText;
             var description = form.querySelector('.description').innerText;
             // Afficher la fenêtre modale de modification avec les champs préremplis
             var modal = document.getElementById('myModal');
             modal.style.display = "block";
             // Remplir les champs de la fenêtre modale avec les valeurs récupérées
-            document.getElementById('service_id2').value = service_id;
+            document.getElementById('habitat_id2').value = habitat_id;
             document.getElementById('nom2').value = nom;
             document.getElementById('description2').value = description;
         });
@@ -244,8 +272,8 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
         }
     }
 
-    function confirmDelete(service_id) {
-        return confirm("Êtes-vous sûr de vouloir supprimer ce service ?");
+    function confirmDelete(habitat_id) {
+        return confirm("Êtes-vous sûr de vouloir supprimer cet habitat ?");
     }
 </script>
 <script>
@@ -275,7 +303,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
 <script>
     function showSuccessMessage() {
         // Afficher le message de succès dans une fenêtre popup
-        alert("Service mis à jour avec succès");
+        alert("Habitat mis à jour avec succès");
 
         // Cacher la fenêtre modale après avoir affiché le message
         var modal = document.getElementById('myModal');
