@@ -1,0 +1,18 @@
+<div class="container" id="background2">
+  <br>
+  <h1 class="text-center">Espace Vétérinaire <a href="back/logout.php" class="btn btn-danger">Déconnexion</a></h1>
+  <br>
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-6">
+      <div class="d-flex flex-column align-items-center">
+        <a href="veterinaire_gestion.php" class="btn btn-primary custom-btn">Bilan Veterinaire</a>
+        <p class="text-center">Donne accès aux rapports et aux comptes rendus vétérinaires, fournissant des informations récapitulatives sur divers aspects.</p>
+      </div>
+    </div>
+  </div>
+  <br>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

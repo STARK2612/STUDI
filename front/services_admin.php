@@ -16,8 +16,8 @@ $result = $connexion->query($sql);
 $first = true;
 ?>
 <body>
-    <div class="info-container">
-        <div class="row row-cols-3 row-cols-md-3 g-3">
+    <div class="info-container container-fluid"> <!-- Utilisation de container-fluid pour permettre le plein largeur -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3"> <!-- Utilisation de différentes colonnes en fonction de la largeur de l'écran -->
             <?php
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {

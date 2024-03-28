@@ -116,7 +116,15 @@ $resultAvisValidesEtRejetes = $connexion->query($sqlAvisValidesEtRejetes);
                     <p>Aucun avis en attente de validation.</p>
                 <?php endif; ?>
                 <br>
-                <a href="admin.php" class="btn btn-secondary btn-block">Retour</a>
+                <a href="<?php
+    if ($_SESSION['role'] == 'Administrateur') {
+        echo "admin.php";
+    } elseif ($_SESSION['role'] == 'Employé') {
+        echo "employe.php";
+    } elseif ($_SESSION['role'] == 'Vétérinaire') {
+        echo "veterinaire.php";
+    }
+?>" class="btn btn-secondary btn-block">Retour</a>
             </div>
             <div class="column">
                 <div class="form-container">

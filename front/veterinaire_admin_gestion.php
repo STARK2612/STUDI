@@ -135,7 +135,15 @@ if ($result->num_rows > 0) {
             <br>
         <input type="submit" class="btn btn-primary" value="Enregistrer">
         <br><br>
-        <a href="admin.php" class="btn btn-secondary btn-block">Retour</a>
+        <a href="<?php
+    if ($_SESSION['role'] == 'Administrateur') {
+        echo "admin.php";
+    } elseif ($_SESSION['role'] == 'Employé') {
+        echo "employe.php";
+    } elseif ($_SESSION['role'] == 'Vétérinaire') {
+        echo "veterinaire.php";
+    }
+?>" class="btn btn-secondary btn-block">Retour</a>
         <br><br>
         </div>
         <div class="col-md-8">

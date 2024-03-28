@@ -18,7 +18,7 @@ function getHabitatDetails($habitat_id) {
     $habitat_row = $habitat_result->fetch_assoc();
     
     // Afficher les détails de l'habitat
-    echo '<div class="container" id="background2">';
+    echo '<div class="container custom-container" id="background2">';
     echo '<br>';
     echo "<h2>" . $habitat_row['nom'] . "</h2>";
     echo "<p>Description : " . $habitat_row['description'] . "</p>";
@@ -31,7 +31,7 @@ function getHabitatDetails($habitat_id) {
     $animaux_result = $connexion->query($animaux_query);
     
     // Afficher les animaux associés
-    echo '<div class="container" id="background2">';
+    echo '<div class="container custom-container" id="background2">';
     echo '<br>';
     echo "<h3>Animaux :</h3>";
     echo "<ul>";
@@ -53,7 +53,7 @@ function getAnimalDetails($animal_id) {
     $animal_row = $animal_result->fetch_assoc();
     
     // Afficher les détails de l'animal
-    echo '<div class="container" id="background2">';
+    echo '<div class="container custom-container" id="background2">';
     echo '<br>';
     echo "<h2>" . $animal_row['prenom'] . "</h2>";
     echo "<p>Race : " . $animal_row['race'] . "</p>";
@@ -77,11 +77,20 @@ function getAnimalDetails($animal_id) {
 // Affichage de tous les habitats avec leurs animaux associés
 $habitats_query = "SELECT * FROM habitat";
 $habitats_result = $connexion->query($habitats_query);
+$count = 0; // Compteur pour organiser les habitats sur deux colonnes
+echo '<div class="row">';
 while ($habitat_row = $habitats_result->fetch_assoc()) {
-    echo '<div class="container" id="background2">';
+    // Si le compteur est pair, ouvrir une nouvelle ligne de grille Bootstrap
+    if ($count % 2 == 0) {
+        echo '</div><div class="row">';
+    }
+
+    echo '<div class="col-md-6">';
+    echo '<div class="container custom-container mb-4" id="background2">'; // Ajout de la classe mb-4 pour réduire l'écart
     echo '<br>';
     echo "<div>";
     echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
+    echo '<br>';
     
     // Récupérer les informations de l'image à partir de la table "image"
     $image_id = $habitat_row['image_id'];
@@ -106,19 +115,23 @@ while ($habitat_row = $habitats_result->fetch_assoc()) {
         // Afficher l'image avec les nouvelles dimensions
         $image_src = 'data:image/' . $image_type . ';base64,' . base64_encode($image_data);
         echo "<div class='text-center'>";
-        echo "<img src='" . $image_src . "' alt='" . $habitat_row['nom'] . "' width='" . $new_width . "' height='" . $new_height . "'>";
+        echo "<img src='" . $image_src . "' alt='" . $habitat_row['nom'] . "' width='" . $new_width . "' height='" . $new_height . "'class='rounded'>";
         echo "</div>";
     } else {
         // Afficher une image par défaut si aucune image n'est trouvée
         echo "<img src='images/default.jpg' alt='Image par défaut'>";
     }
-    
-    echo "<p class='text-center'><a href='les_habitats_2.php?habitat_id=" . $habitat_row['habitat_id'] . "'>Voir détails</a></p>";
+    echo '<br>';
+    echo "<p class='text-center'><a href='les_habitats_2.php?habitat_id=" . $habitat_row['habitat_id'] . "' class='btn btn-primary'>Voir détails</a></p>";
     echo "</div>";
     echo '<br>';
     echo '</div>';
     echo '<br>';
+    echo '</div>';
+
+    $count++;
 }
+echo '</div>';
 
 
 // Fermeture de la connexion

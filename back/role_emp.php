@@ -9,7 +9,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['role'])) {
 }
 
 // Vérifier le rôle de l'utilisateur pour accéder à cette page
-$allowed_roles = ['Employé'];
+$allowed_roles = ['Administrateur', 'Employé'];
 if (!in_array($_SESSION['role'], $allowed_roles)) {
     // Redirection vers une page d'erreur si le rôle n'est pas autorisé
     echo "Accès refusé : Vous n'avez pas les permissions nécessaires pour accéder à cette page.";

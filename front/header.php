@@ -69,6 +69,10 @@ $masquerBoutonConnexion = ($role == 'Administrateur' || $role == 'Vétérinaire'
                 require 'front/connexion_admin.php'; // Inclure le contenu de habitats_admin.php
             } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'admin.php') {
                 require 'front/admin_space.php'; // Inclure le contenu de habitats_admin.php
+            } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'veterinaire.php') {
+                require 'front/veterinaire_admin.php'; // Inclure le contenu de habitats_admin.php
+            } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'employe.php') {
+                require 'front/employe_admin.php'; // Inclure le contenu de habitats_admin.php
             } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'compte.php') {
                 require 'front/compte_admin.php'; // Inclure le contenu de habitats_admin.php
             } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'animal_gestion.php') {

@@ -114,3 +114,14 @@ body.compte {
   text-align: center;
   margin: auto; /* Pour centrer verticalement si nécessaire */
 }
+
+.custom-container {
+  max-width: 450px; /* Définissez la largeur maximale selon vos besoins */
+  margin: 0 auto; /* Centre le conteneur horizontalement */
+  /* Ajoutez d'autres styles personnalisés au besoin */
+}
+
+.custom-carousel {
+  max-width: 1000px; /* Changer cette valeur selon votre besoin */
+  margin: auto; /* Pour centrer le carousel */
+}

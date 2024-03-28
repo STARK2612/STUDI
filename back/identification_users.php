@@ -20,11 +20,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['username']) && isset($
             
             if ($utilisateur['role_label'] == 'Employé') {
                 // Redirection vers l'interface appropriée
-                header("Location: empl.php");
+                header("Location: employe.php");
                 exit();
             } elseif ($utilisateur['role_label'] == 'Vétérinaire') {
                 // Redirection vers l'interface d'administrateur
-                header("Location: veto.php");
+                header("Location: veterinaire.php");
                 exit();
             } elseif ($utilisateur['role_label'] == 'Administrateur') {
                 // Redirection vers l'interface d'administrateur

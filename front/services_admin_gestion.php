@@ -135,7 +135,15 @@ $result = $connexion->query($sql);
                 <br>
                 <button type="submit" class="btn btn-primary" name="ajouter">Ajouter</button>
                 <br><br>
-            <a href="admin.php" class="btn btn-secondary btn-block">Retour</a>
+                <a href="<?php
+    if ($_SESSION['role'] == 'Administrateur') {
+        echo "admin.php";
+    } elseif ($_SESSION['role'] == 'Employé') {
+        echo "employe.php";
+    } elseif ($_SESSION['role'] == 'Vétérinaire') {
+        echo "veterinaire.php";
+    }
+?>" class="btn btn-secondary btn-block">Retour</a>
             </form>
             <br>
         </div>
