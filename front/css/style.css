@@ -110,3 +110,7 @@ body.compte {
     }
 }
   
+.text-center {
+  text-align: center;
+  margin: auto; /* Pour centrer verticalement si nécessaire */
+}

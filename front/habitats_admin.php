@@ -1,253 +1,126 @@
-<div class="container">
-    <div id="carouselExampleIndicators2" class="carousel slide carousel-fade info-container">
-        <div class="carousel-inner video-container">
-            <div class="carousel-item active video-container1 object-fit-cover border rounded" onclick="afficherDetails.call(this, 'jungle')">
-                <h3 class="video-title1">La jungle: <img class="cliquez_ici" src="front/img/cliquez-ici.gif" alt="Cliquez ici"><br><br><p>La jungle est un habitat dense et humide, rempli de végétation luxuriante et d'une grande diversité d'animaux.</p></h3>
-                <div id="habitat-details1"></div>
-                <div id="animal-details1"></div>
-                <img class="video-image" src="front/img/jungle.jpg" alt="Jungle Image">
-            </div>
-            <div class="carousel-item video-container2 object-fit-cover border rounded" onclick="afficherDetails.call(this, 'savane')">
-                <h3 class="video-title2">La savane: <img class="cliquez_ici" src="front/img/cliquez-ici.gif" alt="Cliquez ici"><br><br><p>La savane est un vaste paysage ouvert, caractérisé par des herbes hautes et des arbres dispersés.</p></h3>
-                <div id="habitat-details2"></div>
-                <div id="animal-details2"></div>
-                <img class="video-image" src="front/img/savane.jpg" alt="Savane Image">
-            </div>
-            <div class="carousel-item video-container3 object-fit-cover border rounded" onclick="afficherDetails.call(this, 'marais')">
-                <h3 class="video-title3">Les marais: <img class="cliquez_ici" src="front/img/cliquez-ici.gif" alt="Cliquez ici"><br><br><p>Les marais sont des zones humides avec une végétation aquatique dense, souvent habitée par une variété d'animaux.</p></h3>
-                <div id="habitat-details3"></div>
-                <div id="animal-details3"></div>
-                <img class="video-image" src="front/img/marais.jpg" alt="Marais Image">
-            </div>
-        </div>
-        <div class="carousel-controls">
-            <a class="carousel-control-prev" href="#carouselExampleIndicators2" role="button" data-slide="prev">
-                <img class="img_pre" src="front/img/precedent.gif" alt="precedent">
-                <span class="sr-only"></span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleIndicators2" role="button" data-slide="next">
-                <img class="img_sui" src="front/img/suivant.gif" alt="Suivant"><br><br><br>
-                <span class="sr-only"></span>
-            </a>
-        </div>
-    </div>
-</div>
-<!-- Inclure la bibliothèque jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!-- Inclure la bibliothèque Popper.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<!-- Inclure la bibliothèque Bootstrap JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<?php
+// Inclusion du fichier de connexion à la base de données
+include_once "back/connect_bdd.php";
 
-<script>
-    // Fonction pour afficher les détails de l'animal
-function afficherDetailsAnimal(animal, habitat) {
-    // Récupérer l'élément contenant les détails de l'animal
-    var animalDetails;
-    if (habitat === 'jungle') {
-        animalDetails = document.getElementById('animal-details1');
-    } else if (habitat === 'savane') {
-        animalDetails = document.getElementById('animal-details2');
-    } else if (habitat === 'marais') {
-        animalDetails = document.getElementById('animal-details3');
+// Vérifier si la connexion à la base de données est établie
+if (!$connexion) {
+    echo "La connexion à la base de données a échoué.";
+    exit; // Arrêter l'exécution du script en cas d'échec de la connexion
+}
+
+// Fonction pour récupérer les détails d'un habitat avec ses animaux associés
+function getHabitatDetails($habitat_id) {
+    global $connexion;
+    
+    // Récupérer les détails de l'habitat
+    $habitat_query = "SELECT * FROM habitat WHERE habitat_id = $habitat_id";
+    $habitat_result = $connexion->query($habitat_query);
+    $habitat_row = $habitat_result->fetch_assoc();
+    
+    // Afficher les détails de l'habitat
+    echo '<div class="container" id="background2">';
+    echo '<br>';
+    echo "<h2>" . $habitat_row['nom'] . "</h2>";
+    echo "<p>Description : " . $habitat_row['description'] . "</p>";
+    echo '<br>';
+    echo '</div>';
+    echo '<br>';
+    
+    // Récupérer les animaux associés à cet habitat
+    $animaux_query = "SELECT * FROM animal WHERE habitat_id = $habitat_id";
+    $animaux_result = $connexion->query($animaux_query);
+    
+    // Afficher les animaux associés
+    echo '<div class="container" id="background2">';
+    echo '<br>';
+    echo "<h3>Animaux :</h3>";
+    echo "<ul>";
+    while ($animal_row = $animaux_result->fetch_assoc()) {
+        echo "<li><a href='animal.php?animal_id=" . $animal_row['animal_id'] . "'>" . $animal_row['prenom'] . "</a></li>";
+    }
+    echo "</ul>";
+    echo '<br>';
+    echo '</div>';
+}
+
+// Fonction pour récupérer les détails d'un animal avec l'avis du vétérinaire
+function getAnimalDetails($animal_id) {
+    global $connexion;
+    
+    // Récupérer les détails de l'animal
+    $animal_query = "SELECT * FROM animal WHERE animal_id = $animal_id";
+    $animal_result = $connexion->query($animal_query);
+    $animal_row = $animal_result->fetch_assoc();
+    
+    // Afficher les détails de l'animal
+    echo '<div class="container" id="background2">';
+    echo '<br>';
+    echo "<h2>" . $animal_row['prenom'] . "</h2>";
+    echo "<p>Race : " . $animal_row['race'] . "</p>";
+    echo "<p>Habitat : " . $animal_row['habitat'] . "</p>";
+    echo "<p>État : " . $animal_row['etat'] . "</p>";
+    echo "<p>Nourriture proposée : " . $animal_row['nour'] . "</p>";
+    echo "<p>Grammage de la nourriture : " . $animal_row['qte_nour'] . "</p>";
+    echo "<p>Date de passage : " . $animal_row['date_nour'] . "</p>";
+    
+    // Récupérer l'avis du vétérinaire
+    $rapport_query = "SELECT * FROM rapport_veterinaire WHERE animal_id = $animal_id";
+    $rapport_result = $connexion->query($rapport_query);
+    if ($rapport_result->num_rows > 0) {
+        $rapport_row = $rapport_result->fetch_assoc();
+        echo "<p>Avis du vétérinaire : " . $rapport_row['detail'] . "</p>";
+        echo '<br>';
+        echo '</div>';
+    }
+}
+
+// Affichage de tous les habitats avec leurs animaux associés
+$habitats_query = "SELECT * FROM habitat";
+$habitats_result = $connexion->query($habitats_query);
+while ($habitat_row = $habitats_result->fetch_assoc()) {
+    echo '<div class="container" id="background2">';
+    echo '<br>';
+    echo "<div>";
+    echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
+    
+    // Récupérer les informations de l'image à partir de la table "image"
+    $image_id = $habitat_row['image_id'];
+    $image_query = "SELECT * FROM image WHERE image_id = $image_id";
+    $image_result = $connexion->query($image_query);
+    $image_row = $image_result->fetch_assoc();
+    
+    // Vérifier si une image a été trouvée
+    if ($image_result->num_rows > 0) {
+        // Récupérer les données de l'image
+        $image_data = $image_row['image_data'];
+        $image_type = $image_row['image_type'];
+        // Définir la taille maximale souhaitée de l'image
+        $max_width = 300; // Largeur maximale en pixels
+        $max_height = 200; // Hauteur maximale en pixels
+        // Récupérer les dimensions originales de l'image
+        list($width, $height) = getimagesizefromstring($image_data);
+        // Calculer les nouvelles dimensions en conservant le ratio d'aspect
+        $ratio = min($max_width / $width, $max_height / $height);
+        $new_width = $width * $ratio;
+        $new_height = $height * $ratio;
+        // Afficher l'image avec les nouvelles dimensions
+        $image_src = 'data:image/' . $image_type . ';base64,' . base64_encode($image_data);
+        echo "<div class='text-center'>";
+        echo "<img src='" . $image_src . "' alt='" . $habitat_row['nom'] . "' width='" . $new_width . "' height='" . $new_height . "'>";
+        echo "</div>";
+    } else {
+        // Afficher une image par défaut si aucune image n'est trouvée
+        echo "<img src='images/default.jpg' alt='Image par défaut'>";
     }
     
-    // Effacer le contenu précédent des détails de l'animal
-    animalDetails.innerHTML = '';
-
-    // Afficher le titre de l'animal
-    var animalTitle = document.createElement('h3');
-    animalTitle.textContent = animal.name;
-    animalTitle.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-    animalDetails.appendChild(animalTitle);
-
-    // Afficher l'image de l'animal
-    var animalImage = document.createElement('img');
-    animalImage.src = animal.image; // Assurez-vous que votre objet animal contient une propriété 'image' contenant l'URL de l'image de l'animal
-    animalImage.alt = animal.name; // Texte alternatif pour l'image
-    animalImage.classList.add('animal-image'); // Ajouter une classe à l'image pour le stylage CSS
-    animalDetails.appendChild(animalImage);
-
-    // Afficher la race de l'animal
-    var animalRace = document.createElement('p');
-    animalRace.textContent = "Race : " + animal.race;
-    animalRace.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-    animalDetails.appendChild(animalRace);
-
-// Afficher l'état de l'animal
-var animalState = document.createElement('p');
-        animalState.textContent = "État de l'animal : " + animal.state;
-        animalState.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-        animalDetails.appendChild(animalState);
-
-        // Afficher le détail de l'état de l'animal (information facultative)
-        if (animal.stateDetail) {
-            var stateDetail = document.createElement('p');
-            stateDetail.textContent = "Détail de l'état : " + animal.stateDetail;
-            stateDetail.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-            animalDetails.appendChild(stateDetail);
-        }
-
-        // Afficher la nourriture proposée
-        var foodOffered = document.createElement('p');
-        foodOffered.textContent = "Nourriture proposée : " + animal.foodOffered;
-        foodOffered.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-        animalDetails.appendChild(foodOffered);
-
-        // Afficher le grammage de la nourriture
-        var foodGrams = document.createElement('p');
-        foodGrams.textContent = "Grammage de la nourriture : " + animal.foodGrams + " g";
-        foodGrams.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-        animalDetails.appendChild(foodGrams);
-
-        // Afficher la date de passage
-        var passageDate = document.createElement('p');
-        passageDate.textContent = "Date de passage : " + animal.passageDate;
-        passageDate.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-        animalDetails.appendChild(passageDate);
-
-        // Afficher l'habitat où il est affecté
-        var assignedHabitat = document.createElement('p');
-        assignedHabitat.textContent = "Habitat affecté : " + animal.assignedHabitat;
-        assignedHabitat.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-        animalDetails.appendChild(assignedHabitat);
-
-    // Afficher l'avis du vétérinaire sur l'animal
-    var veterinaryOpinion = document.createElement('p');
-    veterinaryOpinion.textContent = "Avis du vétérinaire : " + animal.veterinaryOpinion;
-    veterinaryOpinion.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-    animalDetails.appendChild(veterinaryOpinion);
+    echo "<p class='text-center'><a href='les_habitats_2.php?habitat_id=" . $habitat_row['habitat_id'] . "'>Voir détails</a></p>";
+    echo "</div>";
+    echo '<br>';
+    echo '</div>';
+    echo '<br>';
 }
 
-// Fonction pour afficher les détails de l'habitat
-function afficherDetails(habitat) {
-    // Récupérer l'élément contenant les détails de l'habitat
-    var habitatDetails;
-    if (habitat === 'jungle') {
-        habitatDetails = document.getElementById('habitat-details1');
-    } else if (habitat === 'savane') {
-        habitatDetails = document.getElementById('habitat-details2');
-    } else if (habitat === 'marais') {
-        habitatDetails = document.getElementById('habitat-details3');
-    }
 
-    // Récupérer l'élément contenant les détails de l'animal
-    var animalDetails;
-    if (habitat === 'jungle') {
-        animalDetails = document.getElementById('animal-details1');
-    } else if (habitat === 'savane') {
-        animalDetails = document.getElementById('animal-details2');
-    } else if (habitat === 'marais') {
-        animalDetails = document.getElementById('animal-details3');
-    }
-
-    // Ajouter la classe pour réduire la largeur des détails des habitats et des animaux
-    habitatDetails.classList.add('details-container');
-    animalDetails.classList.add('details-container');
-
-    // Masquer le titre de la vidéo lorsqu'un conteneur vidéo est cliqué
-    var videoTitle = this.querySelector('h3');
-    if (videoTitle.style.display !== 'none') {
-        videoTitle.style.display = 'none';
-    } else {
-        videoTitle.style.display = 'block';
-    }
-
-    // Effacer le contenu précédent des détails de l'habitat
-    habitatDetails.innerHTML = '';
-
-    // Récupérer toutes les vidéos
-    var videos = document.querySelectorAll('.video-container1 video, .video-container2 video, .video-container3 video');
-
-    // Parcourir toutes les vidéos pour désactiver les autres
-    videos.forEach(function(video) {
-        video.classList.remove('clicked'); // Supprimer la classe 'clicked' de toutes les vidéos
-    });
-
-    // Si la vidéo est déjà active, retirer les détails de l'habitat et de l'animal
-    if (this.classList.contains('clicked')) {
-        habitatDetails.innerHTML = '';
-        animalDetails.innerHTML = '';
-        this.classList.remove('clicked');
-        return; // Arrêter l'exécution de la fonction
-    }
-
-    // Ajouter la classe 'clicked' uniquement à la vidéo cliquée
-    this.classList.add('clicked');
-
-    // Ajouter la classe pour remplir le fond du conteneur de vidéo avec du blanc
-    this.classList.add('white-background');
-
-    // Afficher le titre de l'habitat
-    var habitatTitle = document.createElement('h2');
-    habitatTitle.textContent = habitat;
-    habitatTitle.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-    habitatDetails.appendChild(habitatTitle);
-    habitatTitle.style.display = 'none';
-
-    // Récupérer les détails de l'habitat à partir d'une source de données (par exemple, une base de données)
-    var habitatDetailsData = getHabitatDetails(habitat); // Cette fonction devrait récupérer les détails de l'habitat depuis une source de données
-
-    // Afficher la description de l'habitat
-    var habitatDescription = document.createElement('p');
-    habitatDescription.textContent = habitatDetailsData.description;
-    habitatDescription.classList.add('white-text'); // Ajouter la classe pour le texte en noir
-    habitatDetails.appendChild(habitatDescription);
-
-    // Afficher la liste des animaux de l'habitat
-    var animalsList = document.createElement('ul');
-    habitatDetailsData.animals.forEach(function(animal) {
-        var animalItem = document.createElement('li');
-        var animalButton = document.createElement('button');
-        animalButton.textContent = animal.name;
-        animalButton.classList.add('btn', 'btn-primary', 'mr-2', 'mb-2');
-        animalButton.style.backgroundColor = '#6098ea'; // Changer la couleur du fond du bouton
-        animalButton.style.borderColor = '#6098ea'; // Changer la couleur de la bordure du bouton
-        animalButton.onclick = function(event) {
-            event.stopPropagation(); // Empêcher la propagation de l'événement au conteneur vidéo
-            afficherDetailsAnimal(animal, habitat); // Passer l'habitat en paramètre
-        };
-        animalItem.appendChild(animalButton);
-        animalsList.appendChild(animalItem);
-    });
-    habitatDetails.appendChild(animalsList);
-
-    // Masquer les détails de l'animal lorsqu'on clique à nouveau sur la vidéo
-    this.addEventListener('click', function() {
-        animalDetails.innerHTML = '';
-    });
-}
-
-    // Fonction factice pour récupérer les détails de l'habitat depuis une source de données (par exemple, une base de données)
-    function getHabitatDetails(habitat) {
-    // Simulation des données
-    var habitats = {
-        jungle: {
-            description: "La jungle est un habitat dense et humide, rempli de végétation luxuriante et d'une grande diversité d'animaux.",
-            animals: [
-                { name: "Tigre", race: "Bengal", veterinaryOpinion: "L'animal est en bonne santé.", image: "front/img/tigre.jpg", state: "Actif", stateDetail: "Aucun", foodOffered: "Viande", foodGrams: 500, passageDate: "2024-03-13", assignedHabitat: "Jungle" },
-                { name: "Gorille", race: "Gorille des montagnes", veterinaryOpinion: "L'animal présente quelques signes de stress.", image: "front/img/gorille.jpg", state: "Inactif", stateDetail: "Repos", foodOffered: "Fruits et légumes", foodGrams: 800, passageDate: "2024-03-12", assignedHabitat: "Jungle" },
-                { name: "Panthère", race: "Panthère noire", veterinaryOpinion: "L'animal a besoin de plus d'exercice.", image: "front/img/panthere.jpg", state: "Actif", stateDetail: "Chasse", foodOffered: "Viande", foodGrams: 600, passageDate: "2024-03-11", assignedHabitat: "Jungle" }
-            ]
-        },
-        savane: {
-            description: "La savane est un vaste paysage ouvert, caractérisé par des herbes hautes et des arbres dispersés.",
-            animals: [
-                { name: "Lion", race: "Lion d'Afrique", veterinaryOpinion: "L'animal est en pleine forme.", image: "front/img/lion.jpg", state: "Actif", stateDetail: "Chasse", foodOffered: "Viande", foodGrams: 700, passageDate: "2024-03-10", assignedHabitat: "Savane" },
-                { name: "Éléphant", race: "Éléphant d'Afrique", veterinaryOpinion: "L'animal nécessite une attention particulière à sa santé dentaire.", image: "front/img/elephant.jpg", state: "Inactif", stateDetail: "Repos", foodOffered: "Herbe", foodGrams: 1000, passageDate: "2024-03-09", assignedHabitat: "Savane" },
-                { name: "Girafe", race: "Girafe réticulée", veterinaryOpinion: "L'animal présente des signes de déshydratation.", image: "front/img/girafe.jpg", state: "Actif", stateDetail: "Recherche de nourriture", foodOffered: "Feuilles", foodGrams: 800, passageDate: "2024-03-08", assignedHabitat: "Savane" }
-            ]
-        },
-        marais: {
-            description: "Les marais sont des zones humides avec une végétation aquatique dense, souvent habitées par une variété d'animaux.",
-            animals: [
-                { name: "Crocodile", race: "Crocodile du Nil", veterinaryOpinion: "L'animal est en période de mue.", image: "front/img/crocodile.jpg", state: "Inactif", stateDetail: "Repos", foodOffered: "Viande", foodGrams: 600, passageDate: "2024-03-07", assignedHabitat: "Marais" },
-                { name: "Hippopotame", race: "Hippopotame amphibie", veterinaryOpinion: "L'animal nécessite un régime alimentaire plus équilibré.", image: "front/img/hippopotame.jpg", state: "Actif", stateDetail: "Baignade", foodOffered: "Herbe", foodGrams: 900, passageDate: "2024-03-06", assignedHabitat: "Marais" },
-                { name: "Flamant rose", race: "Flamant rose", veterinaryOpinion: "L'animal est en bonne santé.", image: "front/img/flamant.jpg", state: "Actif", stateDetail: "Recherche de nourriture", foodOffered: "Crustacés", foodGrams: 300, passageDate: "2024-03-05", assignedHabitat: "Marais" }
-            ]
-        }
-    };
-
-    return habitats[habitat];
-}
-</script>
+// Fermeture de la connexion
+$connexion->close();
+?>
