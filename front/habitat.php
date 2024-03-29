@@ -47,37 +47,24 @@ function getHabitatDetails($habitat_id) {
     echo "<h3 class='text-center'>Animaux :</h3>";
     echo "<div class='btn-group d-flex flex-wrap justify-content-center'>";
     while ($animal_row = $animaux_result->fetch_assoc()) {
-        echo "<a href='les_habitats_3.php?animal_id=" . $animal_row['animal_id'] . "' class='btn btn-primary m-2' onclick='incrementCounter(" . $animal_row['animal_id'] . ")'>" . $animal_row['prenom'] . " (" . $animal_row['race_label'] . ")</a>";
+        echo "<a href='les_habitats_3.php?animal_id=" . $animal_row['animal_id'] . "' class='btn btn-primary m-2' onclick='handleAnimalClick(" . $animal_row['animal_id'] . ")'>" . $animal_row['prenom'] . " (" . $animal_row['race_label'] . ")</a>";
     }
     echo "</div>";
     echo '<br>';
     echo '</div>';
 }
 
-// Vérifier si l'identifiant de l'animal est passé en paramètre
-if (isset($_GET['animal_id']) && !empty($_GET['animal_id'])) {
-    $animal_id = $_GET['animal_id'];
-
-    // Mettre à jour le compteur de l'animal sélectionné
-    $update_query = "UPDATE animal SET counter = counter + 1 WHERE animal_id = $animal_id";
-    if ($connexion->query($update_query) === TRUE) {
-        echo "Compteur mis à jour avec succès";
-    } else {
-        echo "Erreur lors de la mise à jour du compteur : " . $connexion->error;
-    }
-}
 ?>
 
 <script>
-    function incrementCounter(animal_id) {
+    function handleAnimalClick(animal_id) {
+        // Appeler le script PHP pour mettre à jour le compteur
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'back/increment_counter.php?animal_id=' + animal_id, true);
         xhr.send();
-        // Rafraîchir la page après la mise à jour du compteur
-        xhr.onload = function() {
-            if (xhr.status === 20) {
-                location.reload();
-            }
-        };
+        
+        // Rediriger l'utilisateur vers "les_habitats_3.php" après la mise à jour du compteur
+        window.location.href = '../les_habitats_3.php';
     }
 </script>
+

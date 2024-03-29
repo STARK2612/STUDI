@@ -88,6 +88,7 @@ if (!$result) {
                             <?php endwhile; ?>
                         </tbody>
                     </table>
+                    <br>
                 <?php endif; ?>
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
