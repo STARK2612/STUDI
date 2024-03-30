@@ -72,19 +72,19 @@ if (!$result) {
                 <?php if ($result->num_rows > 0) : ?>
                     <br>
                     <h3 class='text-justify'>Avis des visiteurs</h3>
-                    <div class="table-responsive overflow-auto">
+                    <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th class="table text-justify">Pseudo</th>
                                 <th class="table text-justify">Commentaire</th>
+                                <th class="table text-justify">Pseudo</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php while ($row = $result->fetch_assoc()) : ?>
                                 <tr>
-                                    <td class="description description-cell"><?php echo $row['pseudo']; ?></td>
-                                    <td class="description description-cell2"><?php echo $row['commentaire']; ?></td> <!-- Ajout de la classe pour le style -->
+                                    <td class="description description-cell"><?php echo $row['commentaire']; ?></td>
+                                    <td class="description description-cell2"><?php echo $row['pseudo']; ?></td>
                                 </tr>
                             <?php endwhile; ?>
                         </tbody>

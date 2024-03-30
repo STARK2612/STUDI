@@ -55,7 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
                 $checkRace->close();
                 
                 // Insertion des données de l'animal dans la table animal
-                $insertAnimal = $connexion->prepare("INSERT INTO animal (prenom, race_id, habitat_id, image_id, counter) VALUES (?, ?, ?, ?, 1)");
+                $insertAnimal = $connexion->prepare("INSERT INTO animal (prenom, race_id, habitat_id, image_id) VALUES (?, ?, ?, ?)");
+
                 $insertAnimal->bind_param("siii", $prenom, $raceId, $habitat, $imageId);
                 if($insertAnimal->execute()) {
                     echo "<script>alert('Nouvel animal ajouté avec succès');</script>";

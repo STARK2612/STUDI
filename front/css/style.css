@@ -30,7 +30,7 @@ body.compte {
     }
 
   .description-cell {
-    max-width: 100px; /* Définir la largeur maximale selon vos besoins */
+    max-width: 50px; /* Définir la largeur maximale selon vos besoins */
     word-wrap: break-word; /* Activer le retour à la ligne automatique */
   }
 
