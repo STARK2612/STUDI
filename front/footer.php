@@ -1,7 +1,7 @@
 <footer class="footer">
     <div class="container mt-5">
         <div class="row">
-            <!-- Première Colonne -->
+            <!-- Colonne pour l'abonnement à la newsletter -->
             <div class="col-md-4">
                 <br>
                 <h2>Abonnez-vous à notre Newsletter</h2>
@@ -14,7 +14,7 @@
                 <br>
             </div>
             
-            <!-- Deuxième Colonne -->
+            <!-- Colonne pour les réseaux sociaux -->
             <div class="col-md-4">
                 <br>
                 <br>
@@ -28,7 +28,7 @@
                 <br>
             </div>
 
-            <!-- Troisième Colonne -->
+            <!-- Colonne pour les coordonnées du zoo -->
             <div class="col-md-4">
                 <br>
                 <br>

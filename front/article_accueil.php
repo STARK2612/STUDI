@@ -40,21 +40,21 @@ if (!$result) {
 <body>
     <div class="container" id="background2">
         <div class="row">
-            <div class="column left custom-form">
+            <div class="column left custom-form col-md-4">
                 <br>
                 <h2 class='text-center'>ZOO Arcadia</h2>
-                <p class='text-center'>
+                <p class='text-justify'>
                     Arcadia est un zoo situé en France, près de la célèbre forêt de Brocéliande, en Bretagne. Fondé en 1960, ce zoo offre une expérience unique aux visiteurs, les plongeant au cœur de la nature et leur permettant de découvrir une grande diversité d'animaux fascinants.
                     Arcadia abrite une variété d'habitats soigneusement aménagés pour offrir aux animaux des conditions de vie proches de leur environnement naturel. Parmi les habitats remarquables, on trouve la savane africaine, la jungle tropicale, les marais côtiers et bien d'autres. Chaque espace est conçu avec soin pour garantir le bien-être des animaux tout en offrant aux visiteurs une expérience immersive.
                     ZOO Arcadia offre une expérience inoubliable pour les amoureux de la nature de tous âges, combinant divertissement, éducation et conservation dans un cadre magnifique et préservé.
                 </p>
             </div>
-            <div class="column right custom-form">
+            <div class="col-md-6">
                 <div class="form-container">
                     <!-- Formulaire pour soumettre un avis -->
                     <br>
-                    <h3 class='text-center'>Formulaire pour envoyer ton avis</h3>
-                    <form id="avisForm" method="post" action="back/save_avis.php" class='text-center'>
+                    <h3 class='text-justify'>Formulaire pour envoyer ton avis</h3>
+                    <form id="avisForm" method="post" action="back/save_avis.php" class='text-justify'>
                         <div class="form-group">
                             <label for="pseudo">Pseudo :</label>
                             <input type="text" class="form-control" id="pseudo" name="pseudo" required>
@@ -71,12 +71,13 @@ if (!$result) {
                 <!-- Affichage des avis -->
                 <?php if ($result->num_rows > 0) : ?>
                     <br>
-                    <h3 class='text-center'>Avis des visiteurs</h3>
+                    <h3 class='text-justify'>Avis des visiteurs</h3>
+                    <div class="table-responsive overflow-auto">
                     <table>
                         <thead>
                             <tr>
-                                <th class="table text-center">Pseudo</th>
-                                <th class="table text-center">Commentaire</th>
+                                <th class="table text-justify">Pseudo</th>
+                                <th class="table text-justify">Commentaire</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -88,6 +89,7 @@ if (!$result) {
                             <?php endwhile; ?>
                         </tbody>
                     </table>
+                    </div>
                     <br>
                 <?php endif; ?>
                 <nav aria-label="Page navigation example">

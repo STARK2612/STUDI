@@ -87,6 +87,7 @@ $result = $connexion->query($query);
             <br>
             <!-- Tableau des utilisateurs -->
             <h2 class="text-center">Liste des utilisateurs</h2>
+            <div class="table-responsive overflow-auto">
             <table class="table">
                 <thead>
                     <tr>
@@ -144,6 +145,7 @@ $result = $connexion->query($query);
                 ?>
                 </tbody>
             </table>
+            </div>
             <div class="pagination">
                 <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
                     <a href="?page=<?php echo $i; ?>" class="page-item <?php if ($i === $current_page) echo 'active'; ?>">
@@ -151,6 +153,7 @@ $result = $connexion->query($query);
                     </a>
                 <?php endfor; ?>
             </div>
+            <br>
         </div>
     </div>
 </div>

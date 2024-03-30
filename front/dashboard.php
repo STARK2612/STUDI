@@ -1,76 +1,79 @@
 <?php
-// Connexion à la base de données
+// Inclusion du fichier de connexion à la base de données
 require_once("back/connect_bdd.php");
 
-// Initialisation de $result_stats
+// Initialisation des variables
 $result_stats = null;
 
-// Récupérer les données des animaux avec leur race
+// Requête pour récupérer les animaux avec leurs races associées
 $query_animaux = "SELECT a.animal_id, a.prenom, r.label AS race_label
                   FROM animal a
                   INNER JOIN race r ON a.race_id = r.race_id";
 $result_animaux = $connexion->query($query_animaux);
 
-// Construction de la requête SQL pour les statistiques
+// Requête de base pour les statistiques
 $query_stats = "SELECT s.animal_id, a.prenom, r.label AS race_label, DATE_FORMAT(s.date, '%Y-%m') AS mois_annee, SUM(s.counter) AS total_cliques
                 FROM stat s 
                 INNER JOIN animal a ON s.animal_id = a.animal_id
                 INNER JOIN race r ON a.race_id = r.race_id";
 
-// Filtrage par animal
+// Filtrage des statistiques selon les paramètres GET
+
 if(isset($_GET['animal']) && !empty($_GET['animal'])) {
     $animal_id = $_GET['animal'];
     $query_stats .= " WHERE s.animal_id = $animal_id";
 }
 
-// Filtrage par année
 if(isset($_GET['annee']) && !empty($_GET['annee'])) {
     $annee = $_GET['annee'];
     $query_stats .= " AND YEAR(s.date) = $annee";
 }
 
-// Filtrage par mois
 if(isset($_GET['mois']) && !empty($_GET['mois']) && $_GET['mois'] !== 'aucun') {
     $mois = $_GET['mois'];
     $query_stats .= " AND MONTH(s.date) = $mois";
 }
 
+// Groupement des statistiques par animal
 $query_stats .= " GROUP BY s.animal_id";
 $query_stats .= " ORDER BY s.animal_id";
 
-// Exécution de la requête SQL pour les statistiques
+// Exécution de la requête pour récupérer les statistiques
 $result_stats = $connexion->query($query_stats);
 
-// Tableaux pour les étiquettes et les données du graphique
+// Initialisation des tableaux pour les données du graphique
 $labels = array();
 $data = array();
 
-// Remplir les tableaux avec les données de PHP
+// Traitement des statistiques récupérées
 if($result_stats !== null) {
     while($row_stats = $result_stats->fetch_assoc()) {
-        // Concaténer le prénom avec le label de la race
         $prenom_race = $row_stats['prenom'] . ' (' . $row_stats['race_label'] . ')';
         $labels[] = $prenom_race;
         $data[] = $row_stats['total_cliques'];
     }
 }
 
-// Déterminer les en-têtes du tableau en fonction des filtres
+// Entêtes du tableau affichant les statistiques
 $entetes_tableau = array('Animal (prénom)', 'Nombre de clics');
-if(!(isset($_GET['annee']) && !empty($_GET['annee']))) {
+if(isset($_GET['mois']) && !empty($_GET['mois']) && $_GET['mois'] !== 'aucun') {
     $entetes_tableau[] = 'Mois';
 }
-
 ?>
+
+<!-- Début du contenu HTML -->
 
 <div class="container" id="background2">
     <div class="row">
         <div class="col-md-6">
             <br>
+            <!-- Bouton de retour -->
             <a href="admin.php" class="btn btn-secondary btn-block">Retour</a>
             <br><br>
+            <!-- Titre du dashboard -->
             <h1 class="text-center">Dashboard Statistiques</h1>
             <br>
+            <!-- Formulaire de filtrage -->
             <form action="" method="GET" class="mb-3">
                 <div class="form-group">
                     <label for="animal">Filtrer par Animal :</label>
@@ -82,6 +85,7 @@ if(!(isset($_GET['annee']) && !empty($_GET['annee']))) {
                     </select>
                 </div>
                 <br>
+                <!-- Sélecteur pour l'année -->
                 <div class="form-group">
                     <label for="annee">Filtrer par Année :</label>
                     <select name="annee" id="annee" class="form-control">
@@ -95,6 +99,7 @@ if(!(isset($_GET['annee']) && !empty($_GET['annee']))) {
                     </select>
                 </div>
                 <br>
+                <!-- Sélecteur pour le mois -->
                 <div class="form-group">
                     <label for="mois">Filtrer par Mois :</label>
                     <select name="mois" id="mois" class="form-control">
@@ -120,29 +125,45 @@ if(!(isset($_GET['annee']) && !empty($_GET['annee']))) {
                     </select>
                 </div>
                 <br>
+                <!-- Bouton de soumission du formulaire -->
                 <button type="submit" class="btn btn-primary btn-block">Filtrer</button>
             </form>
-
+            <!-- Tableau affichant les statistiques -->
             <table class="table table-bordered text-center">
                 <thead>
                     <tr>
-                        <?php foreach ($entetes_tableau as $entete): ?>
-                            <th class="align-middle"><?php echo $entete; ?></th>
-                        <?php endforeach; ?>
+                    <?php foreach ($entetes_tableau as $entete): ?>
+                        <th class="align-middle"><?php echo $entete; ?></th>
+                    <?php endforeach; ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php 
-                    // Vérifier si $result_stats est défini et non null avant de l'utiliser
                     if($result_stats !== null) {
-                        // Réinitialiser le pointeur de résultat
                         mysqli_data_seek($result_stats, 0);
                         while($row_stats = $result_stats->fetch_assoc()): ?>
                             <tr>
                                 <td class="align-middle"><?php echo $row_stats['prenom'] . ' (' . $row_stats['race_label'] . ')'; ?></td>
                                 <td class="align-middle"><?php echo $row_stats['total_cliques']; ?></td>
-                                <?php if(!(isset($_GET['annee']) && !empty($_GET['annee']))): ?>
-                                    <td class="align-middle"><?php echo substr($row_stats['mois_annee'], 5); ?></td>
+                                <?php 
+                                $mois_fr = array(
+                                    '01' => 'Janvier',
+                                    '02' => 'Février',
+                                    '03' => 'Mars',
+                                    '04' => 'Avril',
+                                    '05' => 'Mai',
+                                    '06' => 'Juin',
+                                    '07' => 'Juillet',
+                                    '08' => 'Août',
+                                    '09' => 'Septembre',
+                                    '10' => 'Octobre',
+                                    '11' => 'Novembre',
+                                    '12' => 'Décembre'
+                                );
+                                ?>
+                                <!-- Affichage du mois si le filtre est appliqué -->
+                                <?php if(isset($_GET['mois']) && !empty($_GET['mois']) && $_GET['mois'] !== 'aucun'): ?>
+                                    <td class="align-middle"><?php echo $mois_fr[substr($row_stats['mois_annee'], 5)]; ?></td>
                                 <?php endif; ?>
                             </tr>
                         <?php endwhile;
@@ -152,6 +173,7 @@ if(!(isset($_GET['annee']) && !empty($_GET['annee']))) {
             </table>
             <br>
         </div>
+        <!-- Colonne pour afficher le graphique -->
         <div class="col-md-6">
             <canvas id="pieChart" width="400" height="400"></canvas>
         </div>
@@ -159,8 +181,8 @@ if(!(isset($_GET['annee']) && !empty($_GET['annee']))) {
     <br>   
 </div>
 
+<!-- Script pour afficher le graphique -->
 <script>
-    // Dessiner le graphique
     var ctx = document.getElementById('pieChart').getContext('2d');
     var myPieChart = new Chart(ctx, {
         type: 'pie',
@@ -198,7 +220,23 @@ if(!(isset($_GET['annee']) && !empty($_GET['annee']))) {
     });
 </script>
 
+<!-- Script pour afficher ou masquer la colonne du mois en fonction du filtre -->
+<script>
+    function toggleMoisColumn() {
+        var moisColumn = document.querySelectorAll('.mois-column');
+        var moisSelected = document.getElementById('mois').value !== 'aucun';
+        moisColumn.forEach(function(column) {
+            column.classList.toggle('d-none', !moisSelected);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleMoisColumn();
+        document.getElementById('mois').addEventListener('change', toggleMoisColumn);
+    });
+</script>
+
 <?php
-// Fermer la connexion à la base de données
+// Fermeture de la connexion à la base de données
 $connexion->close();
 ?>

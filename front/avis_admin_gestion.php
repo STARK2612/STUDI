@@ -33,74 +33,42 @@ $sqlAvisValidesEtRejetes .= " LIMIT $indiceDepartValidesEtRejetes, $avisParPageV
 $resultAvisValidesEtRejetes = $connexion->query($sqlAvisValidesEtRejetes);
 ?>
 
-<head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0jxoUO/+3u4+9JgWmqO+xrmmnreSpsTzr8Mmw/YpOQ8AlUfVzJf3gCI3UqzTCpW" crossorigin="anonymous">
-    <style>
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .column {
-            width: 48%;
-        }
-
-        .column.left {
-            margin-right: 20px;
-        }
-
-        .form-container {
-            margin-top: 20px;
-        }
-
-        /* Pour les colonnes de commentaire */
-        .commentaire {
-            word-break: break-word;
-        }
-
-        
-    </style>
-</head>
-
-<body>
     <div class="container" id="background2">
         <div class="row">
             <div class="column left">
                 <br>
                 <h2>Avis en attente de validation</h2>
                 <?php if ($resultAttenteValidation->num_rows > 0) : ?>
-                    <table class="table" class="custom-form">
-                        <thead>
-                            <tr>
-                                <th>Pseudo</th>
-                                <th>Commentaire</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($row = $resultAttenteValidation->fetch_assoc()) : ?>
+                    <div class="table-responsive overflow-auto">
+                        <table class="table" class="custom-form">
+                            <thead>
                                 <tr>
-                                    <td><?php echo $row['pseudo']; ?></td>
-                                    <td class="commentaire"><?php echo $row['commentaire']; ?></td>
-                                    <td>
-                                        <form action="back/save_avis.php" method="GET">
-                                            <input type="hidden" name="id" value="<?php echo $row['avis_id']; ?>">
-                                            <button type="submit" class="btn btn-success" name="approve" value="1">Approuver</button>
-                                        </form>
-                                        <br>
-                                        <form action="back/save_avis.php" method="GET">
-                                            <input type="hidden" name="id" value="<?php echo $row['avis_id']; ?>">
-                                            <button type="submit" class="btn btn-danger" name="approve" value="0">Rejeter</button>
-                                        </form>
-                                    </td>
+                                    <th>Pseudo</th>
+                                    <th>Commentaire</th>
+                                    <th>Action</th>
                                 </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php while ($row = $resultAttenteValidation->fetch_assoc()) : ?>
+                                    <tr>
+                                        <td><?php echo $row['pseudo']; ?></td>
+                                        <td class="commentaire"><?php echo $row['commentaire']; ?></td>
+                                        <td>
+                                            <form action="back/save_avis.php" method="GET">
+                                                <input type="hidden" name="id" value="<?php echo $row['avis_id']; ?>">
+                                                <button type="submit" class="btn btn-success" name="approve" value="1">Approuver</button>
+                                            </form>
+                                            <br>
+                                            <form action="back/save_avis.php" method="GET">
+                                                <input type="hidden" name="id" value="<?php echo $row['avis_id']; ?>">
+                                                <button type="submit" class="btn btn-danger" name="approve" value="0">Rejeter</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
                     
                     <!-- Pagination pour les avis en attente de validation -->
                     <?php if ($totalPagesAttenteValidation > 1) : ?>
@@ -115,22 +83,13 @@ $resultAvisValidesEtRejetes = $connexion->query($sqlAvisValidesEtRejetes);
                 <?php else : ?>
                     <p>Aucun avis en attente de validation.</p>
                 <?php endif; ?>
-                <br>
-                <a href="<?php
-    if ($_SESSION['role'] == 'Administrateur') {
-        echo "admin.php";
-    } elseif ($_SESSION['role'] == 'Employé') {
-        echo "employe.php";
-    } elseif ($_SESSION['role'] == 'Vétérinaire') {
-        echo "veterinaire.php";
-    }
-?>" class="btn btn-secondary btn-block">Retour</a>
             </div>
-            <div class="column">
-                <div class="form-container">
+            <div class="column2">
+                <div class="form-container2">
                     <!-- Affichage des avis validés paginés -->
                     <?php if ($resultAvisValidesEtRejetes->num_rows > 0) : ?>
                         <h3>Avis des visiteurs</h3>
+                        <div class="table-responsive overflow-auto">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -157,6 +116,7 @@ $resultAvisValidesEtRejetes = $connexion->query($sqlAvisValidesEtRejetes);
                                 <?php endwhile; ?>
                             </tbody>
                         </table>
+                        </div>
                         <!-- Pagination pour les avis validés et rejetés -->
                         <?php if ($totalPagesValidesEtRejetes > 1) : ?>
                             <nav aria-label="Page navigation example">
@@ -169,11 +129,17 @@ $resultAvisValidesEtRejetes = $connexion->query($sqlAvisValidesEtRejetes);
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
+                <a href="<?php
+    if ($_SESSION['role'] == 'Administrateur') {
+        echo "admin.php";
+    } elseif ($_SESSION['role'] == 'Employé') {
+        echo "employe.php";
+    } elseif ($_SESSION['role'] == 'Vétérinaire') {
+        echo "veterinaire.php";
+    }
+?>" class="btn btn-secondary btn-block">Retour</a><br><br>
             </div>
     </div>
-</body>
-
-</html>
 <?php
 // Fermer la connexion à la base de données
 $connexion->close();

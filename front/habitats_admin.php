@@ -2,22 +2,22 @@
 // Inclusion du fichier de connexion à la base de données
 include_once "back/connect_bdd.php";
 
-// Vérifier si la connexion à la base de données est établie
+// Vérification de la connexion à la base de données
 if (!$connexion) {
     echo "La connexion à la base de données a échoué.";
-    exit; // Arrêter l'exécution du script en cas d'échec de la connexion
+    exit;
 }
 
-// Fonction pour récupérer les détails d'un habitat avec ses animaux associés
+// Fonction pour obtenir les détails d'un habitat
 function getHabitatDetails($habitat_id) {
     global $connexion;
-    
-    // Récupérer les détails de l'habitat
+
+    // Requête pour obtenir les détails de l'habitat
     $habitat_query = "SELECT * FROM habitat WHERE habitat_id = $habitat_id";
     $habitat_result = $connexion->query($habitat_query);
     $habitat_row = $habitat_result->fetch_assoc();
-    
-    // Afficher les détails de l'habitat
+
+    // Affichage des détails de l'habitat
     echo '<div class="container custom-container" id="background2">';
     echo '<br>';
     echo "<h2>" . $habitat_row['nom'] . "</h2>";
@@ -25,12 +25,12 @@ function getHabitatDetails($habitat_id) {
     echo '<br>';
     echo '</div>';
     echo '<br>';
-    
-    // Récupérer les animaux associés à cet habitat
+
+    // Requête pour obtenir les animaux dans cet habitat
     $animaux_query = "SELECT * FROM animal WHERE habitat_id = $habitat_id";
     $animaux_result = $connexion->query($animaux_query);
-    
-    // Afficher les animaux associés
+
+    // Affichage des animaux dans cet habitat
     echo '<div class="container custom-container" id="background2">';
     echo '<br>';
     echo "<h3>Animaux :</h3>";
@@ -43,16 +43,16 @@ function getHabitatDetails($habitat_id) {
     echo '</div>';
 }
 
-// Fonction pour récupérer les détails d'un animal avec l'avis du vétérinaire
+// Fonction pour obtenir les détails d'un animal
 function getAnimalDetails($animal_id) {
     global $connexion;
-    
-    // Récupérer les détails de l'animal
+
+    // Requête pour obtenir les détails de l'animal
     $animal_query = "SELECT * FROM animal WHERE animal_id = $animal_id";
     $animal_result = $connexion->query($animal_query);
     $animal_row = $animal_result->fetch_assoc();
-    
-    // Afficher les détails de l'animal
+
+    // Affichage des détails de l'animal
     echo '<div class="container custom-container" id="background2">';
     echo '<br>';
     echo "<h2>" . $animal_row['prenom'] . "</h2>";
@@ -62,8 +62,8 @@ function getAnimalDetails($animal_id) {
     echo "<p>Nourriture proposée : " . $animal_row['nour'] . "</p>";
     echo "<p>Grammage de la nourriture : " . $animal_row['qte_nour'] . "</p>";
     echo "<p>Date de passage : " . $animal_row['date_nour'] . "</p>";
-    
-    // Récupérer l'avis du vétérinaire
+
+    // Requête pour obtenir le rapport vétérinaire de l'animal
     $rapport_query = "SELECT * FROM rapport_veterinaire WHERE animal_id = $animal_id";
     $rapport_result = $connexion->query($rapport_query);
     if ($rapport_result->num_rows > 0) {
@@ -74,51 +74,44 @@ function getAnimalDetails($animal_id) {
     }
 }
 
-// Affichage de tous les habitats avec leurs animaux associés
+// Requête pour obtenir la liste des habitats
 $habitats_query = "SELECT * FROM habitat";
 $habitats_result = $connexion->query($habitats_query);
-$count = 0; // Compteur pour organiser les habitats sur deux colonnes
+$count = 0;
 echo '<div class="row">';
 while ($habitat_row = $habitats_result->fetch_assoc()) {
-    // Si le compteur est pair, ouvrir une nouvelle ligne de grille Bootstrap
     if ($count % 2 == 0) {
         echo '</div><div class="row">';
     }
 
     echo '<div class="col-md-6">';
-    echo '<div class="container custom-container mb-4" id="background2">'; // Ajout de la classe mb-4 pour réduire l'écart
+    echo '<div class="container custom-container mb-4" id="background2">';
     echo '<br>';
     echo "<div>";
     echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
     echo '<br>';
-    
-    // Récupérer les informations de l'image à partir de la table "image"
+
+    // Requête pour obtenir l'image de l'habitat
     $image_id = $habitat_row['image_id'];
     $image_query = "SELECT * FROM image WHERE image_id = $image_id";
     $image_result = $connexion->query($image_query);
     $image_row = $image_result->fetch_assoc();
-    
-    // Vérifier si une image a été trouvée
+
+    // Affichage de l'image de l'habitat
     if ($image_result->num_rows > 0) {
-        // Récupérer les données de l'image
         $image_data = $image_row['image_data'];
         $image_type = $image_row['image_type'];
-        // Définir la taille maximale souhaitée de l'image
-        $max_width = 300; // Largeur maximale en pixels
-        $max_height = 200; // Hauteur maximale en pixels
-        // Récupérer les dimensions originales de l'image
+        $max_width = 300;
+        $max_height = 200;
         list($width, $height) = getimagesizefromstring($image_data);
-        // Calculer les nouvelles dimensions en conservant le ratio d'aspect
         $ratio = min($max_width / $width, $max_height / $height);
         $new_width = $width * $ratio;
         $new_height = $height * $ratio;
-        // Afficher l'image avec les nouvelles dimensions
         $image_src = 'data:image/' . $image_type . ';base64,' . base64_encode($image_data);
         echo "<div class='text-center'>";
         echo "<img src='" . $image_src . "' alt='" . $habitat_row['nom'] . "' width='" . $new_width . "' height='" . $new_height . "'class='rounded'>";
         echo "</div>";
     } else {
-        // Afficher une image par défaut si aucune image n'est trouvée
         echo "<img src='images/default.jpg' alt='Image par défaut'>";
     }
     echo '<br>';
@@ -133,7 +126,6 @@ while ($habitat_row = $habitats_result->fetch_assoc()) {
 }
 echo '</div>';
 
-
-// Fermeture de la connexion
+// Fermeture de la connexion à la base de données
 $connexion->close();
 ?>

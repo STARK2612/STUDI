@@ -2,41 +2,41 @@
 // Inclusion du fichier de connexion à la base de données
 include_once "back/connect_bdd.php";
 
-// Vérifier si la connexion à la base de données est établie
+// Vérification de la connexion à la base de données
 if (!$connexion) {
     echo "La connexion à la base de données a échoué.";
-    exit; // Arrêter l'exécution du script en cas d'échec de la connexion
+    exit;
 }
 
-// Vérification de la connexion
+// Vérification d'erreur de connexion
 if ($connexion->connect_error) {
     die("La connexion a échoué : " . $connexion->connect_error);
 }
 
-// Traitement de l'upload d'image
+// Traitement du formulaire d'ajout d'un nouvel habitat
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
     $nom = $_POST['nom'];
     $description = $_POST['description'];
 
-    // Vérification si un fichier est envoyé
+    // Vérification de l'upload du fichier
     if(isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $imageData = file_get_contents($_FILES['image']['tmp_name']); // Lecture du fichier
-        $imageType = $_FILES['image']['type']; // Type de fichier
+        $imageData = file_get_contents($_FILES['image']['tmp_name']);
+        $imageType = $_FILES['image']['type'];
 
-        // Vérification du type de fichier
+        // Types de fichiers autorisés
         $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
         if(in_array($imageType, $allowedTypes)) {
-            // Insertion des données de l'image dans la table image
+            // Préparation de la requête pour l'insertion de l'image
             $insertImage = $connexion->prepare("INSERT INTO image (image_data, image_type) VALUES (?, ?)");
             $insertImage->bind_param("ss", $imageData, $imageType);
             if ($insertImage->execute()) {
-                $imageId = $insertImage->insert_id; // Récupération de l'ID de l'image insérée
+                $imageId = $insertImage->insert_id;
 
-                // Insertion des données de l'habitat dans la table habitat avec l'ID de l'image
+                // Préparation de la requête pour l'insertion de l'habitat
                 $insertHabitat = $connexion->prepare("INSERT INTO habitat (image_id, nom, description) VALUES (?, ?, ?)");
                 $insertHabitat->bind_param("iss", $imageId, $nom, $description);
                 if($insertHabitat->execute()) {
-                    $_SESSION['success_message'] = "Nouvel habitat ajouté avec succès"; // Stocke le message dans une variable de session
+                    $_SESSION['success_message'] = "Nouvel habitat ajouté avec succès";
                 } else {
                     echo "Erreur lors de l'insertion de l'habitat : " . $insertHabitat->error;
                 }
@@ -53,14 +53,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
     }
 }
 
-// Modification d'habitat
+// Traitement du formulaire de modification d'un habitat
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier'])) {
     $habitat_id = $_POST['habitat_id'];
     $nom = $_POST['nom'];
     $description = $_POST['description'];
 
+    // Requête SQL pour la mise à jour de l'habitat
     $sql = "UPDATE habitat SET nom='$nom', description='$description' WHERE habitat_id=$habitat_id";
 
+    // Exécution de la requête
     if ($connexion->query($sql) === TRUE) {
         echo "";
     } else {
@@ -68,11 +70,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier'])) {
     }
 }
 
-// Suppression d'habitat
+// Traitement de la suppression d'un habitat
 if (isset($_POST['supprimer'])) {
     $habitat_id = $_POST['habitat_id'];
 
-    // Récupérer l'ID de l'image associée à l'habitat
+    // Requête pour récupérer l'ID de l'image associée à l'habitat
     $sql_select_image_id = "SELECT image_id FROM habitat WHERE habitat_id=$habitat_id";
     $result_select_image_id = $connexion->query($sql_select_image_id);
 
@@ -80,13 +82,13 @@ if (isset($_POST['supprimer'])) {
         $row = $result_select_image_id->fetch_assoc();
         $image_id = $row['image_id'];
 
-        // Supprimer l'habitat
+        // Requête pour supprimer l'habitat
         $sql_delete_habitat = "DELETE FROM habitat WHERE habitat_id=$habitat_id";
         if ($connexion->query($sql_delete_habitat) === TRUE) {
-            // Supprimer l'image associée si elle existe
+            // Requête pour supprimer l'image associée
             $sql_delete_image = "DELETE FROM image WHERE image_id=$image_id";
             if ($connexion->query($sql_delete_image) === TRUE) {
-                echo "<script>alert('Habitat et image associée supprimés avec succès');</script>"; // Affichage du message dans une fenêtre popup
+                echo "<script>alert('Habitat et image associée supprimés avec succès');</script>";
             } else {
                 echo "Erreur lors de la suppression de l'image : " . $connexion->error;
             }
@@ -98,28 +100,25 @@ if (isset($_POST['supprimer'])) {
     }
 }
 
-$servicesParPage = 1; // Vous pouvez ajuster ce nombre selon vos besoins
-
-// Vérifier si la page est définie, sinon, la définir sur 1
+// Pagination
+$servicesParPage = 1;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
-
-// Calculer le numéro du premier habitat pour la requête SQL
 $premierHabitat = ($page - 1) * $servicesParPage;
 
-// Récupération des habitats pour la page actuelle
+// Requête pour sélectionner les habitats avec pagination
 $sql = "SELECT * FROM habitat LIMIT $premierHabitat, $servicesParPage";
 $result = $connexion->query($sql);
 
-// Calculer le nombre total de pages
+// Requête pour compter le nombre total d'habitats
 $sql_count = "SELECT COUNT(*) AS totalHabitats FROM habitat";
 $result_count = $connexion->query($sql_count);
 $row_count = $result_count->fetch_assoc();
 $totalHabitats = $row_count['totalHabitats'];
 $totalPages = ceil($totalHabitats / $servicesParPage);
 ?>
-
 <div class="container" id="background2">
     <div class="row">
+        <!-- Formulaire d'ajout d'un nouvel habitat -->
         <div class="col-md-4">
             <br>
             <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
@@ -140,64 +139,62 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                 <br>
                 <button type="submit" class="btn btn-primary" name="ajouter">Ajouter</button>
                 <br><br>
+                <!-- Bouton de retour en fonction du rôle de l'utilisateur -->
                 <a href="<?php
-    if ($_SESSION['role'] == 'Administrateur') {
-        echo "admin.php";
-    } elseif ($_SESSION['role'] == 'Employé') {
-        echo "employe.php";
-    } elseif ($_SESSION['role'] == 'Vétérinaire') {
-        echo "veterinaire.php";
-    }
-?>" class="btn btn-secondary btn-block">Retour</a>
+                    if ($_SESSION['role'] == 'Administrateur') {
+                        echo "admin.php";
+                    } elseif ($_SESSION['role'] == 'Employé') {
+                        echo "employe.php";
+                    } elseif ($_SESSION['role'] == 'Vétérinaire') {
+                        echo "veterinaire.php";
+                    }
+                ?>" class="btn btn-secondary btn-block">Retour</a>
             </form>
             <br>
         </div>
+        <!-- Tableau pour afficher les habitats -->
         <div class="col-md-7">
             <br>
             <h3>Modifier/Supprimer un Habitat</h3>
-            <!-- Tableau pour afficher les habitats -->
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th class='hidden'>ID de l'Habitat</th>
-                        <th>Nom de l'Habitat</th>
-                        <th>Description de l'Habitat</th>
-                        <th>Commentaire de l'Habitat</th>
-                        <th>Modifier/Supprimer</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    // Boucle à travers chaque habitat et afficher les détails dans le tableau
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td class='habitat_id hidden'>" . $row['habitat_id'] . "</td>";
-                        echo "<td class='nom'>" . $row['nom'] . "</td>";
-                        echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
-                        // Vérifier si la clé 'commentaire_habitat' existe dans le tableau $row avant de l'utiliser
-                        echo "<td class='commentaire description-cell'>" . (isset($row['commentaire_habitat']) ? $row['commentaire_habitat'] : "") . "</td>";
-                        // Ajouter des boutons pour modifier et supprimer chaque habitat
-                        echo "<td>";
-                        echo "<div class='btn-group' role='group'>";
-                        echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
-                        echo "</div>";
-                        echo "<div style='margin-top: 5px;'></div>"; // Espace de 5px entre les boutons
-                        // Formulaire pour la suppression de l'habitat
-                        echo "<form class='delete-form' method='post' action='" . $_SERVER['PHP_SELF'] . "' onsubmit='return confirmDelete(" . $row['habitat_id'] . ")'>";
-                        echo "<input type='hidden' name='habitat_id' value='" . $row['habitat_id'] . "'>";
-                        echo "<button type='submit' class='btn btn-danger btn-sm delete-button' name='supprimer' id='delete-button-" . $row['habitat_id'] . "'>Supprimer</button>";
-                        echo "</form>";
-                        echo "</td>";
-                        echo "</tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+            <div class="table-responsive overflow-auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class='hidden'>ID de l'Habitat</th>
+                            <th>Nom de l'Habitat</th>
+                            <th>Description de l'Habitat</th>
+                            <th>Commentaire de l'Habitat</th>
+                            <th>Modifier/Supprimer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td class='habitat_id hidden'>" . $row['habitat_id'] . "</td>";
+                            echo "<td class='nom'>" . $row['nom'] . "</td>";
+                            echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
+                            echo "<td class='commentaire description-cell'>" . (isset($row['commentaire_habitat']) ? $row['commentaire_habitat'] : "") . "</td>";
+                            echo "<td>";
+                            echo "<div class='btn-group' role='group'>";
+                            echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
+                            echo "</div>";
+                            echo "<div style='margin-top: 5px;'></div>";
+                            echo "<form class='delete-form' method='post' action='" . $_SERVER['PHP_SELF'] . "' onsubmit='return confirmDelete(" . $row['habitat_id'] . ")'>";
+                            echo "<input type='hidden' name='habitat_id' value='" . $row['habitat_id'] . "'>";
+                            echo "<button type='submit' class='btn btn-danger btn-sm delete-button' name='supprimer' id='delete-button-" . $row['habitat_id'] . "'>Supprimer</button>";
+                            echo "</form>";
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
             <!-- Pagination -->
             <?php
             echo "<ul class='pagination'>";
             for ($i = 1; $i <= $totalPages; $i++) {
-                // Vérifie si la page actuelle correspond à $i et ajoute la classe "active" si c'est le cas
                 $activeClass = ($page == $i) ? "active" : "";
                 echo "<li class='page-item $activeClass'><a class='page-link' href='?page=$i'>$i</a></li>";
             }
@@ -206,73 +203,64 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
         </div>
     </div>
 </div>
-<!-- Modal -->
+<!-- Modal pour la modification d'un habitat -->
 <div id="myModal" class="modal">
-<div class="modal-dialog">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modifier Service</h5>
+                <h5 class="modal-title">Modifier Habitat</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-        <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-            <input type="hidden" id="habitat_id" name="habitat_id">
-            <div class="form-group">
-                <label for="habitat_id">ID de l'habitat:</label>
-                <input type="text" class="form-control" id="habitat_id2" name="habitat_id" readonly>
+                <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                    <input type="hidden" id="habitat_id" name="habitat_id">
+                    <div class="form-group">
+                        <label for="habitat_id">ID de l'habitat:</label>
+                        <input type="text" class="form-control" id="habitat_id2" name="habitat_id" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="nom2">Nom de l'Habitat:</label>
+                        <input type="text" class="form-control" id="nom2" name="nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description2">Description de l'Habitat:</label>
+                        <textarea type="text" class="form-control" id="description2" name="description" rows="17" required></textarea>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary" name="modifier" onclick="showSuccessMessage()">Modifier</button>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="nom2">Nom de l'Habitat:</label>
-                <input type="text" class="form-control" id="nom2" name="nom" required>
-            </div>
-            <div class="form-group">
-                <label for="description2">Description de l'Habitat:</label>
-                <textarea type="text" class="form-control" id="description2" name="description" rows="17" required></textarea>
-            </div>
-            <br>
-            <button type="submit" class="btn btn-primary" name="modifier" onclick="showSuccessMessage()">Modifier</button>
-        </form>
+        </div>
     </div>
 </div>
 
-<!-- Inclure la bibliothèque jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!-- Inclure la bibliothèque Popper.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<!-- Inclure la bibliothèque Bootstrap JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+<!-- Script JavaScript -->
 <script>
-    // Ajouter un gestionnaire d'événements pour les boutons "Modifier"
+    // Gestion des boutons de modification
     var editButtons = document.querySelectorAll('.edit-button');
     editButtons.forEach(function(button) {
         button.addEventListener('click', function(event) {
-            // Empêcher le comportement par défaut du formulaire
             event.preventDefault();
-            // Récupérer le formulaire parent
             var form = button.closest('tr');
-            // Récupérer les valeurs des champs
             var habitat_id = form.querySelector('.habitat_id').innerText;
             var nom = form.querySelector('.nom').innerText;
             var description = form.querySelector('.description').innerText;
-            // Afficher la fenêtre modale de modification avec les champs préremplis
             var modal = document.getElementById('myModal');
             modal.style.display = "block";
-            // Remplir les champs de la fenêtre modale avec les valeurs récupérées
             document.getElementById('habitat_id2').value = habitat_id;
             document.getElementById('nom2').value = nom;
             document.getElementById('description2').value = description;
         });
     });
 
-    // Fermer la fenêtre modale lorsque l'utilisateur clique sur la croix
+    // Gestion de la fermeture du modal
     var closeBtn = document.querySelector('.close');
     closeBtn.addEventListener('click', function() {
         var modal = document.getElementById('myModal');
         modal.style.display = "none";
     });
 
-    // Fermer la fenêtre modale lorsque l'utilisateur clique en dehors de celle-ci
+    // Gestion de la fermeture du modal en cliquant en dehors de celui-ci
     window.onclick = function(event) {
         var modal = document.getElementById('myModal');
         if (event.target == modal) {
@@ -280,40 +268,44 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
         }
     }
 
+    // Fonction de confirmation pour la suppression d'un habitat
     function confirmDelete(habitat_id) {
         return confirm("Êtes-vous sûr de vouloir supprimer cet habitat ?");
     }
 </script>
+
+<!-- Affichage du message de succès -->
 <script>
     <?php if(isset($_SESSION['success_message'])): ?>
         alert("<?php echo $_SESSION['success_message']; ?>");
-        <?php unset($_SESSION['success_message']); ?> // Efface le message de la variable de session
+        <?php unset($_SESSION['success_message']); ?>
     <?php endif; ?>
 </script>
+
+<!-- Vérification de la taille du fichier avant l'upload -->
 <script>
     function checkFileSize() {
         var input = document.getElementById('image');
         if (input.files.length > 0) {
-            var fileSize = input.files[0].size; // Taille du fichier en octets
-            var maxSize = 1048576; // 1 Mo en octets
+            var fileSize = input.files[0].size;
+            var maxSize = 1048576;
 
             if (fileSize > maxSize) {
                 document.getElementById('fileSizeError').innerHTML = 'Fichier trop lourd, 1 Mo maximum.';
-                return false; // Empêche l'envoi du formulaire
+                return false;
             } else {
-                document.getElementById('fileSizeError').innerHTML = ''; // Efface le message d'erreur s'il existe
-                return true; // Autorise l'envoi du formulaire
+                document.getElementById('fileSizeError').innerHTML = '';
+                return true;
             }
         }
-        return true; // Autorise l'envoi du formulaire si aucun fichier sélectionné
+        return true;
     }
 </script>
+
+<!-- Affichage du message de succès pour la modification -->
 <script>
     function showSuccessMessage() {
-        // Afficher le message de succès dans une fenêtre popup
         alert("Habitat mis à jour avec succès");
-
-        // Cacher la fenêtre modale après avoir affiché le message
         var modal = document.getElementById('myModal');
         modal.style.display = "none";
     }

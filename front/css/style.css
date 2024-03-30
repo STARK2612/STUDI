@@ -2,6 +2,10 @@ body {
     background-color: #5cc251; /* Couleur de fond de la page par défaut */
 }
 
+.commentaire {
+  word-break: break-word;
+}
+
 body.compte {
     background-color: #ffffff; /* Couleur de fond de la page compte.php */
 }
@@ -41,14 +45,35 @@ body.compte {
     flex-direction: column;
     gap: 20px; /* Espace entre les colonnes */
   }
+
+  .container2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
   
+  .column.left {
+    margin-right: 20px;
+  }
+
   .column {
     flex: 1; /* Les colonnes prennent autant d'espace que nécessaire */
+  }
+
+  .column2 {
+    width: 97%;
   }
   
   .form-container {
     margin-bottom: 20px; /* Espace entre le formulaire et les avis */
   }
+
+  .form-container2 {
+    margin-top: 20px;
+}
 
   .connexion-button {
     display: inline-block;
