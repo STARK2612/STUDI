@@ -48,46 +48,65 @@ $masquerBoutonConnexion = ($role == 'Administrateur' || $role == 'Vétérinaire'
         </div>
     </nav>';
     }?>
-    <div class="info-container <?php if (basename($_SERVER['SCRIPT_FILENAME']) == 'les_services.php' || basename($_SERVER['SCRIPT_FILENAME']) == 'les_habitats.php' || basename($_SERVER['SCRIPT_FILENAME']) == 'connexion.php') { echo 'transparent-bg'; } ?>">
-        <?php
-        // Inclusion du contenu en fonction de la page actuelle
-        if (basename($_SERVER['SCRIPT_FILENAME']) == 'les_services.php') {
+    <div class="info-container <?php echo (basename($_SERVER['SCRIPT_FILENAME']) == 'les_services.php') ? 'transparent-bg' : ''; ?>">
+    <?php
+    // Inclusion du contenu en fonction de la page actuelle
+    switch (basename($_SERVER['SCRIPT_FILENAME'])) {
+        case 'les_services.php':
             require 'front/services_admin.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'les_habitats.php') {
+            break;
+        case 'les_habitats.php':
             require 'front/habitats_admin.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'les_habitats_2.php') {
+            break;
+        case 'les_habitats_2.php':
             require 'front/habitat.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'les_habitats_3.php') {
+            break;
+        case 'les_habitats_3.php':
             require 'front/animal.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'contact.php') {
+            break;
+        case 'contact.php':
             require 'front/contact_admin.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'connexion.php') {
+            break;
+        case 'connexion.php':
             require 'front/connexion_admin.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'admin.php') {
+            break;
+        case 'admin.php':
             require 'front/admin_space.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'veterinaire.php') {
+            break;
+        case 'veterinaire.php':
             require 'front/veterinaire_admin.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'employe.php') {
+            break;
+        case 'employe.php':
             require 'front/employe_admin.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'compte.php') {
+            break;
+        case 'compte.php':
             require 'front/compte_admin.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'animal_gestion.php') {
+            break;
+        case 'animal_gestion.php':
             require 'front/animal_admin_gestion.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'les_services_gestion.php') {
+            break;
+        case 'les_services_gestion.php':
             require 'front/services_admin_gestion.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'avis_gestion.php') {
+            break;
+        case 'avis_gestion.php':
             require 'front/avis_admin_gestion.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'veterinaire_gestion.php') {
+            break;
+        case 'veterinaire_gestion.php':
             require 'front/veterinaire_admin_gestion.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'employe_gestion.php') {
-            require 'front/employe_admin_gestion.php'; 
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'les_habitats_gestion.php') {
+            break;
+        case 'employe_gestion.php':
+            require 'front/employe_admin_gestion.php';
+            break;
+        case 'les_habitats_gestion.php':
             require 'front/habitats_admin_gestion.php';
-        } elseif (basename($_SERVER['SCRIPT_FILENAME']) == 'stat_dashboard.php') {
+            break;
+        case 'stat_dashboard.php':
             require 'front/dashboard.php';
-        } else {
+            break;
+        default:
             require 'front/article_accueil.php';
-        }
-        ?>
-    </div>        
+            break;
+    }
+    ?>
+</div>
 </div>
