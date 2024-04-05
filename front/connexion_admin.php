@@ -1,3 +1,7 @@
+<?php
+// Générer et stocker le jeton CSRF dans la session
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+?>
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -7,6 +11,9 @@
                 </div>
                 <div class="card-body">
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                        <!-- Ajout du champ CSRF -->
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
                         <div class="form-group">
                             <label for="username" class="black-label">Nom d'utilisateur :</label>
                             <input type="text" class="form-control" id="username" name="username" placeholder="Entrez votre nom d'utilisateur" required>

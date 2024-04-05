@@ -1,15 +1,18 @@
 <?php
-// Connexion à la base de données
-$serveur = "localhost"; // Adresse du serveur MySQL
-$utilisateur_db = "root"; // Nom d'utilisateur de la base de données
-$mot_de_passe_db = ""; // Mot de passe de la base de données
-$nom_db = "zooarcadia"; // Nom de la base de données
+// Définir les constantes pour les paramètres de connexion
+define('SERVEUR', 'localhost');
+define('UTILISATEUR_DB', 'root');
+define('MOT_DE_PASSE_DB', '');
+define('NOM_DB', 'zooarcadia');
 
 // Connexion à la base de données
-$connexion = new mysqli($serveur, $utilisateur_db, $mot_de_passe_db, $nom_db);
+$connexion = new mysqli(SERVEUR, UTILISATEUR_DB, MOT_DE_PASSE_DB, NOM_DB);
 
 // Vérifier la connexion
 if ($connexion->connect_error) {
-    die("La connexion a échoué : " . $connexion->connect_error);
+    // Log des erreurs dans un fichier
+    error_log("La connexion à la base de données a échoué : " . $connexion->connect_error, 0);
+    // Affichage d'un message d'erreur générique pour l'utilisateur
+    die("Erreur de connexion à la base de données.");
 }
 ?>

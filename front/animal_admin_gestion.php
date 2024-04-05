@@ -8,11 +8,6 @@ if (!$connexion) {
     exit; // Arrêter l'exécution du script en cas d'échec de la connexion
 }
 
-// Vérification de la connexion
-if ($connexion->connect_error) {
-    die("La connexion a échoué : " . $connexion->connect_error);
-}
-
 // Traitement de l'upload d'image
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
     // Vérifier si un fichier est envoyé
@@ -28,18 +23,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
             $insertImage->bind_param("ss", $imageData, $imageType);
             if ($insertImage->execute()) {
                 $imageId = $insertImage->insert_id; // Récupération de l'ID de l'image insérée
-                
+
                 // Récupération des données du formulaire
                 $prenom = $_POST['prenom'];
                 $race = $_POST['race'];
                 $habitat = $_POST['habitat'];
-                
+
                 // Vérification de l'existence de la race
                 $checkRace = $connexion->prepare("SELECT race_id FROM race WHERE label = ?");
                 $checkRace->bind_param("s", $race);
                 $checkRace->execute();
                 $resultRace = $checkRace->get_result();
-                
+
                 // Si la race n'existe pas, l'ajouter dans la table race
                 if ($resultRace->num_rows === 0) {
                     $insertRace = $connexion->prepare("INSERT INTO race (label) VALUES (?)");
@@ -53,19 +48,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
                     $raceId = $raceData['race_id'];
                 }
                 $checkRace->close();
-                
+
                 // Insertion des données de l'animal dans la table animal
                 $insertAnimal = $connexion->prepare("INSERT INTO animal (prenom, race_id, habitat_id, image_id) VALUES (?, ?, ?, ?)");
-
                 $insertAnimal->bind_param("siii", $prenom, $raceId, $habitat, $imageId);
                 if($insertAnimal->execute()) {
                     echo "<script>alert('Nouvel animal ajouté avec succès');</script>";
                 } else {
                     echo "Erreur lors de l'insertion de l'animal : " . $insertAnimal->error;
                 }
-                }
             }
-        }}
+        }
+    }
+}
 
 // Modification d'un animal
 if (isset($_POST["modifier"])) {
@@ -76,18 +71,19 @@ if (isset($_POST["modifier"])) {
     $habitat = $_POST['habitat'];
 
     // Requête SQL pour mettre à jour l'animal dans la base de données
-    $requete = "UPDATE animal SET prenom='$prenom', habitat_id='$habitat' WHERE animal_id=$animal_id";
-    // Exécution de la requête
-    if ($connexion->query($requete) === TRUE) {
+    $requete = "UPDATE animal SET prenom=?, habitat_id=? WHERE animal_id=?";
+    $stmt = $connexion->prepare($requete);
+    $stmt->bind_param("sii", $prenom, $habitat, $animal_id);
+    if ($stmt->execute()) {
         // Modifier le label de la race dans la table des races
         $updateRace = $connexion->prepare("UPDATE race SET label = ? WHERE race_id = (SELECT race_id FROM animal WHERE animal_id = ?)");
         $updateRace->bind_param("si", $race, $animal_id);
         if ($updateRace->execute()) {
             echo "<script>alert('L\\'animal a été modifié avec succès.');</script>";
-    } else {
-        echo "Erreur lors de la modification de l'animal : " . $connexion->error;
+        } else {
+            echo "Erreur lors de la modification de l'animal : " . $connexion->error;
+        }
     }
-}
 }
 
 // Suppression d'un animal
@@ -98,8 +94,10 @@ if (isset($_POST['supprimer'])) {
     $sql_delete_animal = "DELETE animal, image, race FROM animal 
                           INNER JOIN image ON animal.image_id = image.image_id 
                           LEFT JOIN race ON animal.race_id = race.race_id 
-                          WHERE animal.animal_id=$animal_id";
-    if ($connexion->query($sql_delete_animal) === TRUE) {
+                          WHERE animal.animal_id=?";
+    $stmt = $connexion->prepare($sql_delete_animal);
+    $stmt->bind_param("i", $animal_id);
+    if ($stmt->execute()) {
         echo "<script>alert('Animal supprimé avec succès');</script>"; // Affichage du message dans une fenêtre popup
     } else {
         echo "Erreur lors de la suppression de l'animal : " . $connexion->error;
@@ -128,8 +126,11 @@ $sql_animaux = "SELECT animal.animal_id, animal.prenom, race.label AS race, habi
                 LEFT JOIN race ON animal.race_id = race.race_id
                 LEFT JOIN habitat ON animal.habitat_id = habitat.habitat_id
                 LEFT JOIN image ON animal.image_id = image.image_id 
-                LIMIT $premierAnimal, $animauxParPage";
-$result_animaux = $connexion->query($sql_animaux);
+                LIMIT ?, ?";
+$stmt = $connexion->prepare($sql_animaux);
+$stmt->bind_param("ii", $premierAnimal, $animauxParPage);
+$stmt->execute();
+$result_animaux = $stmt->get_result();
 ?>
 
 <div class="container" id="background2">

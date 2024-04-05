@@ -7,15 +7,22 @@ if ($connexion->connect_error) {
 }
 
 // Récupérer les avis visibles
-$sql = "SELECT * FROM avis WHERE isVisible = 1";
-$result = $connexion->query($sql);
+$sql = "SELECT * FROM avis WHERE isVisible = ?";
+$stmt = $connexion->prepare($sql);
+$isVisible = 1;
+$stmt->bind_param("i", $isVisible);
+$stmt->execute();
+$result = $stmt->get_result();
 
 // Définir le nombre d'avis par page
 $avisParPage = 1;
 
 // Obtenir le nombre total d'avis
-$sqlTotalAvis = "SELECT COUNT(*) AS total FROM avis WHERE isVisible = 1";
-$resultTotalAvis = $connexion->query($sqlTotalAvis);
+$sqlTotalAvis = "SELECT COUNT(*) AS total FROM avis WHERE isVisible = ?";
+$stmtTotalAvis = $connexion->prepare($sqlTotalAvis);
+$stmtTotalAvis->bind_param("i", $isVisible);
+$stmtTotalAvis->execute();
+$resultTotalAvis = $stmtTotalAvis->get_result();
 $rowTotalAvis = $resultTotalAvis->fetch_assoc();
 $totalAvis = $rowTotalAvis['total'];
 
@@ -29,8 +36,11 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $indiceDepart = ($page - 1) * $avisParPage;
 
 // Récupérer les avis pour la page actuelle
-$sql = "SELECT * FROM avis WHERE isVisible = 1 LIMIT $indiceDepart, $avisParPage";
-$result = $connexion->query($sql);
+$sql = "SELECT * FROM avis WHERE isVisible = ? LIMIT ?, ?";
+$stmt = $connexion->prepare($sql);
+$stmt->bind_param("iii", $isVisible, $indiceDepart, $avisParPage);
+$stmt->execute();
+$result = $stmt->get_result();
 
 // Vérifier si la requête s'est exécutée correctement
 if (!$result) {

@@ -5,10 +5,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     // Récupérer l'ID de l'avis à supprimer
     $id = $_POST['id'];
 
-    // Préparer et exécuter la requête de suppression de l'avis
-    $sql = "DELETE FROM avis WHERE avis_id = $id";
+    // Préparer la requête de suppression de l'avis
+    $sql = "DELETE FROM avis WHERE avis_id = ?";
+    $stmt = $connexion->prepare($sql);
 
-    if ($connexion->query($sql) === TRUE) {
+    // Liaison du paramètre
+    $stmt->bind_param("i", $id);
+
+    // Exécuter la requête préparée
+    if ($stmt->execute()) {
         // Redirection vers la page d'administration après la suppression
         header("Location: ../avis_gestion.php");
         exit();
@@ -16,6 +21,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
         // En cas d'erreur, afficher un message d'erreur
         echo "Erreur lors de la suppression de l'avis : " . $connexion->error;
     }
+
+    // Fermer la requête préparée
+    $stmt->close();
 } else {
     // Si la requête n'est pas de type POST ou si l'ID n'est pas défini, rediriger vers la page d'accueil
     header("Location: ../admin.php");

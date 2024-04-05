@@ -49,12 +49,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         }
 
+        // Hacher le mot de passe
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
         // Préparer la requête d'insertion
         $sql = "INSERT INTO utilisateur (username, password, nom, prenom, role_id) VALUES (?, ?, ?, ?, ?)";
 
         // Préparer et exécuter la requête
         $stmt = $connexion->prepare($sql);
-        $stmt->bind_param("ssssi", $username, $password, $nom, $prenom, $role_id);
+        $stmt->bind_param("ssssi", $username, $passwordHash, $nom, $prenom, $role_id);
         if ($stmt->execute()) {
             // Afficher un message de succès dans une fenêtre popup JavaScript
             echo "<script>

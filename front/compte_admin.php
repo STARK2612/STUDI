@@ -29,7 +29,9 @@ $usersPerPage = 5;
 
 // Déterminer le nombre total d'utilisateurs
 $totalUsersQuery = "SELECT COUNT(*) as total FROM utilisateur";
-$totalUsersResult = $connexion->query($totalUsersQuery);
+$stmt = $connexion->prepare($totalUsersQuery);
+$stmt->execute();
+$totalUsersResult = $stmt->get_result();
 $totalUsers = $totalUsersResult->fetch_assoc()['total'];
 
 // Calculer le nombre total de pages
@@ -42,9 +44,13 @@ $current_page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($current_page - 1) * $usersPerPage;
 
 // Sélectionner les utilisateurs pour la page actuelle
-$query = "SELECT * FROM utilisateur LIMIT $offset, $usersPerPage";
-$result = $connexion->query($query);
+$query = "SELECT * FROM utilisateur LIMIT ?, ?";
+$stmt = $connexion->prepare($query);
+$stmt->bind_param("ii", $offset, $usersPerPage);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
+
 
 <div class="container" id="background2">
     <div class="row">
