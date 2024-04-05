@@ -47,10 +47,9 @@ if (!$result) {
     die("Erreur lors de l'exécution de la requête SQL : " . $connexion->error);
 }
 ?>
-<body>
     <div class="container" id="background2">
         <div class="row">
-            <div class="column left custom-form col-md-4">
+            <div class="column left custom-form col-md-3">
                 <br>
                 <h2 class='text-center'>ZOO Arcadia</h2>
                 <p class='text-justify'>
@@ -140,6 +139,5 @@ if (!$result) {
                     <span class="visually-hidden">Suivant</span>
                 </button>
             </div>  
-</body>
 
 <?php $connexion->close(); ?>

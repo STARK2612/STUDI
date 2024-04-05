@@ -48,6 +48,7 @@ $masquerBoutonConnexion = ($role == 'Administrateur' || $role == 'Vétérinaire'
         </div>
     </nav>';
     }?>
+<<<<<<< HEAD
     <div class="info-container <?php if (basename($_SERVER['SCRIPT_FILENAME']) == 'les_services.php' || basename($_SERVER['SCRIPT_FILENAME']) == 'les_habitats.php' || basename($_SERVER['SCRIPT_FILENAME']) == 'connexion.php') { echo 'transparent-bg'; } ?>">
         <?php
         // Inclusion du contenu en fonction de la page actuelle
@@ -110,4 +111,67 @@ $masquerBoutonConnexion = ($role == 'Administrateur' || $role == 'Vétérinaire'
         }
         ?>
     </div>        
+=======
+    <div class="info-container <?php echo (basename($_SERVER['SCRIPT_FILENAME']) == 'les_services.php') ? 'transparent-bg' : ''; ?>">
+    <?php
+    // Inclusion du contenu en fonction de la page actuelle
+    switch (basename($_SERVER['SCRIPT_FILENAME'])) {
+        case 'les_services.php':
+            require 'front/services_admin.php';
+            break;
+        case 'les_habitats.php':
+            require 'front/habitats_admin.php';
+            break;
+        case 'les_habitats_2.php':
+            require 'front/habitat.php';
+            break;
+        case 'les_habitats_3.php':
+            require 'front/animal.php';
+            break;
+        case 'contact.php':
+            require 'front/contact_admin.php';
+            break;
+        case 'connexion.php':
+            require 'front/connexion_admin.php';
+            break;
+        case 'admin.php':
+            require 'front/admin_space.php';
+            break;
+        case 'veterinaire.php':
+            require 'front/veterinaire_admin.php';
+            break;
+        case 'employe.php':
+            require 'front/employe_admin.php';
+            break;
+        case 'compte.php':
+            require 'front/compte_admin.php';
+            break;
+        case 'animal_gestion.php':
+            require 'front/animal_admin_gestion.php';
+            break;
+        case 'les_services_gestion.php':
+            require 'front/services_admin_gestion.php';
+            break;
+        case 'avis_gestion.php':
+            require 'front/avis_admin_gestion.php';
+            break;
+        case 'veterinaire_gestion.php':
+            require 'front/veterinaire_admin_gestion.php';
+            break;
+        case 'employe_gestion.php':
+            require 'front/employe_admin_gestion.php';
+            break;
+        case 'les_habitats_gestion.php':
+            require 'front/habitats_admin_gestion.php';
+            break;
+        case 'stat_dashboard.php':
+            require 'front/dashboard.php';
+            break;
+        default:
+            require 'front/article_accueil.php';
+            break;
+    }
+    ?>
+</div>
+>>>>>>> d0e43c7270465bf79a5bf6cc124aef34f370a0ec
 </div>
