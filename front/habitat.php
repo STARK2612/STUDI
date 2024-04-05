@@ -36,11 +36,17 @@ function getHabitatDetails($habitat_id) {
     // Affichage des détails de l'habitat
     echo '<br>';
     echo '<div class="container custom-container" id="background2">';
-    echo '<br>';
-    echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
-    // Affichage de l'image de l'habitat
-    echo "<img src='data:image/" . $habitat_row['image_type'] . ";base64," . base64_encode($habitat_row['image_data']) . "' alt='" . $habitat_row['nom'] . "' class='text-center img-fluid rounded' style='width: 600px; height: auto;'>";
-    echo "<p class='lead text-center'>Description : " . wordwrap($habitat_row['description'], 31, "<br>", true) . "</p>";
+echo '<br>';
+echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
+// Affichage de l'image de l'habitat
+echo "<img src='data:image/" . $habitat_row['image_type'] . ";base64," . base64_encode($habitat_row['image_data']) . "' alt='" . $habitat_row['nom'] . "' class='text-center img-fluid rounded' style='max-width: 100%; height: auto;'>";
+echo "<p class='lead text-center'>";
+echo "<span class='d-none d-sm-block'>Description : </span>"; // Ne pas afficher sur les smartphones
+echo "<span class='d-sm-none'>Desc. : </span>"; // Afficher uniquement sur les smartphones
+echo "<span class='d-inline d-sm-none'>" . wordwrap($habitat_row['description'], 25, "<br>", true) . "</span>"; // Texte pour smartphones
+echo "<span class='d-none d-sm-inline'>" . wordwrap($habitat_row['description'], 50, "<br>", true) . "</span>"; // Texte pour tablettes et PC
+echo "</p>";
+
 
     // Requête pour récupérer les animaux associés à cet habitat
     $animaux_query = "SELECT animal.*, race.label AS race_label FROM animal INNER JOIN race ON animal.race_id = race.race_id WHERE animal.habitat_id = $habitat_id";

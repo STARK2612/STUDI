@@ -85,42 +85,36 @@ while ($habitat_row = $habitats_result->fetch_assoc()) {
     }
 
     echo '<div class="col-md-6">';
-    echo '<div class="container custom-container mb-4" id="background2">';
-    echo '<br>';
-    echo "<div>";
-    echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
-    echo '<br>';
+echo '<div class="container custom-container mb-4" id="background2">';
+echo '<br>';
+echo "<div>";
+echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
+echo '<br>';
 
-    // Requête pour obtenir l'image de l'habitat
-    $image_id = $habitat_row['image_id'];
-    $image_query = "SELECT * FROM image WHERE image_id = $image_id";
-    $image_result = $connexion->query($image_query);
-    $image_row = $image_result->fetch_assoc();
+// Requête pour obtenir l'image de l'habitat
+$image_id = $habitat_row['image_id'];
+$image_query = "SELECT * FROM image WHERE image_id = $image_id";
+$image_result = $connexion->query($image_query);
+$image_row = $image_result->fetch_assoc();
 
-    // Affichage de l'image de l'habitat
-    if ($image_result->num_rows > 0) {
-        $image_data = $image_row['image_data'];
-        $image_type = $image_row['image_type'];
-        $max_width = 300;
-        $max_height = 200;
-        list($width, $height) = getimagesizefromstring($image_data);
-        $ratio = min($max_width / $width, $max_height / $height);
-        $new_width = $width * $ratio;
-        $new_height = $height * $ratio;
-        $image_src = 'data:image/' . $image_type . ';base64,' . base64_encode($image_data);
-        echo "<div class='text-center'>";
-        echo "<img src='" . $image_src . "' alt='" . $habitat_row['nom'] . "' width='" . $new_width . "' height='" . $new_height . "'class='rounded'>";
-        echo "</div>";
-    } else {
-        echo "<img src='images/default.jpg' alt='Image par défaut'>";
-    }
-    echo '<br>';
-    echo "<p class='text-center'><a href='les_habitats_2.php?habitat_id=" . $habitat_row['habitat_id'] . "' class='btn btn-primary'>Voir détails</a></p>";
+// Affichage de l'image de l'habitat
+if ($image_result->num_rows > 0) {
+    $image_data = $image_row['image_data'];
+    $image_type = $image_row['image_type'];
+    $image_src = 'data:image/' . $image_type . ';base64,' . base64_encode($image_data);
+    echo "<div class='text-center'>";
+    echo "<img src='" . $image_src . "' alt='" . $habitat_row['nom'] . "' class='img-fluid rounded'>";
     echo "</div>";
-    echo '<br>';
-    echo '</div>';
-    echo '<br>';
-    echo '</div>';
+} else {
+    echo "<img src='front/img/default.jpg' alt='Image par défaut' class='img-fluid'>";
+}
+echo '<br>';
+echo "<p class='text-center'><a href='les_habitats_2.php?habitat_id=" . $habitat_row['habitat_id'] . "' class='btn btn-primary'>Voir détails</a></p>";
+echo "</div>";
+echo '<br>';
+echo '</div>';
+echo '<br>';
+echo '</div>';
 
     $count++;
 }
