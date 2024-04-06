@@ -6,7 +6,7 @@
     <div class="col-md-6">
       <div class="d-flex flex-column align-items-center">
         <a href="veterinaire_gestion.php" class="btn btn-primary custom-btn">Bilan Veterinaire</a>
-        <p class="text-center">Donne accès aux rapports et aux comptes rendus vétérinaires, fournissant des informations récapitulatives sur divers aspects.</p>
+        <p class="text-center">Donne accès aux comptes rendus vétérinaires, fournissant des informations récapitulatives sur divers aspects.</p>
       </div>
     </div>
   </div>

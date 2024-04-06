@@ -1,49 +1,46 @@
-<?php
-// Vérification du rôle de l'utilisateur
-$role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
-// Détermination de la visibilité du bouton de connexion en fonction du rôle
-$masquerBoutonConnexion = ($role == 'Administrateur' || $role == 'Vétérinaire' || $role == 'Employé');
-?>
-
 <div class="container-fluid carousel-container">
     <?php
     // Affichage de la barre de navigation uniquement si l'utilisateur n'est pas connecté et n'est pas sur certaines pages spécifiques
     if (!isset($_SESSION['username']) && !in_array(basename($_SERVER['SCRIPT_FILENAME']), ['admin.php', 'veto.php', 'empl.php'])) {
     echo '
     <nav class="navbar navbar-dark bg-bark" style="width: 80px;">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">ZOOArcadia</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <div class="container-fluid">    
+            <div class="d-flex align-items-center"> <!-- Ajout de align-items-center pour centrer verticalement les éléments -->
+                <button class="navbar-toggler me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation"> <!-- Ajout de la classe me-3 pour un espacement à droite -->
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand ms-auto" href="index.php">
+                    <img src="front/img/logo.png" alt="ZOOArcadia Logo" class="logo" width="60" height="60">
+                    ZOOArcadia
+                </a>
+            </div>
             <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">ZOOArcadia</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.php">Accueil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="les_services.php">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="les_habitats.php">Habitats</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.php">Contact</a>
-                        </li>
-                        <br>
-                        <li class="nav-item">
-                            <a href="connexion.php" class="btn btn-danger connexion-button">
-                                <img src="front/img/connexion.png" alt="Connexion" class="connexion-image">
-                                <span class="connexion-text">Connexion<br>réservée au<br>personnels du <br>zoo</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">ZOOArcadia</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.php">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="les_services.php">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="les_habitats.php">Habitats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.php">Contact</a>
+                    </li>
+                    <br>
+                    <li class="nav-item">
+                        <a href="connexion.php" class="btn btn-danger connexion-button">
+                            <img src="front/img/connexion.png" alt="Connexion" class="connexion-image">
+                            <span class="connexion-text">Connexion<br>réservée au<br>personnels du <br>zoo</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>';

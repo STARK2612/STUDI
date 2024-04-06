@@ -94,7 +94,7 @@ function getAnimalDetails($animal_id) {
     $rapport_result = $rapport_stmt->get_result();
     if ($rapport_result && $rapport_result->num_rows > 0) {
         $rapport_row = $rapport_result->fetch_assoc();
-        echo "<p class='text-center'>Avis du vétérinaire :<br>" . wordwrap($rapport_row['detail'], 31, "<br>", true) . "</p>";
+        echo "<p class='text-center'>Avis du vétérinaire :<br>" . wordwrap($rapport_row['detail'], 29, "<br>", true) . "</p>";
 
     }
     echo '<br>';

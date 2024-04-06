@@ -85,15 +85,15 @@ if (!$result) {
                     <table>
                         <thead>
                             <tr>
-                                <th class="table text-justify">Commentaire</th>
-                                <th class="table text-justify">Pseudo</th>
+                                <th class="table text-justify" style="width: 150px;">Pseudo</th>
+                                <th class="table text-justify" style="width: 150px;">Commentaire</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php while ($row = $result->fetch_assoc()) : ?>
                                 <tr>
-                                    <td class="description description-cell"><?php echo $row['commentaire']; ?></td>
-                                    <td class="description description-cell2"><?php echo $row['pseudo']; ?></td>
+                                    <td class="description description-cell"><?php echo $row['pseudo']; ?></td>
+                                    <td class="description description-cell2"><?php echo $row['commentaire']; ?></td>
                                 </tr>
                             <?php endwhile; ?>
                         </tbody>

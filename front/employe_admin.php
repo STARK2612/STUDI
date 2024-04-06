@@ -22,7 +22,7 @@
     <div class="col-md-6">
       <div class="d-flex flex-column align-items-center">
         <a href="employe_gestion.php" class="btn btn-primary custom-btn">Alimentation quotidienne</a>
-        <p class="text-center">Facilite la gestion des rapports et des comptes rendus vétérinaires, fournissant des informations récapitulatives sur divers aspects.</p>
+        <p class="text-center">Facilite la gestion de l'état de santé de l'animal et son alimentation.</p>
       <br>
       </div>
     </div>

@@ -43,8 +43,8 @@ echo "<img src='data:image/" . $habitat_row['image_type'] . ";base64," . base64_
 echo "<p class='lead text-center'>";
 echo "<span class='d-none d-sm-block'>Description : </span>"; // Ne pas afficher sur les smartphones
 echo "<span class='d-sm-none'>Desc. : </span>"; // Afficher uniquement sur les smartphones
-echo "<span class='d-inline d-sm-none'>" . wordwrap($habitat_row['description'], 25, "<br>", true) . "</span>"; // Texte pour smartphones
-echo "<span class='d-none d-sm-inline'>" . wordwrap($habitat_row['description'], 50, "<br>", true) . "</span>"; // Texte pour tablettes et PC
+echo "<span class='d-inline d-sm-none'>" . wordwrap($habitat_row['description'], 22, "<br>", true) . "</span>"; // Texte pour smartphones
+echo "<span class='d-none d-sm-inline'>" . wordwrap($habitat_row['description'], 40, "<br>", true) . "</span>"; // Texte pour tablettes et PC
 echo "</p>";
 
 

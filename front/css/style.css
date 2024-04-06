@@ -30,12 +30,12 @@ body.compte {
     }
 
   .description-cell {
-    max-width: 50px; /* Définir la largeur maximale selon vos besoins */
+    max-width: 150px; /* Définir la largeur maximale selon vos besoins */
     word-wrap: break-word; /* Activer le retour à la ligne automatique */
   }
 
   .description-cell2 {
-    max-width: 250px; /* Définir la largeur maximale selon vos besoins */
+    max-width: 150px; /* Définir la largeur maximale selon vos besoins */
     word-wrap: break-word; /* Activer le retour à la ligne automatique */
   }
   

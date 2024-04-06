@@ -34,28 +34,28 @@
     <div class="col-md-6">
       <div class="d-flex flex-column align-items-center">
         <a href="animal_gestion.php" class="btn btn-primary custom-btn">Gestion des animaux</a>
-        <p class="text-center">Gère les données concernant les animaux, comme leur enregistrement, leur suivi médical, etc.</p>
+        <p class="text-center">Gère les animaux, création, suppression et modification.</p>
       <br>
       </div>
     </div>
     <div class="col-md-6">
       <div class="d-flex flex-column align-items-center">
         <a href="veterinaire_gestion.php" class="btn btn-primary custom-btn">Bilan Veterinaire</a>
-        <p class="text-center">Donne accès aux rapports et aux comptes rendus vétérinaires, fournissant des informations récapitulatives sur divers aspects.</p>
+        <p class="text-center">Donne accès aux comptes rendus vétérinaires, fournissant des informations récapitulatives sur divers aspects.</p>
       <br>
       </div>
     </div>
     <div class="col-md-6">
       <div class="d-flex flex-column align-items-center">
         <a href="employe_gestion.php" class="btn btn-primary custom-btn">Alimentation quotidienne</a>
-        <p class="text-center">Facilite la gestion des rapports et des comptes rendus vétérinaires, fournissant des informations récapitulatives sur divers aspects.</p>
+        <p class="text-center">Facilite la gestion de l'état de santé de l'animal et son alimentation.</p>
       <br>
       </div>
     </div>
     <div class="col-md-6">
       <div class="d-flex flex-column align-items-center">
       <a href="stat_dashboard.php" class="btn btn-primary custom-btn">Nombre de consultations</a>
-        <p class="text-center">Affiche le nombre de fois où certaines informations ont été consultées dans le système, offrant un aperçu de l'activité et de l'utilisation.</p>
+        <p class="text-center">Affiche le nombre de fois où les visiteurs cliques sur les animaux.</p>
         <br>
       </div>
     </div>
