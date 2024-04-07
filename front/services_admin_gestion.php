@@ -15,58 +15,75 @@ if ($connexion->connect_error) {
 
 // Traitement pour l'ajout d'un nouveau service
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
-    $nom = $_POST['nom'];
-    $description = $_POST['description'];
+    // Assurez-vous de nettoyer et de valider les données d'entrée
+    $nom = htmlspecialchars($_POST['nom']);
+    $description = htmlspecialchars($_POST['description']);
 
     // Vérifier si un fichier image est uploadé et s'il n'y a pas d'erreur
     if(isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        // Effectuez les vérifications sur le fichier image ici
         $imageData = file_get_contents($_FILES['image']['tmp_name']);
         $imageType = $_FILES['image']['type'];
 
-        // Types de fichiers image autorisés
-        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-        if(in_array($imageType, $allowedTypes)) {
-            // Préparer et exécuter la requête d'insertion de l'image
-            $insertImage = $connexion->prepare("INSERT INTO image (image_data, image_type) VALUES (?, ?)");
-            $insertImage->bind_param("ss", $imageData, $imageType);
-            if ($insertImage->execute()) {
-                $imageId = $insertImage->insert_id;
+        // Préparer et exécuter la requête d'insertion de l'image dans la table "image"
+        $insertImage = $connexion->prepare("INSERT INTO image (image_data, image_type) VALUES (?, ?)");
+        $insertImage->bind_param("ss", $imageData, $imageType);
+        if ($insertImage->execute()) {
+            $imageId = $insertImage->insert_id; // Récupérer l'ID de l'image insérée
 
-                // Préparer et exécuter la requête d'insertion du service
-                $insertService = $connexion->prepare("INSERT INTO service (nom, description, image_id) VALUES (?, ?, ?)");
-                $insertService->bind_param("ssi", $nom, $description, $imageId);
-                if($insertService->execute()) {
-                    $_SESSION['success_message'] = "Nouveau service ajouté avec succès";
-                } else {
-                    echo "Erreur lors de l'insertion du service : " . $insertService->error;
-                }
-                $insertService->close();
+            // Préparer et exécuter la requête d'insertion du service avec l'ID de l'image associée
+            $insertService = $connexion->prepare("INSERT INTO service (nom, description, image_id) VALUES (?, ?, ?)");
+            $insertService->bind_param("ssi", $nom, $description, $imageId);
+            if($insertService->execute()) {
+                $_SESSION['success_message'] = "Nouveau service ajouté avec succès";
             } else {
-                echo "Erreur lors de l'insertion de l'image : " . $insertImage->error;
+                $_SESSION['error_message'] = "Erreur lors de l'insertion du service";
             }
-            $insertImage->close();
+            $insertService->close();
         } else {
-            echo "Le fichier doit être au format JPEG, JPG ou PNG.";
+            $_SESSION['error_message'] = "Erreur lors de l'insertion de l'image";
         }
+        $insertImage->close();
+
     } else {
-        echo "Erreur lors de l'upload du fichier.";
+        $_SESSION['error_message'] = "Erreur lors de l'upload du fichier";
     }
+    // Rediriger l'utilisateur après le traitement du formulaire
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
+
 
 // Traitement pour la modification d'un service existant
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier'])) {
-    $service_id = $_POST['service_id'];
-    $nom = $_POST['nom'];
-    $description = $_POST['description'];
+    // Nettoyer et valider les données d'entrée
+    $service_id = htmlspecialchars($_POST['service_id']);
+    $nom = htmlspecialchars($_POST['nom']);
+    $description = htmlspecialchars($_POST['description']);
+
+    // Si un nouveau fichier d'image est téléchargé
+    if (isset($_FILES['new_image']) && $_FILES['new_image']['error'] === UPLOAD_ERR_OK) {
+        $new_image_data = file_get_contents($_FILES['new_image']['tmp_name']);
+        $new_image_type = $_FILES['new_image']['type'];
+        
+        // Mettre à jour les données de l'image
+        $updateImage = $connexion->prepare("UPDATE image SET image_data=?, image_type=? WHERE image_id=(SELECT image_id FROM service WHERE service_id=?)");
+        $updateImage->bind_param("ssi", $new_image_data, $new_image_type, $service_id);
+        if (!$updateImage->execute()) {
+            echo "Erreur lors de la mise à jour de l'image : " . $updateImage->error;
+        }
+    }
 
     // Requête de mise à jour du service
-    $sql = "UPDATE service SET nom='$nom', description='$description' WHERE service_id=$service_id";
-
-    if ($connexion->query($sql) === TRUE) {
-        echo "Service mis à jour avec succès";
+    $sql = "UPDATE service SET nom=?, description=? WHERE service_id=?";
+    $updateService = $connexion->prepare($sql);
+    $updateService->bind_param("ssi", $nom, $description, $service_id);
+    if ($updateService->execute()) {
+        $_SESSION['success_message'] = "Service mis à jour avec succès";
     } else {
-        echo "Erreur : " . $sql . "<br>" . $connexion->error;
+        echo "Erreur lors de la mise à jour du service : " . $updateService->error;
     }
+    $updateService->close();
 }
 
 // Traitement pour la suppression d'un service
@@ -107,10 +124,10 @@ $sql = "SELECT * FROM service LIMIT $premierService, $servicesParPage";
 $result = $connexion->query($sql);
 ?>
 
-<!-- Début du contenu HTML -->
+
+
 <div class="container" id="background2">
     <div class="row">
-        <!-- Formulaire d'ajout d'un nouveau service -->
         <div class="col-md-4">
             <br>
             <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" onsubmit="return checkFileSize()">
@@ -132,7 +149,6 @@ $result = $connexion->query($sql);
                 <br>
                 <button type="submit" class="btn btn-primary" name="ajouter">Ajouter</button>
                 <br><br>
-                <!-- Bouton de retour en fonction du rôle de l'utilisateur -->
                 <a href="<?php
                     if ($_SESSION['role'] == 'Administrateur') {
                         echo "admin.php";
@@ -145,7 +161,6 @@ $result = $connexion->query($sql);
             </form>
             <br>
         </div>
-        <!-- Affichage des services avec possibilité de modification et suppression -->
         <div class="col-md-8">
             <br>
             <h3>Modifier/Supprimer un Service</h3>
@@ -156,17 +171,25 @@ $result = $connexion->query($sql);
                             <th class='hidden'>ID du Service</th>
                             <th>Nom</th>
                             <th>Description</th>
+                            <th>Image</th> <!-- Nouvelle colonne pour afficher l'image -->
                             <th>Modifier/Supprimer</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        // Affichage des services
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td class='service_id hidden'>" . $row['service_id'] . "</td>";
                             echo "<td class='nom'>" . $row['nom'] . "</td>";
                             echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
+                            
+                            // Vérifier si les clés "image_type" et "image_data" sont définies dans $row
+                            if (isset($row['image_type']) && isset($row['image_data'])) {
+                                echo "<td><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='100'></td>";
+                            } else {
+                                echo "<td></td>"; // Afficher une cellule vide si les données de l'image ne sont pas disponibles
+                            }
+                            
                             echo "<td>";
                             echo "<div class='btn-group' role='group'>";
                             echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
@@ -179,12 +202,12 @@ $result = $connexion->query($sql);
                             echo "</td>";
                             echo "</tr>";
                         }
+                        
                         ?>
                     </tbody>
                 </table>
             </div>
             <?php
-            // Pagination
             $sql = "SELECT COUNT(*) AS totalServices FROM service";
             $result = $connexion->query($sql);
             $row = $result->fetch_assoc();
@@ -199,10 +222,10 @@ $result = $connexion->query($sql);
             echo "</ul>";
             ?>
         </div>
+
     </div>
 </div>
 
-<!-- Modèle de fenêtre modale pour la modification de service -->
 <div id="myModal" class="modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -211,7 +234,7 @@ $result = $connexion->query($sql);
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form method="post" action="back/modifier_service.php">
+                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="service_id">ID du Service:</label>
                         <input type="text" class="form-control" id="service_id2" name="service_id" readonly>
@@ -224,20 +247,21 @@ $result = $connexion->query($sql);
                         <label for="description">Description:</label>
                         <textarea class="form-control" id="description2" name="description" rows="15" required></textarea>
                     </div>
+                    <div class="form-group">
+                        <label for="image">Nouvelle Image:</label>
+                        <input type="file" class="form-control-file" id="new_image" name="new_image" accept="image/jpeg, image/jpg, image/png">
+                    </div>
                     <br>
-                    <button type="submit" class="btn btn-primary" onclick="showSuccessMessage()">Modifier</button>
+                    <button type="submit" class="btn btn-primary" name="modifier">Modifier</button>
                 </form>
             </div>
-            <!-- Affichage du message de succès après la modification -->
             <div id="successMessage" class="modal-footer" style="display: none;">
             </div>
         </div>
     </div>
 </div>
 
-<!-- Script JavaScript pour la gestion des événements -->
 <script>
-    // Gestion des boutons de modification
     var editButtons = document.querySelectorAll('.edit-button');
     editButtons.forEach(function(button) {
         button.addEventListener('click', function(event) {
@@ -254,14 +278,12 @@ $result = $connexion->query($sql);
         });
     });
 
-    // Gestion du bouton de fermeture de la fenêtre modale
     var closeBtn = document.querySelector('.close');
     closeBtn.addEventListener('click', function() {
         var modal = document.getElementById('myModal');
         modal.style.display = "none";
     });
 
-    // Fermer la fenêtre modale lors du clic en dehors de celle-ci
     window.onclick = function(event) {
         var modal = document.getElementById('myModal');
         if (event.target == modal) {
@@ -269,13 +291,11 @@ $result = $connexion->query($sql);
         }
     }
 
-    // Fonction de confirmation de suppression d'un service
     function confirmDelete(service_id) {
         return confirm("Êtes-vous sûr de vouloir supprimer ce service ?");
     }
 </script>
 
-<!-- Script JavaScript pour afficher le message de succès après la modification -->
 <script>
     <?php if(isset($_SESSION['success_message'])): ?>
         alert("<?php echo $_SESSION['success_message']; ?>");
@@ -283,7 +303,6 @@ $result = $connexion->query($sql);
     <?php endif; ?>
 </script>
 
-<!-- Script JavaScript pour vérifier la taille du fichier uploadé -->
 <script>
     function checkFileSize() {
         var input = document.getElementById('image');
@@ -303,7 +322,6 @@ $result = $connexion->query($sql);
     }
 </script>
 
-<!-- Script JavaScript pour afficher le message de succès après la modification d'un service -->
 <script>
     function showSuccessMessage() {
         alert("Service mis à jour avec succès");
