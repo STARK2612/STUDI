@@ -27,7 +27,7 @@ function getHabitatDetails($habitat_id) {
     global $connexion;
     
     // Requête pour récupérer les détails de l'habitat ainsi que l'image associée
-    $habitat_query = "SELECT habitat.*, image.image_data, image.image_type FROM habitat INNER JOIN image ON habitat.image_id = image.image_id WHERE habitat.habitat_id = $habitat_id";
+    $habitat_query = "SELECT habitat.*, image.image_data, image.image_type FROM habitat LEFT JOIN image ON habitat.image_id = image.image_id WHERE habitat.habitat_id = $habitat_id";
     // Exécution de la requête
     $habitat_result = $connexion->query($habitat_query);
     // Récupération de la première ligne de résultat
@@ -36,16 +36,20 @@ function getHabitatDetails($habitat_id) {
     // Affichage des détails de l'habitat
     echo '<br>';
     echo '<div class="container custom-container" id="background2">';
-echo '<br>';
-echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
-// Affichage de l'image de l'habitat
-echo "<img src='data:image/" . $habitat_row['image_type'] . ";base64," . base64_encode($habitat_row['image_data']) . "' alt='" . $habitat_row['nom'] . "' class='text-center img-fluid rounded' style='max-width: 100%; height: auto;'>";
-echo "<p class='lead text-center'>";
-echo "<span class='d-none d-sm-block'>Description : </span>"; // Ne pas afficher sur les smartphones
-echo "<span class='d-sm-none'>Desc. : </span>"; // Afficher uniquement sur les smartphones
-echo "<span class='d-inline d-sm-none'>" . wordwrap($habitat_row['description'], 22, "<br>", true) . "</span>"; // Texte pour smartphones
-echo "<span class='d-none d-sm-inline'>" . wordwrap($habitat_row['description'], 40, "<br>", true) . "</span>"; // Texte pour tablettes et PC
-echo "</p>";
+    echo '<br>';
+    echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
+    // Affichage de l'image de l'habitat
+    if (!empty($habitat_row['image_data'])) {
+        echo "<img src='data:image/" . $habitat_row['image_type'] . ";base64," . base64_encode($habitat_row['image_data']) . "' alt='" . $habitat_row['nom'] . "' class='text-center img-fluid rounded' style='max-width: 100%; height: auto;'>";
+    } else {
+        echo "<img src='front/img/default.jpg' alt='Image par défaut' class='text-center img-fluid rounded' style='max-width: 100%; height: auto;'>";
+    }
+    echo "<p class='lead text-center'>";
+    echo "<span class='d-none d-sm-block'>Description : </span>"; // Ne pas afficher sur les smartphones
+    echo "<span class='d-sm-none'>Desc. : </span>"; // Afficher uniquement sur les smartphones
+    echo "<span class='d-inline d-sm-none'>" . wordwrap($habitat_row['description'], 22, "<br>", true) . "</span>"; // Texte pour smartphones
+    echo "<span class='d-none d-sm-inline'>" . wordwrap($habitat_row['description'], 40, "<br>", true) . "</span>"; // Texte pour tablettes et PC
+    echo "</p>";
 
 
     // Requête pour récupérer les animaux associés à cet habitat

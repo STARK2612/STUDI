@@ -82,11 +82,11 @@ if (!$result) {
                     <br>
                     <h3 class='text-justify'>Avis des visiteurs</h3>
                     <div class="table-responsive">
-                    <table>
+                    <table id="paginationTable">
                         <thead>
                             <tr>
                                 <th class="table text-justify" style="width: 150px;">Pseudo</th>
-                                <th class="table text-justify" style="width: 150px;">Commentaire</th>
+                                <th class="table text-justify" style="width: 450px;">Commentaire</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,7 +101,7 @@ if (!$result) {
                     </div>
                     <br>
                 <?php endif; ?>
-                <nav aria-label="Page navigation example">
+                <nav aria-label="Page navigation" id="paginationTable">
                     <ul class="pagination">
                         <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
                             <li class="page-item <?php if ($i == $page) echo 'active'; ?>"><a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
@@ -141,3 +141,24 @@ if (!$result) {
             </div>  
 
 <?php $connexion->close(); ?>
+
+<script>
+    // Fonction pour ajuster la position de la fenêtre d'affichage pour conserver le tableau de pagination centré
+    function adjustScrollPosition() {
+        // Calculer la position verticale du milieu du tableau de pagination
+        var paginationTable = document.getElementById("paginationTable");
+        var paginationTableTop = paginationTable.getBoundingClientRect().top;
+        var paginationTableHeight = paginationTable.offsetHeight;
+        var middlePosition = paginationTableTop + (paginationTableHeight / 2);
+
+        // Ajuster la position de la fenêtre d'affichage pour centrer le tableau de pagination
+        window.scrollTo(0, middlePosition - (window.innerHeight / 2));
+    }
+
+    // Attacher un gestionnaire d'événement à chaque lien de pagination pour ajuster la position de la fenêtre
+    var pageLinks = document.querySelectorAll('.pagination a');
+    pageLinks.forEach(function(link) {
+        link.addEventListener('click', adjustScrollPosition);
+    });
+</script>
+

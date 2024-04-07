@@ -23,42 +23,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
             $insertImage->bind_param("ss", $imageData, $imageType);
             if ($insertImage->execute()) {
                 $imageId = $insertImage->insert_id; // Récupération de l'ID de l'image insérée
-
-                // Récupération des données du formulaire
-                $prenom = $_POST['prenom'];
-                $race = $_POST['race'];
-                $habitat = $_POST['habitat'];
-
-                // Vérification de l'existence de la race
-                $checkRace = $connexion->prepare("SELECT race_id FROM race WHERE label = ?");
-                $checkRace->bind_param("s", $race);
-                $checkRace->execute();
-                $resultRace = $checkRace->get_result();
-
-                // Si la race n'existe pas, l'ajouter dans la table race
-                if ($resultRace->num_rows === 0) {
-                    $insertRace = $connexion->prepare("INSERT INTO race (label) VALUES (?)");
-                    $insertRace->bind_param("s", $race);
-                    $insertRace->execute();
-                    $raceId = $insertRace->insert_id;
-                    $insertRace->close();
-                } else {
-                    // Récupérer l'ID de la race existante
-                    $raceData = $resultRace->fetch_assoc();
-                    $raceId = $raceData['race_id'];
-                }
-                $checkRace->close();
-
-                // Insertion des données de l'animal dans la table animal
-                $insertAnimal = $connexion->prepare("INSERT INTO animal (prenom, race_id, habitat_id, image_id) VALUES (?, ?, ?, ?)");
-                $insertAnimal->bind_param("siii", $prenom, $raceId, $habitat, $imageId);
-                if($insertAnimal->execute()) {
-                    echo "<script>alert('Nouvel animal ajouté avec succès');</script>";
-                } else {
-                    echo "Erreur lors de l'insertion de l'animal : " . $insertAnimal->error;
-                }
+            } else {
+                echo "Erreur lors de l'insertion de l'image : " . $insertImage->error;
+                exit;
             }
+        } else {
+            echo "Type de fichier non supporté.";
+            exit;
         }
+    }
+
+    // Récupération des données du formulaire
+    $prenom = $_POST['prenom'];
+    $race = $_POST['race'];
+    $habitat = $_POST['habitat'];
+
+    // Vérification de l'existence de la race
+    $checkRace = $connexion->prepare("SELECT race_id FROM race WHERE label = ?");
+    $checkRace->bind_param("s", $race);
+    $checkRace->execute();
+    $resultRace = $checkRace->get_result();
+
+    // Si la race n'existe pas, l'ajouter dans la table race
+    if ($resultRace->num_rows === 0) {
+        $insertRace = $connexion->prepare("INSERT INTO race (label) VALUES (?)");
+        $insertRace->bind_param("s", $race);
+        $insertRace->execute();
+        $raceId = $insertRace->insert_id;
+        $insertRace->close();
+    } else {
+        // Récupérer l'ID de la race existante
+        $raceData = $resultRace->fetch_assoc();
+        $raceId = $raceData['race_id'];
+    }
+    $checkRace->close();
+
+    // Insertion des données de l'animal dans la table animal
+    $insertAnimal = $connexion->prepare("INSERT INTO animal (prenom, race_id, habitat_id, image_id) VALUES (?, ?, ?, ?)");
+    $insertAnimal->bind_param("siii", $prenom, $raceId, $habitat, $imageId);
+    if($insertAnimal->execute()) {
+        echo "<script>alert('Nouvel animal ajouté avec succès');</script>";
+    } else {
+        echo "Erreur lors de l'insertion de l'animal : " . $insertAnimal->error;
     }
 }
 
@@ -70,10 +76,33 @@ if (isset($_POST["modifier"])) {
     $race = $_POST['race'];
     $habitat = $_POST['habitat'];
 
+    // Vérifier si un fichier est envoyé
+    if(isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $imageData = file_get_contents($_FILES['image']['tmp_name']); // Lecture du fichier
+        $imageType = $_FILES['image']['type']; // Type de fichier
+
+        // Vérification du type de fichier
+        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if(in_array($imageType, $allowedTypes)) {
+            // Insertion des données de l'image dans la table image
+            $insertImage = $connexion->prepare("INSERT INTO image (image_data, image_type) VALUES (?, ?)");
+            $insertImage->bind_param("ss", $imageData, $imageType);
+            if ($insertImage->execute()) {
+                $imageId = $insertImage->insert_id; // Récupération de l'ID de l'image insérée
+            } else {
+                echo "Erreur lors de l'insertion de l'image : " . $insertImage->error;
+                exit;
+            }
+        } else {
+            echo "Type de fichier non supporté.";
+            exit;
+        }
+    }
+
     // Requête SQL pour mettre à jour l'animal dans la base de données
-    $requete = "UPDATE animal SET prenom=?, habitat_id=? WHERE animal_id=?";
+    $requete = "UPDATE animal SET prenom=?, habitat_id=?, image_id=? WHERE animal_id=?";
     $stmt = $connexion->prepare($requete);
-    $stmt->bind_param("sii", $prenom, $habitat, $animal_id);
+    $stmt->bind_param("siii", $prenom, $habitat, $imageId, $animal_id);
     if ($stmt->execute()) {
         // Modifier le label de la race dans la table des races
         $updateRace = $connexion->prepare("UPDATE race SET label = ? WHERE race_id = (SELECT race_id FROM animal WHERE animal_id = ?)");
@@ -252,7 +281,7 @@ $result_animaux = $stmt->get_result();
             </div>
             <div class="modal-body">
                 <!-- Formulaire de modification d'animal -->
-                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="animal_id">ID de l'Animal:</label>
                         <input type="text" class="form-control" id="animal_id2" name="animal_id" readonly>
@@ -277,6 +306,10 @@ $result_animaux = $stmt->get_result();
                             }
                             ?>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="image2">Photo de l'Animal:</label>
+                        <input type="file" class="form-control-file" id="image2" name="image" accept="image/jpeg, image/jpg, image/png">
                     </div>
                     <br>
                     <button type="submit" class="btn btn-primary" name="modifier">Modifier</button>
@@ -329,20 +362,25 @@ $result_animaux = $stmt->get_result();
         if (event.target == modal) {
             modal.style.display = "none";
         }
-    }
+    };
 
+    // Fonction pour confirmer la suppression d'un animal
     function confirmDelete(animal_id) {
         return confirm("Êtes-vous sûr de vouloir supprimer cet animal ?");
     }
 
-    // Vérifier la taille du fichier avant de l'uploader
+    // Vérifier la taille du fichier avant l'envoi
     function checkFileSize() {
-        var input = document.getElementById('image');
-        if (input.files[0].size > 1024 * 1024) {
-            document.getElementById('fileSizeError').innerText = "La taille du fichier ne doit pas dépasser 1 Mo.";
-            return false;
-        } else {
-            return true;
-        }
+    var input, file;
+    var maxSize = 10 * 1024 * 1024; // 10 Mo
+    input = document.getElementById('image');
+    file = input.files[0];
+    if (file.size > maxSize) {
+        // Afficher un message à l'utilisateur pour lui demander de choisir un fichier plus petit
+        alert('La taille du fichier ne doit pas dépasser 10 Mo. Veuillez choisir un fichier plus petit.');
+        return false; // Annuler l'envoi du formulaire
     }
+    return true; // Autoriser l'envoi du formulaire si la taille du fichier est valide
+}
+
 </script>

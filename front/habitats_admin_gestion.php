@@ -60,14 +60,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier'])) {
     $description = $_POST['description'];
 
     // Requête SQL pour la mise à jour de l'habitat
-    $sql = "UPDATE habitat SET nom='$nom', description='$description' WHERE habitat_id=$habitat_id";
+    $sql = "UPDATE habitat SET nom=?, description=?";
+    $bindParams = array("ss", $nom, $description);
+
+    if ($_FILES['nouvelle_image']['error'] === UPLOAD_ERR_OK) {
+        // Traitement de l'image
+        $imageData = file_get_contents($_FILES['nouvelle_image']['tmp_name']);
+        $imageType = $_FILES['nouvelle_image']['type'];
+
+        // Types de fichiers autorisés
+        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!in_array($imageType, $allowedTypes)) {
+            echo "Le fichier doit être au format JPEG, JPG ou PNG.";
+            exit;
+        }
+
+        // Préparation de la requête pour l'insertion de l'image
+        $sqlInsertImage = "INSERT INTO image (image_data, image_type) VALUES (?, ?)";
+        $insertImage = $connexion->prepare($sqlInsertImage);
+        $insertImage->bind_param("ss", $imageData, $imageType);
+        if (!$insertImage->execute()) {
+            echo "Erreur lors de l'insertion de l'image : " . $insertImage->error;
+            exit;
+        }
+
+        // Récupération de l'ID de l'image insérée
+        $imageId = $insertImage->insert_id;
+
+        // Ajout de l'ID de l'image dans la requête de mise à jour
+        $sql .= ", image_id=?";
+        $bindParams[0] .= "i";
+        $bindParams[] = $imageId;
+    }
+
+    $sql .= " WHERE habitat_id=?";
+    $bindParams[0] .= "i";
+    $bindParams[] = $habitat_id;
+
+    // Préparation de la requête
+    $updateStatement = $connexion->prepare($sql);
+
+    if (!$updateStatement) {
+        echo "Erreur de préparation de la requête : " . $connexion->error;
+        exit;
+    }
+
+    // Liaison des paramètres
+    if (!$updateStatement->bind_param(...$bindParams)) {
+        echo "Erreur de liaison des paramètres : " . $updateStatement->error;
+        exit;
+    }
 
     // Exécution de la requête
-    if ($connexion->query($sql) === TRUE) {
-        echo "";
+    if ($updateStatement->execute()) {
+        echo "Habitat mis à jour avec succès";
     } else {
-        echo "Erreur : " . $sql . "<br>" . $connexion->error;
+        echo "Erreur lors de l'exécution de la requête : " . $updateStatement->error;
     }
+
+    // Fermeture de la déclaration
+    $updateStatement->close();
 }
 
 // Traitement de la suppression d'un habitat
@@ -157,39 +209,51 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
             <br>
             <h3>Modifier/Supprimer un Habitat</h3>
             <div class="table-responsive overflow-auto">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class='hidden'>ID de l'Habitat</th>
-                            <th>Nom de l'Habitat</th>
-                            <th>Description de l'Habitat</th>
-                            <th>Commentaire de l'Habitat</th>
-                            <th>Modifier/Supprimer</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td class='habitat_id hidden'>" . $row['habitat_id'] . "</td>";
-                            echo "<td class='nom'>" . $row['nom'] . "</td>";
-                            echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
-                            echo "<td class='commentaire description-cell'>" . (isset($row['commentaire_habitat']) ? $row['commentaire_habitat'] : "") . "</td>";
-                            echo "<td>";
-                            echo "<div class='btn-group' role='group'>";
-                            echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
-                            echo "</div>";
-                            echo "<div style='margin-top: 5px;'></div>";
-                            echo "<form class='delete-form' method='post' action='" . $_SERVER['PHP_SELF'] . "' onsubmit='return confirmDelete(" . $row['habitat_id'] . ")'>";
-                            echo "<input type='hidden' name='habitat_id' value='" . $row['habitat_id'] . "'>";
-                            echo "<button type='submit' class='btn btn-danger btn-sm delete-button' name='supprimer' id='delete-button-" . $row['habitat_id'] . "'>Supprimer</button>";
-                            echo "</form>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class='hidden'>ID de l'Habitat</th>
+                        <th>Nom de l'Habitat</th>
+                        <th>Description de l'Habitat</th>
+                        <th>Commentaire de l'Habitat</th>
+                        <th>Image</th>
+                        <th>Modifier/Supprimer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td class='habitat_id hidden'>" . $row['habitat_id'] . "</td>";
+                        echo "<td class='nom'>" . $row['nom'] . "</td>";
+                        echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
+                        echo "<td class='commentaire description-cell'>" . (isset($row['commentaire_habitat']) ? $row['commentaire_habitat'] : "") . "</td>";
+                        echo "<td>";
+                    if ($row['image_id']) {
+                        // Chemin d'accès direct à l'image dans le répertoire images
+                        $imagePath = "front/img/" . $row['image_id'] . ".jpg"; // Modifiez l'extension en fonction du type de vos images
+                        echo "<img src='$imagePath' alt='Image'>";
+                    } else {
+                        // Afficher l'image par défaut si aucune image n'est associée
+                        echo "<img src='front/img/defaultsmall.jpg' alt='Image par défaut'>";
+                    }
+                        echo "</td>";
+                        echo "</td>";
+                        echo "<td>";
+                        echo "<div class='btn-group' role='group'>";
+                        echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
+                        echo "</div>";
+                        echo "<div style='margin-top: 5px;'></div>";
+                        echo "<form class='delete-form' method='post' action='" . $_SERVER['PHP_SELF'] . "' onsubmit='return confirmDelete(" . $row['habitat_id'] . ")'>";
+                        echo "<input type='hidden' name='habitat_id' value='" . $row['habitat_id'] . "'>";
+                        echo "<button type='submit' class='btn btn-danger btn-sm delete-button' name='supprimer' id='delete-button-" . $row['habitat_id'] . "'>Supprimer</button>";
+                        echo "</form>";
+                        echo "</td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
             </div>
             <!-- Pagination -->
             <?php
@@ -212,7 +276,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
                     <input type="hidden" id="habitat_id" name="habitat_id">
                     <div class="form-group">
                         <label for="habitat_id">ID de l'habitat:</label>
@@ -225,6 +289,10 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                     <div class="form-group">
                         <label for="description2">Description de l'Habitat:</label>
                         <textarea type="text" class="form-control" id="description2" name="description" rows="17" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="nouvelle_image">Nouvelle Image:</label>
+                        <input type="file" class="form-control-file" id="nouvelle_image" name="nouvelle_image" accept="image/jpeg, image/jpg, image/png">
                     </div>
                     <br>
                     <button type="submit" class="btn btn-primary" name="modifier" onclick="showSuccessMessage()">Modifier</button>

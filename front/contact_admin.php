@@ -3,9 +3,11 @@
 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 ?>
 
-<div class="container">  
+<div class="container" id="background2">  
     <div class="row mt-5">
         <div class="col-md-6 mx-auto">
+        <br>
+            <h2 class='text-center'>Contact</h2>
             <form action="send_email.php" method="post" enctype="text/plain">
                 <!-- Ajout du champ CSRF -->
                 <input type="hidden" name="csrf_token" value="<?php echo uniqid(); ?>">

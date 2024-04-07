@@ -1,5 +1,5 @@
 body {
-    background-color: #5cc251; /* Couleur de fond de la page par défaut */
+    background-color:  rgb(55, 110, 241); /* Couleur de fond de la page par défaut */
 }
 
 .commentaire {
@@ -98,15 +98,15 @@ body.compte {
 }
 
 .modal-content {
-    background-color: rgb(121, 161, 255);
+    background-color: rgb(55, 110, 241);
 }
 
 .card{
-  background-color: rgb(121, 161, 255);
+  background-color: rgb(26, 129, 20);
 }
 
 #background2{
-  background-color: rgb(255, 159, 95);
+  background-color: rgb(26, 129, 20);
   border-radius: 20px;
 }
 

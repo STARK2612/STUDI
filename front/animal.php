@@ -1,3 +1,4 @@
+<!-- Affichage du titre de la page -->
 <h1 class='text-center'>Détails de l'animal</h1>
 <br>
 <?php
@@ -54,21 +55,35 @@ function getAnimalDetails($animal_id) {
     $image_stmt->bind_param("i", $animal_row['image_id']);
     $image_stmt->execute();
     $image_result = $image_stmt->get_result();
-    $image_row = $image_result->fetch_assoc();
 
     // Vérifier si des données d'image ont été récupérées
     if ($image_result && $image_result->num_rows > 0) {
-        // Afficher l'image
+        // Afficher l'image seulement si sa taille est inférieure à 1 Mo
+        $image_row = $image_result->fetch_assoc();
         $image_data = $image_row['image_data'];
         $image_type = $image_row['image_type'];
-        $base64_image = 'data:image/' . $image_type . ';base64,' . base64_encode($image_data);
+
+        // Vérifier la taille de l'image en octets
+        $image_size = strlen($image_data);
+
+        if ($image_size <= 1048576) { // 1 Mo en octets (1024 * 1024)
+            $base64_image = 'data:image/' . $image_type . ';base64,' . base64_encode($image_data);
+        } else {
+            // Afficher un message d'erreur ou une boîte de dialogue
+            echo "<script>alert('La taille de l'image dépasse 1 Mo. Veuillez sélectionner une image plus petite.');</script>";
+            // Vous pouvez également afficher une image par défaut ici si nécessaire
+            $base64_image = 'front/img/default.jpg';
+        }
+    } else {
+        // Afficher l'image par défaut si aucune donnée n'a été récupérée
+        $base64_image = 'front/img/default.jpg';
     }
 
     // Afficher les détails de l'animal
     echo '<div class="container custom-container" id="background2">';
     echo '<br>';
     echo '<a href="les_habitats.php" class="btn btn-secondary btn-block">Retour</a>';
-    echo '<img src="' . $base64_image . '" alt="Image de l\'animal" width="100" height="100" class="text-center rounded">';
+    echo '<img src="' . $base64_image . '" alt="Image de l\'animal" width="150" height="100" class="text-center rounded">';
     echo "<h2 class='text-center'>" . $animal_row['prenom'] . "</h2>";
     if (!empty($race_row['label'])) {
         echo "<p class='text-center'>Race : " . $race_row['label'] . "</p>";
@@ -95,7 +110,6 @@ function getAnimalDetails($animal_id) {
     if ($rapport_result && $rapport_result->num_rows > 0) {
         $rapport_row = $rapport_result->fetch_assoc();
         echo "<p class='text-center'>Avis du vétérinaire :<br>" . wordwrap($rapport_row['detail'], 29, "<br>", true) . "</p>";
-
     }
     echo '<br>';
     echo '</div>';
