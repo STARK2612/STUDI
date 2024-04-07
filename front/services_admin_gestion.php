@@ -124,8 +124,6 @@ $sql = "SELECT * FROM service LIMIT $premierService, $servicesParPage";
 $result = $connexion->query($sql);
 ?>
 
-
-
 <div class="container" id="background2">
     <div class="row">
         <div class="col-md-4">
