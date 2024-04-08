@@ -55,100 +55,110 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
 
 // Traitement du formulaire de modification d'un habitat
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier'])) {
-    $habitat_id = $_POST['habitat_id'];
+    $habitat_id = isset($_POST['habitat_id']) ? $_POST['habitat_id'] : null;
     $nom = $_POST['nom'];
     $description = $_POST['description'];
 
-    // Requête SQL pour la mise à jour de l'habitat
-    $sql = "UPDATE habitat SET nom=?, description=?";
-    $bindParams = array("ss", $nom, $description);
+    // Vérification de l'existence de l'habitat_id
+    if ($habitat_id !== null) {
+        // Requête SQL pour la mise à jour de l'habitat
+        $sql = "UPDATE habitat SET nom=?, description=?";
+        $bindParams = array("ss", $nom, $description);
 
-    if ($_FILES['nouvelle_image']['error'] === UPLOAD_ERR_OK) {
-        // Traitement de l'image
-        $imageData = file_get_contents($_FILES['nouvelle_image']['tmp_name']);
-        $imageType = $_FILES['nouvelle_image']['type'];
+        if ($_FILES['nouvelle_image']['error'] === UPLOAD_ERR_OK) {
+            // Traitement de l'image
+            $imageData = file_get_contents($_FILES['nouvelle_image']['tmp_name']);
+            $imageType = $_FILES['nouvelle_image']['type'];
 
-        // Types de fichiers autorisés
-        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-        if (!in_array($imageType, $allowedTypes)) {
-            echo "Le fichier doit être au format JPEG, JPG ou PNG.";
-            exit;
+            // Types de fichiers autorisés
+            $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!in_array($imageType, $allowedTypes)) {
+                echo "Le fichier doit être au format JPEG, JPG ou PNG.";
+                exit;
+            }
+
+            // Préparation de la requête pour l'insertion de l'image
+            $sqlInsertImage = "INSERT INTO image (image_data, image_type) VALUES (?, ?)";
+            $insertImage = $connexion->prepare($sqlInsertImage);
+            $insertImage->bind_param("ss", $imageData, $imageType);
+            if (!$insertImage->execute()) {
+                echo "Erreur lors de l'insertion de l'image : " . $insertImage->error;
+                exit;
+            }
+
+            // Récupération de l'ID de l'image insérée
+            $imageId = $insertImage->insert_id;
+
+            // Ajout de l'ID de l'image dans la requête de mise à jour
+            $sql .= ", image_id=?";
+            $bindParams[0] .= "i";
+            $bindParams[] = $imageId;
         }
 
-        // Préparation de la requête pour l'insertion de l'image
-        $sqlInsertImage = "INSERT INTO image (image_data, image_type) VALUES (?, ?)";
-        $insertImage = $connexion->prepare($sqlInsertImage);
-        $insertImage->bind_param("ss", $imageData, $imageType);
-        if (!$insertImage->execute()) {
-            echo "Erreur lors de l'insertion de l'image : " . $insertImage->error;
-            exit;
-        }
-
-        // Récupération de l'ID de l'image insérée
-        $imageId = $insertImage->insert_id;
-
-        // Ajout de l'ID de l'image dans la requête de mise à jour
-        $sql .= ", image_id=?";
+        $sql .= " WHERE habitat_id=?";
         $bindParams[0] .= "i";
-        $bindParams[] = $imageId;
-    }
+        $bindParams[] = $habitat_id;
 
-    $sql .= " WHERE habitat_id=?";
-    $bindParams[0] .= "i";
-    $bindParams[] = $habitat_id;
+        // Préparation de la requête
+        $updateStatement = $connexion->prepare($sql);
 
-    // Préparation de la requête
-    $updateStatement = $connexion->prepare($sql);
+        if (!$updateStatement) {
+            echo "Erreur de préparation de la requête : " . $connexion->error;
+            exit;
+        }
 
-    if (!$updateStatement) {
-        echo "Erreur de préparation de la requête : " . $connexion->error;
-        exit;
-    }
+        // Liaison des paramètres
+        if (!$updateStatement->bind_param(...$bindParams)) {
+            echo "Erreur de liaison des paramètres : " . $updateStatement->error;
+            exit;
+        }
 
-    // Liaison des paramètres
-    if (!$updateStatement->bind_param(...$bindParams)) {
-        echo "Erreur de liaison des paramètres : " . $updateStatement->error;
-        exit;
-    }
+        // Exécution de la requête
+        if ($updateStatement->execute()) {
+            echo "Habitat mis à jour avec succès";
+        } else {
+            echo "Erreur lors de l'exécution de la requête : " . $updateStatement->error;
+        }
 
-    // Exécution de la requête
-    if ($updateStatement->execute()) {
-        echo "Habitat mis à jour avec succès";
+        // Fermeture de la déclaration
+        $updateStatement->close();
     } else {
-        echo "Erreur lors de l'exécution de la requête : " . $updateStatement->error;
+        echo "ID d'habitat non spécifié.";
     }
-
-    // Fermeture de la déclaration
-    $updateStatement->close();
 }
 
 // Traitement de la suppression d'un habitat
 if (isset($_POST['supprimer'])) {
-    $habitat_id = $_POST['habitat_id'];
+    $habitat_id = isset($_POST['habitat_id']) ? $_POST['habitat_id'] : null;
 
-    // Requête pour récupérer l'ID de l'image associée à l'habitat
-    $sql_select_image_id = "SELECT image_id FROM habitat WHERE habitat_id=$habitat_id";
-    $result_select_image_id = $connexion->query($sql_select_image_id);
+    // Vérification de l'existence de l'habitat_id
+    if ($habitat_id !== null) {
+        // Requête pour récupérer l'ID de l'image associée à l'habitat
+        $sql_select_image_id = "SELECT image_id FROM habitat WHERE habitat_id=$habitat_id";
+        $result_select_image_id = $connexion->query($sql_select_image_id);
 
-    if ($result_select_image_id->num_rows > 0) {
-        $row = $result_select_image_id->fetch_assoc();
-        $image_id = $row['image_id'];
+        if ($result_select_image_id->num_rows > 0) {
+            $row = $result_select_image_id->fetch_assoc();
+            $image_id = $row['image_id'];
 
-        // Requête pour supprimer l'habitat
-        $sql_delete_habitat = "DELETE FROM habitat WHERE habitat_id=$habitat_id";
-        if ($connexion->query($sql_delete_habitat) === TRUE) {
-            // Requête pour supprimer l'image associée
-            $sql_delete_image = "DELETE FROM image WHERE image_id=$image_id";
-            if ($connexion->query($sql_delete_image) === TRUE) {
-                echo "<script>alert('Habitat et image associée supprimés avec succès');</script>";
+            // Requête pour supprimer l'habitat
+            $sql_delete_habitat = "DELETE FROM habitat WHERE habitat_id=$habitat_id";
+            if ($connexion->query($sql_delete_habitat) === TRUE) {
+                // Requête pour supprimer l'image associée
+                $sql_delete_image = "DELETE FROM image WHERE image_id=$image_id";
+                if ($connexion->query($sql_delete_image) === TRUE) {
+                    echo "<script>alert('Habitat et image associée supprimés avec succès');</script>";
+                } else {
+                    echo "Erreur lors de la suppression de l'image : " . $connexion->error;
+                }
             } else {
-                echo "Erreur lors de la suppression de l'image : " . $connexion->error;
+                echo "Erreur lors de la suppression de l'habitat : " . $connexion->error;
             }
         } else {
-            echo "Erreur lors de la suppression de l'habitat : " . $connexion->error;
+            echo "ID d'habitat non trouvé.";
         }
     } else {
-        echo "ID d'habitat non trouvé.";
+        echo "ID d'habitat non spécifié.";
     }
 }
 
@@ -158,7 +168,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $premierHabitat = ($page - 1) * $servicesParPage;
 
 // Requête pour sélectionner les habitats avec pagination
-$sql = "SELECT * FROM habitat LIMIT $premierHabitat, $servicesParPage";
+$sql = "SELECT habitat.*, image.image_type, image.image_data FROM habitat INNER JOIN image ON habitat.image_id = image.image_id LIMIT $premierHabitat, $servicesParPage";
 $result = $connexion->query($sql);
 
 // Requête pour compter le nombre total d'habitats
@@ -167,6 +177,7 @@ $result_count = $connexion->query($sql_count);
 $row_count = $result_count->fetch_assoc();
 $totalHabitats = $row_count['totalHabitats'];
 $totalPages = ceil($totalHabitats / $servicesParPage);
+
 ?>
 <div class="container" id="background2">
     <div class="row">
@@ -210,7 +221,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
             <h3>Modifier/Supprimer un Habitat</h3>
             <div class="table-responsive overflow-auto">
             <table class="table">
-                <thead>
+            <thead class="thead-dark">
                     <tr>
                         <th class='hidden'>ID de l'Habitat</th>
                         <th>Nom de l'Habitat</th>
@@ -224,29 +235,21 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                     <?php
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td class='habitat_id hidden'>" . $row['habitat_id'] . "</td>";
+                        echo "<td class='habitat_id hidden'>" . ($row['habitat_id'] ?? '') . "</td>";
                         echo "<td class='nom'>" . $row['nom'] . "</td>";
                         echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
                         echo "<td class='commentaire description-cell'>" . (isset($row['commentaire_habitat']) ? $row['commentaire_habitat'] : "") . "</td>";
                         echo "<td>";
-                    if ($row['image_id']) {
-                        // Chemin d'accès direct à l'image dans le répertoire images
-                        $imagePath = "front/img/" . $row['image_id'] . ".jpg"; // Modifiez l'extension en fonction du type de vos images
-                        echo "<img src='$imagePath' alt='Image'>";
-                    } else {
-                        // Afficher l'image par défaut si aucune image n'est associée
-                        echo "<img src='front/img/defaultsmall.jpg' alt='Image par défaut'>";
-                    }
-                        echo "</td>";
+                        echo isset($row['image_type']) ? "<img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='50' height='50' />" : "<img src='front/img/defaultsmall.jpg' alt='Image par défaut'>";
                         echo "</td>";
                         echo "<td>";
                         echo "<div class='btn-group' role='group'>";
                         echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
                         echo "</div>";
                         echo "<div style='margin-top: 5px;'></div>";
-                        echo "<form class='delete-form' method='post' action='" . $_SERVER['PHP_SELF'] . "' onsubmit='return confirmDelete(" . $row['habitat_id'] . ")'>";
-                        echo "<input type='hidden' name='habitat_id' value='" . $row['habitat_id'] . "'>";
-                        echo "<button type='submit' class='btn btn-danger btn-sm delete-button' name='supprimer' id='delete-button-" . $row['habitat_id'] . "'>Supprimer</button>";
+                        echo "<form class='delete-form' method='post' action='" . $_SERVER['PHP_SELF'] . "' onsubmit='return confirmDelete(" . ($row['habitat_id'] ?? '') . ")'>";
+                        echo "<input type='hidden' name='habitat_id' value='" . ($row['habitat_id'] ?? '') . "'>";
+                        echo "<button type='submit' class='btn btn-danger btn-sm delete-button' name='supprimer' id='delete-button-" . ($row['habitat_id'] ?? '') . "'>Supprimer</button>";
                         echo "</form>";
                         echo "</td>";
                         echo "</tr>";
@@ -254,6 +257,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                     ?>
                 </tbody>
             </table>
+
             </div>
             <!-- Pagination -->
             <?php
@@ -310,7 +314,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
         button.addEventListener('click', function(event) {
             event.preventDefault();
             var form = button.closest('tr');
-            var habitat_id = form.querySelector('.habitat_id').innerText;
+            var habitat_id = form.querySelector('.habitat_id') ? form.querySelector('.habitat_id').innerText : null;
             var nom = form.querySelector('.nom').innerText;
             var description = form.querySelector('.description').innerText;
             var modal = document.getElementById('myModal');

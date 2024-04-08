@@ -120,7 +120,7 @@ if (isset($_POST['supprimer'])) {
 $servicesParPage = 1;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $premierService = ($page - 1) * $servicesParPage;
-$sql = "SELECT * FROM service LIMIT $premierService, $servicesParPage";
+$sql = "SELECT service.*, image.image_type, image.image_data FROM service INNER JOIN image ON service.image_id = image.image_id LIMIT $premierService, $servicesParPage";
 $result = $connexion->query($sql);
 ?>
 
@@ -180,14 +180,7 @@ $result = $connexion->query($sql);
                             echo "<td class='service_id hidden'>" . $row['service_id'] . "</td>";
                             echo "<td class='nom'>" . $row['nom'] . "</td>";
                             echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
-                            
-                            // Vérifier si les clés "image_type" et "image_data" sont définies dans $row
-                            if (isset($row['image_type']) && isset($row['image_data'])) {
-                                echo "<td><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='100'></td>";
-                            } else {
-                                echo "<td></td>"; // Afficher une cellule vide si les données de l'image ne sont pas disponibles
-                            }
-                            
+                            echo isset($row['image_type']) ? "<td><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='50' height='50' /></td>" : "<td><img src='front/img/defaultsmall.jpg' alt='Image par défaut'></td>";
                             echo "<td>";
                             echo "<div class='btn-group' role='group'>";
                             echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
