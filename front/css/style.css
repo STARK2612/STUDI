@@ -150,3 +150,11 @@ body.compte {
   max-width: 1000px; /* Changer cette valeur selon votre besoin */
   margin: auto; /* Pour centrer le carousel */
 }
+
+.rounded-image {
+  border-radius: 100px; /* Adjust the value to change the degree of rounding */
+}
+
+.rounded-image-gestion {
+  border-radius: 10px; /* Adjust the value to change the degree of rounding */
+}

@@ -83,7 +83,7 @@ function getAnimalDetails($animal_id) {
     echo '<div class="container custom-container" id="background2">';
     echo '<br>';
     echo '<a href="les_habitats.php" class="btn btn-secondary btn-block">Retour</a>';
-    echo '<img src="' . $base64_image . '" alt="Image de l\'animal" width="150" height="100" class="text-center rounded">';
+    echo '<img src="' . $base64_image . '" alt="Image de l\'animal" width="auto" height="150" class="text-center rounded-image">';
     echo "<h2 class='text-center'>" . $animal_row['prenom'] . "</h2>";
     if (!empty($race_row['label'])) {
         echo "<p class='text-center'>Race : " . $race_row['label'] . "</p>";

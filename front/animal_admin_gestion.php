@@ -226,7 +226,7 @@ $result_animaux = $stmt->get_result();
                     echo "<tr>";
                     echo "<td class='animal_id hidden'>" . $row['animal_id'] . "</td>";
                     echo "<td class='prenom description-cell'>" . $row['prenom'] . "</td>";
-                    echo "<td><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='50' height='50' /></td>";
+                    echo "<td><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='auto' height='50' /></td>";
                     echo "<td class='race-animal description-cell'>" . $row['race'] . "</td>";
                     echo "<td class='habitat-animal'>" . $row['habitat'] . "</td>";
                     // Ajouter des boutons pour modifier et supprimer chaque animal

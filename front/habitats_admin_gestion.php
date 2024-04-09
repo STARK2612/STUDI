@@ -240,7 +240,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                         echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
                         echo "<td class='commentaire description-cell'>" . (isset($row['commentaire_habitat']) ? $row['commentaire_habitat'] : "") . "</td>";
                         echo "<td>";
-                        echo isset($row['image_type']) ? "<img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='50' height='50' />" : "<img src='front/img/defaultsmall.jpg' alt='Image par défaut'>";
+                        echo isset($row['image_type']) ? "<img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='auto' height='50' />" : "<img src='front/img/defaultsmall.jpg' alt='Image par défaut'>";
                         echo "</td>";
                         echo "<td>";
                         echo "<div class='btn-group' role='group'>";

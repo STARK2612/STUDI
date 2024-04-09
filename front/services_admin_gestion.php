@@ -180,7 +180,7 @@ $result = $connexion->query($sql);
                             echo "<td class='service_id hidden'>" . $row['service_id'] . "</td>";
                             echo "<td class='nom'>" . $row['nom'] . "</td>";
                             echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
-                            echo isset($row['image_type']) ? "<td><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='50' height='50' /></td>" : "<td><img src='front/img/defaultsmall.jpg' alt='Image par défaut'></td>";
+                            echo isset($row['image_type']) ? "<td><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='auto' height='50' /></td>" : "<td><img src='front/img/defaultsmall.jpg' alt='Image par défaut'></td>";
                             echo "<td>";
                             echo "<div class='btn-group' role='group'>";
                             echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
