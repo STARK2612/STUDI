@@ -81,8 +81,8 @@ if (!$result) {
                 <?php if ($result->num_rows > 0) : ?>
                     <br>
                     <h3 class='text-justify'>Avis des visiteurs</h3>
-                    <div class="table-responsive">
-                    <table id="paginationTable">
+                    <div class="table-responsive overflow-auto">
+                    <table id="table">
                         <thead>
                             <tr>
                                 <th class="table text-justify" style="width: 150px;">Pseudo</th>

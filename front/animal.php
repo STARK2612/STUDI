@@ -1,6 +1,3 @@
-<!-- Affichage du titre de la page -->
-<h1 class='text-center'>Détails de l'animal</h1>
-<br>
 <?php
 // Inclusion du fichier de connexion à la base de données
 include_once "back/connect_bdd.php";
@@ -83,23 +80,24 @@ function getAnimalDetails($animal_id) {
     echo '<div class="container custom-container" id="background2">';
     echo '<br>';
     echo '<a href="les_habitats.php" class="btn btn-secondary btn-block">Retour</a>';
+    echo "<h1 class='text-center'>Détails de l'animal</h1>";
     echo '<img src="' . $base64_image . '" alt="Image de l\'animal" width="auto" height="150" class="text-center rounded-image">';
     echo "<h2 class='text-center'>" . $animal_row['prenom'] . "</h2>";
     if (!empty($race_row['label'])) {
-        echo "<p class='text-center'>Race : " . $race_row['label'] . "</p>";
+        echo "<p class='text-center2'>Race : " . $race_row['label'] . "</p>";
     }
     if (!empty($habitat_row['nom'])) {
-        echo "<p class='text-center'>Habitat : " . $habitat_row['nom'] . "</p>";
+        echo "<p class='text-center2'>Habitat : " . $habitat_row['nom'] . "</p>";
     }
-    echo "<p class='text-center'>État : " . $animal_row['etat'] . "</p>";
-    echo "<p class='text-center'>Nourriture proposée : " . $animal_row['nour'] . "</p>";
+    echo "<p class='text-center2'>État : " . $animal_row['etat'] . "</p>";
+    echo "<p class='text-center2'>Nourriture proposée : " . $animal_row['nour'] . "</p>";
 
     // Ajouter l'unité de mesure "gramme" après le grammage de la nourriture
-    echo "<p class='text-center'>Grammage de la nourriture : " . $animal_row['qte_nour'] . " gramme(s)</p>";
+    echo "<p class='text-center2'>Grammage de la nourriture : " . $animal_row['qte_nour'] . " gramme(s)</p>";
 
     // Formater et afficher la date de passage au format "dd/mm/yyyy"
     $date_nour = date('d/m/Y', strtotime($animal_row['date_nour']));
-    echo "<p class='text-center'>Date de passage : " . $date_nour . "</p>";
+    echo "<p class='text-center2'>Date de passage : " . $date_nour . "</p>";
 
     // Récupérer l'avis du vétérinaire s'il existe
     $rapport_query = "SELECT detail FROM rapport_veterinaire WHERE rapport_veterinaire_id = ?";
@@ -109,7 +107,7 @@ function getAnimalDetails($animal_id) {
     $rapport_result = $rapport_stmt->get_result();
     if ($rapport_result && $rapport_result->num_rows > 0) {
         $rapport_row = $rapport_result->fetch_assoc();
-        echo "<p class='text-center'>Avis du vétérinaire :<br>" . wordwrap($rapport_row['detail'], 29, "<br>", true) . "</p>";
+        echo "<p class='text-center2'>Avis du vétérinaire :<br>" . wordwrap($rapport_row['detail'], 29, "<br>", true) . "</p>";
     }
     echo '<br>';
     echo '</div>';

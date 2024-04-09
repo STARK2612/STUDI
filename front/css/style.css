@@ -102,11 +102,11 @@ body.compte {
 }
 
 .card{
-  background-color: rgb(26, 129, 20);
+  background-color: rgb(82, 169, 77);
 }
 
 #background2{
-  background-color: rgb(26, 129, 20);
+  background-color: rgb(82, 169, 77);
   border-radius: 20px;
 }
 
@@ -140,6 +140,12 @@ body.compte {
   margin: auto; /* Pour centrer verticalement si nécessaire */
 }
 
+.text-center2 {
+  text-align: center;
+  margin: auto; /* Pour centrer verticalement si nécessaire */
+  font-weight: bold; /* Pour ajouter le style en gras */
+}
+
 .custom-container {
   max-width: 450px; /* Définissez la largeur maximale selon vos besoins */
   margin: 0 auto; /* Centre le conteneur horizontalement */
@@ -157,4 +163,15 @@ body.compte {
 
 .rounded-image-gestion {
   border-radius: 10px; /* Adjust the value to change the degree of rounding */
+}
+
+.animal-button {
+  background-size: cover;
+  background-position: center;
+}
+
+.table-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  width: 100%; /* Vous pouvez ajuster cette valeur en fonction de vos besoins */
 }
