@@ -44,8 +44,8 @@ function getHabitatDetails($habitat_id) {
         echo "<img src='front/img/default.jpg' alt='Image par défaut' class='text-center img-fluid rounded' style='max-width: 100%; height: auto;'>";
     }
     echo "<p class='lead text-center2'>";
-    echo "<span class='d-none d-sm-block'>Description : </span>"; // Ne pas afficher sur les smartphones
-    echo "<span class='d-sm-none'>Desc. : </span>"; // Afficher uniquement sur les smartphones
+    echo "<span class='d-none d-sm-block'><strong><u>Description :</u></strong></span>"; // Ne pas afficher sur les smartphones
+    echo "<span class='d-sm-none'><u><b>Desc. :</b></u></span>"; // Afficher uniquement sur les smartphones
     echo "<span class='d-inline d-sm-none'>" . wordwrap($habitat_row['description'], 22, "<br>", true) . "</span>"; // Texte pour smartphones
     echo "<span class='d-none d-sm-inline'>" . wordwrap($habitat_row['description'], 40, "<br>", true) . "</span>"; // Texte pour tablettes et PC
     echo "</p>";

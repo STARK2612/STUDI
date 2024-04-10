@@ -84,33 +84,34 @@ function getAnimalDetails($animal_id) {
     echo '<img src="' . $base64_image . '" alt="Image de l\'animal" width="auto" height="150" class="text-center rounded-image">';
     echo "<h2 class='text-center'>" . $animal_row['prenom'] . "</h2>";
     if (!empty($race_row['label'])) {
-        echo "<p class='text-center2'>Race : " . $race_row['label'] . "</p>";
+        echo "<p class='text-center2'><u>Race :</u> <span style='background-color: white; padding: 2px 5px; border-radius: 5px; font-weight: normal;'>" . $race_row['label'] . "</span></p>";
     }
     if (!empty($habitat_row['nom'])) {
-        echo "<p class='text-center2'>Habitat : " . $habitat_row['nom'] . "</p>";
+        echo "<p class='text-center2'><u>Habitat :</u> <span style='background-color: white; padding: 2px 5px; border-radius: 5px; font-weight: normal;'>" . $habitat_row['nom'] . "</span></p>";
     }
-    echo "<p class='text-center2'>État : " . $animal_row['etat'] . "</p>";
-    echo "<p class='text-center2'>Nourriture proposée : " . $animal_row['nour'] . "</p>";
-
+    echo "<p class='text-center2'><u>État :</u> <span style='background-color: white; padding: 2px 5px; border-radius: 5px; font-weight: normal;'>" . $animal_row['etat'] . "</span></p>";
+    echo "<p class='text-center2'><u>Nourriture proposée :</u> <span style='background-color: white; padding: 2px 5px; border-radius: 5px; font-weight: normal;'>" . $animal_row['nour'] . "</span></p>";
+    
     // Ajouter l'unité de mesure "gramme" après le grammage de la nourriture
-    echo "<p class='text-center2'>Grammage de la nourriture : " . $animal_row['qte_nour'] . " gramme(s)</p>";
-
+    echo "<p class='text-center2'><u>Grammage de la nourriture :</u> <span style='background-color: white; padding: 2px 5px; border-radius: 5px; font-weight: normal;'>" . $animal_row['qte_nour'] . " gramme(s)</span></p>";
+    
     // Formater et afficher la date de passage au format "dd/mm/yyyy"
     $date_nour = date('d/m/Y', strtotime($animal_row['date_nour']));
-    echo "<p class='text-center2'>Date de passage : " . $date_nour . "</p>";
+    echo "<p class='text-center2'><u>Date de passage :</u> <span style='background-color: white; padding: 2px 5px; border-radius: 5px; font-weight: normal;'>" . $date_nour . "</span></p>";    
 
-    // Récupérer l'avis du vétérinaire s'il existe
-    $rapport_query = "SELECT detail FROM rapport_veterinaire WHERE rapport_veterinaire_id = ?";
-    $rapport_stmt = $connexion->prepare($rapport_query);
-    $rapport_stmt->bind_param("i", $animal_row['rapport_veterinaire_id']);
-    $rapport_stmt->execute();
-    $rapport_result = $rapport_stmt->get_result();
-    if ($rapport_result && $rapport_result->num_rows > 0) {
-        $rapport_row = $rapport_result->fetch_assoc();
-        echo "<p class='text-center2'>Avis du vétérinaire :<br>" . wordwrap($rapport_row['detail'], 29, "<br>", true) . "</p>";
-    }
-    echo '<br>';
-    echo '</div>';
+// Récupérer l'avis du vétérinaire s'il existe
+$rapport_query = "SELECT detail FROM rapport_veterinaire WHERE rapport_veterinaire_id = ?";
+$rapport_stmt = $connexion->prepare($rapport_query);
+$rapport_stmt->bind_param("i", $animal_row['rapport_veterinaire_id']);
+$rapport_stmt->execute();
+$rapport_result = $rapport_stmt->get_result();
+if ($rapport_result && $rapport_result->num_rows > 0) {
+    $rapport_row = $rapport_result->fetch_assoc();
+    echo "<p class='text-center2'><u>Avis du vétérinaire :</u><br><div style='background-color: white; padding: 10px; border-radius: 10px; display: inline-block; text-align: center;'>" . wordwrap($rapport_row['detail'], 29, "<br>", true) . "</div></p>";
+}
+echo '<br>';
+echo '</div>';
+
 }
 
 // Fermeture de la connexion
