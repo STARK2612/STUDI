@@ -120,9 +120,9 @@ INSERT INTO zooarcadia.role (label) VALUES
 
 -- Intégration des données dans la table "utilisateur"
 INSERT INTO zooarcadia.utilisateur (username, nom, password, prenom, role_id) VALUES 
-('admin@zarcadia.com', 'GENTIL', 'G3nt1lJ0sé', 'José', 1), 
-('c.barros@zarcadia.com', 'BARROS', 'Employé', 'Charles', 2),
-('m.protana@zarcadia.com', 'PROTANA', 'Vétérinaire', 'Marie', 3);
+('admin@arcadiazoo.com', 'GENTIL', 'G3nt1lJ0sé', 'José', 1), 
+('employe@arcadiazoo.com', 'BARROS', 'Employé', 'Charles', 2),
+('veto@arcadiazoo.com', 'PROTANA', 'Vétérinaire', 'Marie', 3);
 
 -- Intégration des données dans la table "habitat"
 INSERT INTO zooarcadia.habitat (image_id, commentaire_habitat, description, nom) VALUES 

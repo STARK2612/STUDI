@@ -57,6 +57,21 @@ if (!$result) {
                     Arcadia abrite une variété d'habitats soigneusement aménagés pour offrir aux animaux des conditions de vie proches de leur environnement naturel. Parmi les habitats remarquables, on trouve la savane africaine, la jungle tropicale, les marais côtiers et bien d'autres. Chaque espace est conçu avec soin pour garantir le bien-être des animaux tout en offrant aux visiteurs une expérience immersive.
                     ZOO Arcadia offre une expérience inoubliable pour les amoureux de la nature de tous âges, combinant divertissement, éducation et conservation dans un cadre magnifique et préservé.
                 </p>
+                <?php
+                // Vérifiez si le formulaire pour ajouter les horaires a été soumis
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter_horaires'])) {
+                    // Récupérez les horaires d'ouverture et de fermeture depuis le formulaire
+                    $heure_ouverture = $_POST['heure_ouverture'];
+                    $heure_fermeture = $_POST['heure_fermeture'];
+
+                    // Affichez les horaires sur la page
+                    echo "<div class='container'>";
+                    echo "<h3>Horaires d'Ouverture et de Fermeture du Zoo</h3>";
+                    echo "<p>Heure d'Ouverture: $heure_ouverture</p>";
+                    echo "<p>Heure de Fermeture: $heure_fermeture</p>";
+                    echo "</div>";
+                }
+                ?>
             </div>
             <div class="col-md-6">
                 <!-- Affichage des avis -->

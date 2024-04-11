@@ -116,6 +116,23 @@ if (isset($_POST['supprimer'])) {
     }
 }
 
+// Traitement pour l'ajout des horaires d'ouverture et de fermeture
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter_horaires'])) {
+    // Nettoyer et valider les données d'entrée
+    $heure_ouverture = htmlspecialchars($_POST['heure_ouverture']);
+    $heure_fermeture = htmlspecialchars($_POST['heure_fermeture']);
+
+    // Requête d'insertion des horaires
+    $insertHorairesQuery = $connexion->prepare("INSERT INTO horaires_ouverture (heure_ouverture, heure_fermeture) VALUES (?, ?)");
+    $insertHorairesQuery->bind_param("ss", $heure_ouverture, $heure_fermeture);
+    if ($insertHorairesQuery->execute()) {
+        $_SESSION['success_message'] = "Horaires ajoutés avec succès";
+    } else {
+        $_SESSION['error_message'] = "Erreur lors de l'ajout des horaires : " . $insertHorairesQuery->error;
+    }
+    $insertHorairesQuery->close();
+}
+
 // Pagination des services
 $servicesParPage = 1;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -212,6 +229,21 @@ $result = $connexion->query($sql);
             }
             echo "</ul>";
             ?>
+
+            <form method="post" action="index.php">
+                <h3>Ajouter les Horaires d'Ouverture et de Fermeture du Zoo</h3>
+                <div class="form-group">
+                    <label for="heure_ouverture">Heure d'Ouverture:</label>
+                    <input type="time" class="form-control" id="heure_ouverture" name="heure_ouverture" required>
+                </div>
+                <div class="form-group">
+                    <label for="heure_fermeture">Heure de Fermeture:</label>
+                    <input type="time" class="form-control" id="heure_fermeture" name="heure_fermeture" required>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary" name="ajouter_horaires">Ajouter Horaires</button>
+            </form>
+
         </div>
 
     </div>
