@@ -107,7 +107,7 @@ $rapport_stmt->execute();
 $rapport_result = $rapport_stmt->get_result();
 if ($rapport_result && $rapport_result->num_rows > 0) {
     $rapport_row = $rapport_result->fetch_assoc();
-    echo "<p class='text-center2'><u>Avis du vétérinaire :</u><br><div style='background-color: white; padding: 10px; border-radius: 10px; display: inline-block; text-align: center;'>" . wordwrap($rapport_row['detail'], 29, "<br>", true) . "</div></p>";
+    echo "<p class='text-center2'><u>Avis du vétérinaire :</u><br><div style='background-color: white; padding: 10px; border-radius: 10px; display: inline-block; text-align: center;'>" . wordwrap($rapport_row['detail'], 50, "<br>", true) . "</div></p>";
 }
 echo '<br>';
 echo '</div>';

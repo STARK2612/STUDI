@@ -44,10 +44,11 @@ function getHabitatDetails($habitat_id) {
         echo "<img src='front/img/default.jpg' alt='Image par défaut' class='text-center img-fluid rounded' style='max-width: 100%; height: auto;'>";
     }
     echo "<p class='lead text-center2'>";
-    echo "<span class='d-none d-sm-block'><strong><u>Description :</u></strong></span>"; // Ne pas afficher sur les smartphones
+    echo "<span class='d-none d-sm-block'><u>Description :</u></strong></span>"; // Ne pas afficher sur les smartphones
     echo "<span class='d-sm-none'><u><b>Desc. :</b></u></span>"; // Afficher uniquement sur les smartphones
-    echo "<span class='d-inline d-sm-none'>" . wordwrap($habitat_row['description'], 22, "<br>", true) . "</span>"; // Texte pour smartphones
-    echo "<span class='d-none d-sm-inline'>" . wordwrap($habitat_row['description'], 40, "<br>", true) . "</span>"; // Texte pour tablettes et PC
+    echo "<pre class='d-inline d-sm-none' style='background-color: white; display: inline; padding: 10px; border-radius: 5px; text-align: center;'>" . wordwrap($habitat_row['description'], 22, "<br>", true) . "</pre>"; // Texte pour smartphones
+    echo "<pre class='d-none d-sm-inline' style='background-color: white; display: inline; padding: 10px; border-radius: 5px; text-align: center;'>" . wordwrap($habitat_row['description'], 50, "<br>", true) . "</pre>"; // Texte pour tablettes et PC
+    //echo "<pre style='background-color: white; display: inline; border-radius: 5px; text-align: center;'>" . wordwrap($habitat_row['description'], 50, "<br>", true) . "</pre>";// Texte pour tablettes et PC
     echo "</p>";
 
     // Requête pour récupérer les animaux associés à cet habitat
