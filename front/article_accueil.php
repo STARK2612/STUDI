@@ -59,29 +59,11 @@ if (!$result) {
                 </p>
             </div>
             <div class="col-md-6">
-                <div class="form-container">
-                    <!-- Formulaire pour soumettre un avis -->
-                    <br>
-                    <h3 class='text-justify'>Formulaire pour envoyer ton avis</h3>
-                    <form id="avisForm" method="post" action="back/save_avis.php" class='text-justify'>
-                        <div class="form-group">
-                            <label for="pseudo">Pseudo :</label>
-                            <input type="text" class="form-control" id="pseudo" name="pseudo" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="commentaire">Votre avis :</label>
-                            <textarea class="form-control" id="commentaire" name="commentaire" rows="3" required></textarea>
-                        </div>
-                        <br>
-                        <button type="submit" class="btn btn-primary">Soumettre</button>
-                    </form>
-                </div>
-                <br>
                 <!-- Affichage des avis -->
                 <?php if ($result->num_rows > 0) : ?>
                     <br>
                     <h3 class='text-justify'>Avis des visiteurs</h3>
-                    <div class="table-responsive overflow-auto">
+                    <div class="table-responsive overflow-auto" id="avisTable">
                     <table id="table">
                         <thead>
                             <tr>
@@ -108,6 +90,23 @@ if (!$result) {
                         <?php endfor; ?>
                     </ul>
                 </nav>
+                <div class="form-container">
+                    <!-- Formulaire pour soumettre un avis -->
+                    <br>
+                    <h3 class='text-justify'>Formulaire pour envoyer ton avis</h3>
+                    <form id="avisForm" method="post" action="back/save_avis.php" class='text-justify'>
+                        <div class="form-group">
+                            <label for="pseudo">Pseudo :</label>
+                            <input type="text" class="form-control" id="pseudo" name="pseudo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="commentaire">Votre avis :</label>
+                            <textarea class="form-control" id="commentaire" name="commentaire" rows="3" required></textarea>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Soumettre</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>   
@@ -143,22 +142,21 @@ if (!$result) {
 <?php $connexion->close(); ?>
 
 <script>
-    // Fonction pour ajuster la position de la fenêtre d'affichage pour conserver le tableau de pagination centré
-    function adjustScrollPosition() {
-        // Calculer la position verticale du milieu du tableau de pagination
-        var paginationTable = document.getElementById("paginationTable");
-        var paginationTableTop = paginationTable.getBoundingClientRect().top;
-        var paginationTableHeight = paginationTable.offsetHeight;
-        var middlePosition = paginationTableTop + (paginationTableHeight / 2);
+    document.addEventListener("DOMContentLoaded", function() {
+        var paginationLinks = document.querySelectorAll("#paginationTable a.page-link");
 
-        // Ajuster la position de la fenêtre d'affichage pour centrer le tableau de pagination
-        window.scrollTo(0, middlePosition - (window.innerHeight / 2));
-    }
+        paginationLinks.forEach(function(link) {
+            link.addEventListener("click", function(event) {
+                event.preventDefault(); // Empêche le comportement par défaut du lien
 
-    // Attacher un gestionnaire d'événement à chaque lien de pagination pour ajuster la position de la fenêtre
-    var pageLinks = document.querySelectorAll('.pagination a');
-    pageLinks.forEach(function(link) {
-        link.addEventListener('click', adjustScrollPosition);
+                var targetPage = this.getAttribute("href").split("=")[1];
+
+                setTimeout(function() {
+                    window.location.href = "?page=" + targetPage;
+                }, 50);
+            });
+        });
     });
 </script>
+
 
