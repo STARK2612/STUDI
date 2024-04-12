@@ -1,20 +1,17 @@
 <?php
 // Inclusion du fichier de connexion à la base de données
 include_once "back/connect_bdd.php";
-
 // Vérifier si la connexion à la base de données est établie
 if (!$connexion) {
     echo "La connexion à la base de données a échoué.";
     exit; // Arrêter l'exécution du script en cas d'échec de la connexion
 }
-
 // Traitement de l'upload d'image
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
     // Vérifier si un fichier est envoyé
     if(isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $imageData = file_get_contents($_FILES['image']['tmp_name']); // Lecture du fichier
         $imageType = $_FILES['image']['type']; // Type de fichier
-
         // Vérification du type de fichier
         $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
         if(in_array($imageType, $allowedTypes)) {
@@ -32,18 +29,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
             exit;
         }
     }
-
     // Récupération des données du formulaire
     $prenom = $_POST['prenom'];
     $race = $_POST['race'];
     $habitat = $_POST['habitat'];
-
     // Vérification de l'existence de la race
     $checkRace = $connexion->prepare("SELECT race_id FROM race WHERE label = ?");
     $checkRace->bind_param("s", $race);
     $checkRace->execute();
     $resultRace = $checkRace->get_result();
-
     // Si la race n'existe pas, l'ajouter dans la table race
     if ($resultRace->num_rows === 0) {
         $insertRace = $connexion->prepare("INSERT INTO race (label) VALUES (?)");
@@ -57,7 +51,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
         $raceId = $raceData['race_id'];
     }
     $checkRace->close();
-
     // Insertion des données de l'animal dans la table animal
     $insertAnimal = $connexion->prepare("INSERT INTO animal (prenom, race_id, habitat_id, image_id) VALUES (?, ?, ?, ?)");
     $insertAnimal->bind_param("siii", $prenom, $raceId, $habitat, $imageId);
@@ -67,7 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
         echo "Erreur lors de l'insertion de l'animal : " . $insertAnimal->error;
     }
 }
-
 // Modification d'un animal
 if (isset($_POST["modifier"])) {
     // Récupération des données du formulaire
@@ -75,12 +67,10 @@ if (isset($_POST["modifier"])) {
     $prenom = $_POST['prenom'];
     $race = $_POST['race'];
     $habitat = $_POST['habitat'];
-
     // Vérifier si un fichier est envoyé
     if(isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $imageData = file_get_contents($_FILES['image']['tmp_name']); // Lecture du fichier
         $imageType = $_FILES['image']['type']; // Type de fichier
-
         // Vérification du type de fichier
         $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
         if(in_array($imageType, $allowedTypes)) {
@@ -98,7 +88,6 @@ if (isset($_POST["modifier"])) {
             exit;
         }
     }
-
     // Requête SQL pour mettre à jour l'animal dans la base de données
     $requete = "UPDATE animal SET prenom=?, habitat_id=?, image_id=? WHERE animal_id=?";
     $stmt = $connexion->prepare($requete);
@@ -114,46 +103,40 @@ if (isset($_POST["modifier"])) {
         }
     }
 }
-
 // Suppression d'un animal
 if (isset($_POST['supprimer'])) {
     $animal_id = $_POST['animal_id'];
 
     // Supprimer les statistiques liées à l'animal
-    $sql_delete_stat = "DELETE FROM stat WHERE animal_id=?";
-    $stmt_delete_stat = $connexion->prepare($sql_delete_stat);
-    $stmt_delete_stat->bind_param("i", $animal_id);
-    if ($stmt_delete_stat->execute()) {
-        // Supprimer l'animal
-        $sql_delete_animal = "DELETE FROM animal WHERE animal_id=?";
-        $stmt_delete_animal = $connexion->prepare($sql_delete_animal);
-        $stmt_delete_animal->bind_param("i", $animal_id);
-        if ($stmt_delete_animal->execute()) {
-            echo "<script>alert('Animal supprimé avec succès');</script>"; // Affichage du message dans une fenêtre popup
-        } else {
-            echo "Erreur lors de la suppression de l'animal : " . $stmt_delete_animal->error;
-        }
+$sql_delete_stat = "DELETE FROM stat WHERE animal_id=?";
+$stmt_delete_stat = $connexion->prepare($sql_delete_stat);
+$stmt_delete_stat->bind_param("i", $animal_id);
+if ($stmt_delete_stat->execute()) {
+    // Supprimer l'animal
+    $sql_delete_animal = "DELETE FROM animal WHERE animal_id=?";
+    $stmt_delete_animal = $connexion->prepare($sql_delete_animal);
+    $stmt_delete_animal->bind_param("i", $animal_id);
+    if ($stmt_delete_animal->execute()) {
+        echo "<script>alert('Animal supprimé avec succès');</script>"; // Affichage du message dans une fenêtre popup
     } else {
-        echo "Erreur lors de la suppression des statistiques de l'animal : " . $stmt_delete_stat->error;
+        echo "Erreur lors de la suppression de l'animal : " . $stmt_delete_animal->error;
     }
+} else {
+    echo "Erreur lors de la suppression des statistiques de l'animal : " . $stmt_delete_stat->error;
 }
+    }
 
 // Récupération de la liste des habitats
 $sql_habitats = "SELECT habitat_id, nom FROM habitat";
 $result_habitats = $connexion->query($sql_habitats);
-
 // Récupération des races d'animaux
 $sql_races = "SELECT race_id, label FROM race";
 $result_races = $connexion->query($sql_races);
-
 $animauxParPage = 1; // Nombre d'animaux à afficher par page
-
 // Vérifier si la page est définie, sinon, la définir sur 1
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
-
 // Calculer le numéro du premier animal pour la requête SQL
 $premierAnimal = ($page - 1) * $animauxParPage;
-
 // Récupération des animaux pour la page actuelle
 $sql_animaux = "SELECT animal.animal_id, animal.prenom, race.label AS race, habitat.nom AS habitat, image.image_data, image.image_type 
                 FROM animal
@@ -166,7 +149,6 @@ $stmt->bind_param("ii", $premierAnimal, $animauxParPage);
 $stmt->execute();
 $result_animaux = $stmt->get_result();
 ?>
-
 <div class="container" id="background2">
     <div class="row">
         <div class="col-md-4">
@@ -251,17 +233,15 @@ $result_animaux = $stmt->get_result();
                 ?>
                 </tbody>
             </table>
-
             <!-- Pagination -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
-                <?php
+                    <?php
                     // Nombre total de pages
                     $sql_total_animaux = "SELECT COUNT(*) AS total FROM animal";
                     $result_total_animaux = $connexion->query($sql_total_animaux);
                     $row_total_animaux = $result_total_animaux->fetch_assoc();
                     $totalPages = ceil($row_total_animaux['total'] / $animauxParPage);
-
                     // Affichage des liens de pagination
                     for ($i = 1; $i <= $totalPages; $i++) {
                         // Vérifier si la page actuelle correspond à la page en cours de boucle
@@ -276,14 +256,116 @@ $result_animaux = $stmt->get_result();
     </div>
 </div>
 
+<!-- Modal de modification d'animal -->
+<div id="myModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modifier Animal</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulaire de modification d'animal -->
+                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="animal_id">ID de l'Animal:</label>
+                        <input type="text" class="form-control" id="animal_id2" name="animal_id" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">Prénom de l'Animal:</label>
+                        <input type="text" class="form-control" id="prenom2" name="prenom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="race2">Race de l'Animal:</label>
+                        <input type="text" class="form-control" id="race2" name="race" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="habitat2">Habitat de l'Animal:</label>
+                        <select class="form-control" id="habitat2" name="habitat" required>
+                            <?php
+                            // Récupération de la liste des habitats
+                            $sql_habitats = "SELECT habitat_id, nom FROM habitat";
+                            $result_habitats = $connexion->query($sql_habitats);
+                            while ($row = $result_habitats->fetch_assoc()) {
+                                echo "<option value='" . $row['habitat_id'] . "'>" . $row['nom'] . "</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="image2">Photo de l'Animal:</label>
+                        <input type="file" class="form-control-file" id="image2" name="image" accept="image/jpeg, image/jpg, image/png">
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary" name="modifier">Modifier</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inclure la bibliothèque jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Inclure la bibliothèque Bootstrap JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <script>
+    // Ajouter un gestionnaire d'événements pour les boutons "Modifier"
+    var editButtons = document.querySelectorAll('.edit-button');
+    editButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            // Empêcher le comportement par défaut du formulaire
+            event.preventDefault();
+            // Récupérer le formulaire parent
+            var form = button.closest('tr');
+            // Récupérer les valeurs des champs
+            var animal_id = form.querySelector('.animal_id').innerText;
+            var prenom = form.querySelector('.prenom').innerText;
+            var race = form.querySelector('.race-animal').innerText;
+            var habitat = form.querySelector('.habitat-animal').innerText;
+            // Afficher la fenêtre modale de modification avec les champs préremplis
+            var modal = document.getElementById('myModal');
+            modal.style.display = "block";
+            // Remplir les champs de la fenêtre modale avec les valeurs récupérées
+            document.getElementById('animal_id2').value = animal_id;
+            document.getElementById('prenom2').value = prenom;
+            document.getElementById('race2').value = race;
+            document.getElementById('habitat2').value = habitat;
+        });
+    });
+
+    // Fermer la fenêtre modale lorsque l'utilisateur clique sur la croix
+    var closeBtn = document.querySelector('.close');
+    closeBtn.addEventListener('click', function() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = "none";
+    });
+
+    // Fermer la fenêtre modale lorsque l'utilisateur clique en dehors de celle-ci
+    window.onclick = function(event) {
+        var modal = document.getElementById('myModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    // Fonction pour confirmer la suppression d'un animal
     // Confirmation avant de supprimer un animal
     function confirmDelete(animal_id) {
         return confirm("Êtes-vous sûr de vouloir supprimer cet animal ?");
     }
 
+    // Vérifier la taille du fichier avant l'envoi
     // Vérifier la taille du fichier avant de l'envoyer
     function checkFileSize() {
+    var input, file;
+    var maxSize = 10 * 1024 * 1024; // 10 Mo
+    input = document.getElementById('image');
+    file = input.files[0];
+    if (file.size > maxSize) {
+        // Afficher un message à l'utilisateur pour lui demander de choisir un fichier plus petit
+        alert('La taille du fichier ne doit pas dépasser 10 Mo. Veuillez choisir un fichier plus petit.');
+        return false; // Annuler l'envoi du formulaire
         var fileInput = document.getElementById('image');
         var fileSize = fileInput.files[0].size; // Taille du fichier en octets
         var maxSize = 2 * 1024 * 1024; // Taille maximale autorisée (2 Mo)
@@ -296,6 +378,8 @@ $result_animaux = $stmt->get_result();
             return true; // Autoriser l'envoi du formulaire
         }
     }
+    return true; // Autoriser l'envoi du formulaire si la taille du fichier est valide
+}
 
     // Modifier les données de l'animal sélectionné
     $('.edit-button').click(function () {
