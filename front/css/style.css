@@ -1,5 +1,5 @@
 body {
-    background-color:  rgb(55, 110, 241); /* Couleur de fond de la page par défaut */
+  background-color: rgb(55, 110, 241); /* Couleur de fond de la page par défaut */
 }
 
 .commentaire {
@@ -7,110 +7,99 @@ body {
 }
 
 body.compte {
-    background-color: #ffffff; /* Couleur de fond de la page compte.php */
+  background-color: #ffffff; /* Couleur de fond de la page compte.php */
 }
 
 .social-icons {
-    display: flex;
-    justify-content: left;
-  }
-  
-  .social-icons a img {
-    width: 50px; /* Changer la largeur selon vos besoins */
-    height: auto; /* Laisser la hauteur ajustable en fonction de la largeur */
-  }
-  
-  .info-container{
-    margin-top: 40px;
-  }
-
-  .connexion-image {
-    width: 50px; /* Largeur souhaitée */
-    height: auto; /* Hauteur automatique pour conserver les proportions */
-    }
-
-  .description-cell {
-    max-width: 150px; /* Définir la largeur maximale selon vos besoins */
-    word-wrap: break-word; /* Activer le retour à la ligne automatique */
-  }
-
-  .description-cell2 {
-    max-width: 150px; /* Définir la largeur maximale selon vos besoins */
-    word-wrap: break-word; /* Activer le retour à la ligne automatique */
-  }
-  
-  .container {
-    flex-direction: row;
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Espace entre les colonnes */
-  }
-
-  .container2 {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-  
-  .column.left {
-    margin-right: 20px;
-  }
-
-  .column {
-    flex: 1; /* Les colonnes prennent autant d'espace que nécessaire */
-  }
-
-  .column2 {
-    width: 97%;
-  }
-  
-  .form-container {
-    margin-bottom: 20px; /* Espace entre le formulaire et les avis */
-  }
-
-  .form-container2 {
-    margin-top: 20px;
+  display: flex;
+  justify-content: left;
 }
 
-  .connexion-button {
-    display: inline-block;
-    text-decoration: none; /* Supprime le soulignement du lien */
-    color: #fff; /* Couleur du texte */
+.social-icons a img {
+  width: 50px; /* Changer la largeur selon vos besoins */
+  height: auto; /* Laisser la hauteur ajustable en fonction de la largeur */
 }
 
-.connexion-button:hover {
-    color: #fff; /* Couleur du texte au survol */
-    text-decoration: none; /* Supprime le soulignement du lien au survol */
+.info-container {
+  margin-top: 40px;
 }
 
 .connexion-image {
-    vertical-align: middle; /* Alignement vertical */
-    margin-right: 10px; /* Marge à droite pour séparer l'image du texte */
+  width: 50px; /* Largeur souhaitée */
+  height: auto; /* Hauteur automatique pour conserver les proportions */
 }
 
+.description-cell,
+.description-cell2 {
+  max-width: 150px; /* Définir la largeur maximale selon vos besoins */
+  word-wrap: break-word; /* Activer le retour à la ligne automatique */
+}
+
+.container {
+  flex-direction: row;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espace entre les colonnes */
+}
+
+.container2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.column.left {
+  margin-right: 20px;
+}
+
+.column,
+.column2 {
+  flex: 1; /* Les colonnes prennent autant d'espace que nécessaire */
+}
+
+.column2 {
+  width: 97%;
+}
+
+.form-container,
+.form-container2 {
+  margin: 20px 0; /* Espace entre le formulaire et les avis */
+}
+
+.connexion-button {
+  display: inline-block;
+  text-decoration: none; /* Supprime le soulignement du lien */
+  color: #fff; /* Couleur du texte */
+}
+
+.connexion-button:hover {
+  color: #fff; /* Couleur du texte au survol */
+  text-decoration: none; /* Supprime le soulignement du lien au survol */
+}
+
+.connexion-image,
 .connexion-text {
-    vertical-align: middle; /* Alignement vertical */
-    display: inline-block;
-    margin-right: 10px; /* Marge à droite pour séparer l'image du texte */
+  vertical-align: middle; /* Alignement vertical */
+  margin-right: 10px; /* Marge à droite pour séparer l'image du texte */
 }
 
 .modal-content {
-    background-color: rgb(55, 110, 241);
+  background-color: rgb(55, 110, 241);
 }
 
-.card{
+.card {
   background-color: rgb(82, 169, 77);
 }
 
-#background2{
+#background2 {
   background-color: rgb(82, 169, 77);
   border-radius: 20px;
 }
 
-.carousel-inner{
+.carousel-inner {
   border-radius: 20px;
 }
 
@@ -124,25 +113,24 @@ body.compte {
 }
 
 @media screen and (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
+  .container {
+    flex-direction: column;
+  }
 
-    .column {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 20px;
-    }
+  .column {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
 }
-  
-.text-center {
+
+.text-center,
+.text-center2 {
   text-align: center;
   margin: auto; /* Pour centrer verticalement si nécessaire */
 }
 
 .text-center2 {
-  text-align: center;
-  margin: auto; /* Pour centrer verticalement si nécessaire */
   font-weight: bold; /* Pour ajouter le style en gras */
 }
 
@@ -157,10 +145,7 @@ body.compte {
   margin: auto; /* Pour centrer le carousel */
 }
 
-.rounded-image {
-  border-radius: 100px; /* Adjust the value to change the degree of rounding */
-}
-
+.rounded-image,
 .rounded-image-gestion {
   border-radius: 10px; /* Adjust the value to change the degree of rounding */
 }

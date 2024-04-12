@@ -64,6 +64,13 @@ CREATE TABLE IF NOT EXISTS role (
     label VARCHAR(255)
 );
 
+-- Création de la table "horaire"
+CREATE TABLE horaire (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    debut TIME NOT NULL,
+    fin TIME NOT NULL
+);
+
 -- Création de la table "service"
 CREATE TABLE IF NOT EXISTS service (
     service_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -117,6 +124,10 @@ INSERT INTO zooarcadia.role (label) VALUES
 ('Administrateur'), 
 ('Employé'),
 ('Vétérinaire');
+
+-- Intégration des données dans la table "horaire"
+INSERT INTO horaire (id, debut, fin) VALUES
+(1, '10:00:00', '18:00:00');
 
 -- Intégration des données dans la table "utilisateur"
 INSERT INTO zooarcadia.utilisateur (username, nom, password, prenom, role_id) VALUES 
