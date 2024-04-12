@@ -123,11 +123,11 @@ $resultAvisPage = $stmtAvisPage->get_result();
                 <br>
                 <h3 class='text-justify'>Formulaire pour envoyer ton avis</h3>
                 <form id="avisForm" method="post" action="back/save_avis.php" class='text-justify'>
-                    <div class="form-group">
+                    <div class="form-group col-md-8">
                         <label for="pseudo">Pseudo :</label>
                         <input type="text" class="form-control" id="pseudo" name="pseudo" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-md-8">
                         <label for="commentaire">Votre avis :</label>
                         <textarea class="form-control" id="commentaire" name="commentaire" rows="3" required></textarea>
                     </div>
