@@ -77,9 +77,8 @@ function getAnimalDetails($animal_id) {
     }
 
     // Afficher les détails de l'animal
-    echo '<div class="container custom-container" id="background2">';
+    echo '<div class="container custom-container" id="background-color">';
     echo '<br>';
-    echo '<a href="les_habitats.php" class="btn btn-secondary btn-block">Retour</a>';
     echo "<h1 class='text-center'>Détails de l'animal</h1>";
     echo '<img src="' . $base64_image . '" alt="Image de l\'animal" width="auto" height="150" class="text-center rounded-image">';
     echo "<h2 class='text-center'>" . $animal_row['prenom'] . "</h2>";
@@ -107,11 +106,14 @@ $rapport_stmt->execute();
 $rapport_result = $rapport_stmt->get_result();
 if ($rapport_result && $rapport_result->num_rows > 0) {
     $rapport_row = $rapport_result->fetch_assoc();
-    echo "<p class='text-center2'><u>Avis du vétérinaire :</u><br><div style='background-color: white; padding: 10px; border-radius: 10px; display: inline-block; text-align: center;'>" . wordwrap($rapport_row['detail'], 50, "<br>", true) . "</div></p>";
+    echo "<p class='text-center2'><u>Avis du vétérinaire :</u><br>";
+    echo "<pre class='d-inline d-sm-none habitat-description shadow' style='background-color: white; display: inline; padding: 10px; border-radius: 20px; text-align: center;'>" . wordwrap($rapport_row['detail'], 22, "<br>", true) . "</pre>"; // Texte pour smartphones
+    echo "<pre class='d-none d-sm-inline habitat-description shadow' style='background-color: white; display: block; padding: 10px; border-radius: 20px; text-align: center; width: 570px; margin: 0 auto;'>" . wordwrap($rapport_row['detail'], 50, "<br>", true) . "</pre>"; // Texte pour tablettes et PC
+    echo "</p>";
 }
+echo '<a href="les_habitats.php" class="btn btn-secondary btn-block custom-width" style="margin: 0 auto;">Retour</a>';
 echo '<br>';
 echo '</div>';
-
 }
 
 // Fermeture de la connexion

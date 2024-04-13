@@ -25,7 +25,7 @@ $first = true;
                 while ($row = $result->fetch_assoc()) {
             ?>
                     <div class="col">
-                        <div class="card mx-2">
+                        <div class="card mx-2 shadow">
                             <!-- Affichage de l'image du service, avec une image par défaut si aucune image n'est disponible -->
                             <img src="<?php echo (!empty($row['image_data'])) ? 'data:' . $row['image_type'] . ';base64,' . base64_encode($row['image_data']) : 'front/img/default.jpg'; ?>" class="card-img-top" alt="Image du service">
                             <div class="card-body">

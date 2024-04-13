@@ -85,15 +85,12 @@ while ($habitat_row = $habitats_result->fetch_assoc()) {
     }
 
     echo '<div class="col-md-6">';
-    echo '<div class="container custom-container mb-4" id="background2">';
-    echo '<br>';
+    echo '<div class="container custom-container mb-4" id="background-color">';
     echo "<div>";
-    echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
-    echo '<br>';
 
     // Requête pour obtenir l'image de l'habitat
     $image_id = $habitat_row['image_id'];
-    
+
     // Vérifiez si $image_id est vide
     if (empty($image_id)) {
         // Si $image_id est vide, affichez l'image par défaut
@@ -104,25 +101,39 @@ while ($habitat_row = $habitats_result->fetch_assoc()) {
         $image_result = $connexion->query($image_query);
 
         // Affichage de l'image de l'habitat
-        echo "<div class='text-center'>";
+        echo "<div class='habitat-image-container text-center'>";
         if ($image_result->num_rows > 0) {
             $image_row = $image_result->fetch_assoc();
             $image_data = $image_row['image_data'];
             $image_type = $image_row['image_type'];
             $image_src = 'data:image/' . $image_type . ';base64,' . base64_encode($image_data);
-            echo "<img src='" . $image_src . "' alt='" . $habitat_row['nom'] . "' class='img-fluid rounded'>";
+
+            // Appliquer le style et le lien
+            echo "<a href='les_habitats_2.php?habitat_id=" . $habitat_row['habitat_id'] . "' class='m-2'>";
+            if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], 'Mobile') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'Android') !== false)) {
+                // Si l'utilisateur est sur un smartphone
+                echo "<div style='width: 200px; height: 200px; border-radius: 50%; overflow: hidden; position: relative; margin: auto;'>";
+                $fontSize = "15px"; // Taille de police pour smartphone
+            } else {
+                // Si l'utilisateur est sur une tablette ou un PC
+                echo "<div style='width: 500px; height: 500px; border-radius: 50%; overflow: hidden; position: relative; margin: auto;'>";
+                $fontSize = "30px"; // Taille de police pour tablette ou PC
+            }
+            echo "<img src='" . $image_src . "' alt='" . $habitat_row['nom'] . "' style='width: 100%; height: 100%; object-fit: cover;'>";
+            echo "<div style='position: absolute; bottom: 0; width: 100%; background-color: rgba(0, 0, 0, 0.7); color: white; text-align: center; padding: 20px; font-size: " . $fontSize . ";'>";
+            echo $habitat_row['nom'];
+            echo "</div>";
+            echo "</div>";
+            echo "</a>";
         } else {
+            // Si aucune image n'est trouvée, affichez l'image par défaut
             echo "<img src='front/img/default.jpg' alt='Image par défaut' class='img-fluid'>";
         }
         echo "</div>";
     }
-    echo '<br>';
-    echo '<br>';
-    echo "<p class='text-center'><a href='les_habitats_2.php?habitat_id=" . $habitat_row['habitat_id'] . "' class='btn btn-primary'>Voir détails</a></p>";
+
     echo "</div>";
-    echo '<br>';
-    echo '</div>';
-    echo '<br>';
+    echo "</div>";
     echo '</div>';
 
     $count++;
