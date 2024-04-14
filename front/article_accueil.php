@@ -62,12 +62,12 @@ $resultAvisPage = $stmtAvisPage->get_result();
 
 ?>
 
-<div class="container" id="background2">
+<div class="container" id="background-color">
     <div class="row">
-        <div class="column left custom-form col-md-3">
+        <div class="column left custom-form col-md-3" style='background-color:green; border-radius: 20px; border: 2px solid white;'>
             <br>
             <h2 class='text-center'>ZOO Arcadia</h2>
-            <p class='text-justify'>
+            <p class='text-justify text-center' style='background-color:white; border-radius: 10px; border: 1px solid black;'>
                 Arcadia est un zoo situé en France, près de la célèbre forêt de Brocéliande, en Bretagne. Fondé en 1960, ce zoo offre une expérience unique aux visiteurs, les plongeant au cœur de la nature et leur permettant de découvrir une grande diversité d'animaux fascinants.
                 Arcadia abrite une variété d'habitats soigneusement aménagés pour offrir aux animaux des conditions de vie proches de leur environnement naturel. Parmi les habitats remarquables, on trouve la savane africaine, la jungle tropicale, les marais côtiers et bien d'autres. Chaque espace est conçu avec soin pour garantir le bien-être des animaux tout en offrant aux visiteurs une expérience immersive.
                 ZOO Arcadia offre une expérience inoubliable pour les amoureux de la nature de tous âges, combinant divertissement, éducation et conservation dans un cadre magnifique et préservé.
@@ -77,16 +77,16 @@ $resultAvisPage = $stmtAvisPage->get_result();
                     <br>
                     <br>
                     <?php if ($heure_ouverture && $heure_fermeture): ?>
-                        <p class="font-weight-bold" style="font-size: 20px; color: blue; border: 2px solid black; padding: 20px;">Heure d'Ouverture du ZOO:<br><?php echo date("H:i", strtotime($heure_ouverture)); ?></p>
-                        <p class="font-weight-bold" style="font-size: 20px; color: blue; border: 2px solid black; padding: 20px;">Heure de Fermeture du ZOO:<br><?php echo date("H:i", strtotime($heure_fermeture)); ?></p>
+                        <p class="font-weight-bold" style="font-size: 20px; color: white; border: 2px solid white; padding: 20px; border-radius: 20px;">Heure d'Ouverture du ZOO:<br><?php echo date("H:i", strtotime($heure_ouverture)); ?></p>
+                        <p class="font-weight-bold" style="font-size: 20px; color: white; border: 2px solid white; padding: 20px; border-radius: 20px;">Heure de Fermeture du ZOO:<br><?php echo date("H:i", strtotime($heure_fermeture)); ?></p>
                     <?php else: ?>
-                        <p class="font-weight-bold" style="font-size: 20px; color: blue; border: 2px solid black; padding: 20px;">Aucun horaire trouvé dans la base de données.</p>
+                        <p class="font-weight-bold" style="font-size: 20px; color: white; border: 2px solid white; padding: 20px; border-radius: 20px;">Aucun horaire trouvé dans la base de données.</p>
                     <?php endif; ?>
                 </div>
             </div>
 
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" style='border: 2px solid white; border-radius: 20px;'>
             <!-- Affichage des avis -->
             <?php if ($resultAvisPage->num_rows > 0) : ?>
                 <br>
@@ -96,14 +96,14 @@ $resultAvisPage = $stmtAvisPage->get_result();
                         <thead>
                             <tr>
                                 <th class="table text-justify" style="width: 150px;">Pseudo</th>
-                                <th class="table text-justify" style="width: 450px;">Commentaire</th>
+                                <th class="table text-justify" style="width: 500px;">Commentaire</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php while ($row = $resultAvisPage->fetch_assoc()) : ?>
                                 <tr>
-                                    <td class="description description-cell"><?php echo $row['pseudo']; ?></td>
-                                    <td class="description description-cell2"><?php echo $row['commentaire']; ?></td>
+                                    <td class="description description-cell text-center" style='background-color:white; border: 1px solid black;'><?php echo $row['pseudo']; ?></td>
+                                    <td class="description description-cell2 text-center" style='background-color:white; border: 1px solid black;'><?php echo $row['commentaire']; ?></td>
                                 </tr>
                             <?php endwhile; ?>
                         </tbody>
@@ -123,16 +123,16 @@ $resultAvisPage = $stmtAvisPage->get_result();
                 <br>
                 <h3 class='text-justify'>Formulaire pour envoyer ton avis</h3>
                 <form id="avisForm" method="post" action="back/save_avis.php" class='text-justify'>
-                    <div class="form-group col-md-8">
+                    <div class="form-group col-md-12">
                         <label for="pseudo">Pseudo :</label>
                         <input type="text" class="form-control" id="pseudo" name="pseudo" required>
                     </div>
-                    <div class="form-group col-md-8">
+                    <div class="form-group col-md-12">
                         <label for="commentaire">Votre avis :</label>
                         <textarea class="form-control" id="commentaire" name="commentaire" rows="3" required></textarea>
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-primary">Soumettre</button>
+                    <button type="submit" class="btn btn-warning">Soumettre</button>
                 </form>
             </div>
         </div>
