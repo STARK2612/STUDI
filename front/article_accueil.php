@@ -64,7 +64,7 @@ $resultAvisPage = $stmtAvisPage->get_result();
 
 <div class="container" id="background-color">
     <div class="row">
-        <div class="column left custom-form col-md-3" style='background-color:green; border-radius: 20px; border: 2px solid white;'>
+        <div class="column left custom-form col-md-3" style='border-radius: 20px; border: 2px solid white;'>
             <br>
             <h2 class='text-center'>ZOO Arcadia</h2>
             <p class='text-justify text-center' style='background-color:white; border-radius: 10px; border: 1px solid black;'>
@@ -141,7 +141,7 @@ $resultAvisPage = $stmtAvisPage->get_result();
 
 <!-- Carousel -->
 <br>
-<div id="carouselExampleIndicators" class="carousel slide rounded-carousel custom-carousel" data-bs-ride="carousel">
+<div id="carouselExampleIndicators" class="carousel slide rounded-carousel custom-carousel text-center" data-bs-ride="carousel" style='border-radius: 22px; border: 3px solid white;'>
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>

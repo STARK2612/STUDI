@@ -116,7 +116,7 @@ while ($habitat_row = $habitats_result->fetch_assoc()) {
                 $fontSize = "15px"; // Taille de police pour smartphone
             } else {
                 // Si l'utilisateur est sur une tablette ou un PC
-                echo "<div style='width: 500px; border: 3px solid white; height: 500px; border-radius: 50%; overflow: hidden; position: relative; margin: auto;'>";
+                echo "<div style='width: 400px; border: 3px solid white; height: 400px; border-radius: 50%; overflow: hidden; position: relative; margin: auto;'>";
                 $fontSize = "30px"; // Taille de police pour tablette ou PC
             }
             echo "<img src='" . $image_src . "' alt='" . $habitat_row['nom'] . "' style='width: 100%; height: 100%; object-fit: cover;'>";
