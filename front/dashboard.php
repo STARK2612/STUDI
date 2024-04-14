@@ -63,7 +63,7 @@ if(!(isset($_GET['annee']) && !empty($_GET['annee']))) {
 
 ?>
 
-<div class="container" id="background2">
+<div class="container" id="background-color" style="border-radius: 10px; border: 3px solid white;">
     <div class="row">
         <div class="col-md-6">
             <br>

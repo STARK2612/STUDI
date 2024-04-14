@@ -34,10 +34,10 @@
                         <a class="nav-link" href="contact.php">Contact</a>
                     </li>
                     <br>
-                    <li class="nav-item">
-                        <a href="connexion.php" class="btn btn-danger connexion-button">
+                    <li class="nav-item" style="width:200px">
+                        <a href="connexion.php" class="btn btn-warning connexion-button">
                             <img src="front/img/connexion.png" alt="Connexion" class="connexion-image">
-                            <span class="connexion-text">Connexion<br>réservée au<br>personnels du <br>zoo</span>
+                            <span class="connexion-text">Connexion réservée au personnels du zoo</span>
                         </a>
                     </li>
                 </ul>

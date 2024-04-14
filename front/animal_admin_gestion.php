@@ -149,7 +149,7 @@ $stmt->bind_param("ii", $premierAnimal, $animauxParPage);
 $stmt->execute();
 $result_animaux = $stmt->get_result();
 ?>
-<div class="container" id="background2">
+<div class="container" id="background-color" style="border-radius: 10px; border: 3px solid white;">
     <div class="row">
         <div class="col-md-4">
             <br>
@@ -185,7 +185,7 @@ $result_animaux = $stmt->get_result();
                     </select>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-primary" name="ajouter">Ajouter</button>
+                <button type="submit" class="btn btn-warning" name="ajouter">Ajouter</button>
                 <br><br>
             <a href="admin.php" class="btn btn-secondary btn-block">Retour</a>
             <br><br>
@@ -211,21 +211,21 @@ $result_animaux = $stmt->get_result();
                 // Boucle à travers chaque animal et afficher les détails dans le tableau
                 while ($row = $result_animaux->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td class='animal_id hidden'>" . $row['animal_id'] . "</td>";
-                    echo "<td class='prenom description-cell'>" . $row['prenom'] . "</td>";
-                    echo "<td><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='auto' height='50' /></td>";
-                    echo "<td class='race-animal description-cell'>" . $row['race'] . "</td>";
-                    echo "<td class='habitat-animal'>" . $row['habitat'] . "</td>";
+                    echo "<td class='animal_id hidden text-center'>" . $row['animal_id'] . "</td>";
+                    echo "<td class='prenom description-cell text-center'style='background-color:white; border: 1px solid black;'>" . $row['prenom'] . "</td>";
+                    echo "<td class='text-center' style='background-color:white; border: 1px solid black;'><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "'border= 2px solid black width='auto' height='50'/></td>";
+                    echo "<td class='race-animal description-cell text-center' style='background-color:white; border: 1px solid black;'>" . $row['race'] . "</td>";
+                    echo "<td class='habitat-animal text-center' style='background-color:white; border: 1px solid black;'>" . $row['habitat'] . "</td>";
                     // Ajouter des boutons pour modifier et supprimer chaque animal
-                    echo "<td>";
-                    echo "<div class='btn-group' role='group'>";
-                    echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
+                    echo "<td class='text-center' style='background-color:white; border: 1px solid black;'>";
+                    echo "<div class='btn-group text-center' role='group'>";
+                    echo "<button class='btn btn-primary btn-sm edit-button text-center'>Modifier</button>";
                     echo "</div>";
                     echo "<div style='margin-top: 5px;'></div>"; // Espace de 5px entre les boutons
                     // Formulaire pour la suppression de l'animal
-                    echo "<form class='delete-form' method='post' action='" . $_SERVER['PHP_SELF'] . "' onsubmit='return confirmDelete(" . $row['animal_id'] . ")'>";
+                    echo "<form class='delete-form text-center' method='post' action='" . $_SERVER['PHP_SELF'] . "' onsubmit='return confirmDelete(" . $row['animal_id'] . ")'>";
                     echo "<input type='hidden' name='animal_id' value='" . $row['animal_id'] . "'>";
-                    echo "<button type='submit' class='btn btn-danger btn-sm delete-button' name='supprimer' id='delete-button-" . $row['animal_id'] . "'>Supprimer</button>";
+                    echo "<button type='submit' class='btn btn-danger btn-sm delete-button text-center' name='supprimer' id='delete-button-" . $row['animal_id'] . "'>Supprimer</button>";
                     echo "</form>";
                     echo "</td>";
                     echo "</tr>";
@@ -297,7 +297,7 @@ $result_animaux = $stmt->get_result();
                         <input type="file" class="form-control-file" id="image2" name="image" accept="image/jpeg, image/jpg, image/png">
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-primary" name="modifier">Modifier</button>
+                    <button type="submit" class="btn btn-warning" name="modifier">Modifier</button>
                 </form>
             </div>
         </div>

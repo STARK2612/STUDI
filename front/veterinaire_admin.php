@@ -1,14 +1,21 @@
-<div class="container" id="background2">
+<div class="container" id="background-color">
   <br>
   <h1 class="text-center">Espace Vétérinaire <a href="back/logout.php" class="btn btn-danger">Déconnexion</a></h1>
   <br>
-  <div class="row justify-content-center align-items-center">
-    <div class="col-md-6">
-      <div class="d-flex flex-column align-items-center">
-        <a href="veterinaire_gestion.php" class="btn btn-primary custom-btn">Bilan Veterinaire</a>
-        <p class="text-center">Donne accès aux comptes rendus vétérinaires, fournissant des informations récapitulatives sur divers aspects.</p>
-      </div>
+  <div class="col-md-4" style="height: 200px; width:500px; margin: 10px;">
+    <div class="row justify-content-center">
+        <div class="d-flex flex-column align-items-center" style='border-radius: 10px; border: 3px solid black; margin:10px; background-color:white'>
+            <div class="col-md-15">
+                <div class="d-flex justify-content-center align-items-center">
+                    <a href="veterinaire_gestion.php" class="btn btn-warning custom-btn">Bilan Veterinaire</a>
+                    <img src="front/img/veterinaire.gif" width="100" height="100" alt="GIF utilisateur">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <p class="text-center">Gestion comptes rendus vétérinaires.</p>
+            </div>
+            <br>
+        </div>
     </div>
-  </div>
-  <br>
+</div>
 </div>

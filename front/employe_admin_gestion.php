@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Fermeture de la connexion à la base de données
 mysqli_close($connexion);
 ?>
-<div class="container my-4" id="background2">
+<div class="container my-4" id="background-color" style="border-radius: 10px; border: 3px solid white;">
     <br>
     <div class="text-center">
         <h2 class="mb-4">Alimentation quotidienne</h2>
@@ -127,7 +127,7 @@ mysqli_close($connexion);
             <br>
             <!-- Boutons de soumission et de retour -->
             <div class="text-center">
-                <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Enregistrer</button>
+                <button type="submit" class="btn btn-warning" onclick="validateForm(event)">Enregistrer</button>
                 <a href="<?php
                 // Redirection en fonction du rôle de l'utilisateur
                 if ($_SESSION['role'] == 'Administrateur') {

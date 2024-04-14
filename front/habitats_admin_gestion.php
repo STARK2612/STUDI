@@ -179,7 +179,7 @@ $totalHabitats = $row_count['totalHabitats'];
 $totalPages = ceil($totalHabitats / $servicesParPage);
 
 ?>
-<div class="container" id="background2">
+<div class="container" id="background-color" style="border-radius: 10px; border: 3px solid white;">
     <div class="row">
         <!-- Formulaire d'ajout d'un nouvel habitat -->
         <div class="col-md-4">
@@ -200,7 +200,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                     <input type="file" class="form-control-file" id="image" name="image" accept="image/jpeg, image/jpg, image/png" required>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-primary" name="ajouter">Ajouter</button>
+                <button type="submit" class="btn btn-warning" name="ajouter">Ajouter</button>
                 <br><br>
                 <!-- Bouton de retour en fonction du rôle de l'utilisateur -->
                 <a href="<?php
@@ -235,14 +235,14 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                     <?php
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td class='habitat_id hidden'>" . ($row['habitat_id'] ?? '') . "</td>";
-                        echo "<td class='nom'>" . $row['nom'] . "</td>";
-                        echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
-                        echo "<td class='commentaire description-cell'>" . (isset($row['commentaire_habitat']) ? $row['commentaire_habitat'] : "") . "</td>";
-                        echo "<td>";
-                        echo isset($row['image_type']) ? "<img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='auto' height='50' />" : "<img src='front/img/defaultsmall.jpg' alt='Image par défaut'>";
+                        echo "<td class='habitat_id hidden text-center' style='background-color:white; border: 1px solid black;'>" . ($row['habitat_id'] ?? '') . "</td>";
+                        echo "<td class='nom text-center' style='background-color:white; border: 1px solid black;'>" . $row['nom'] . "</td>";
+                        echo "<td class='description description-cell2 text-center' style='background-color:white; border: 1px solid black;'>" . $row['description'] . "</td>";
+                        echo "<td class='commentaire description-cell text-center' style='background-color:white; border: 1px solid black;'>" . (isset($row['commentaire_habitat']) ? $row['commentaire_habitat'] : "") . "</td>";
+                        echo "<td class='text-center' style='background-color:white; border: 1px solid black;'>";
+                        echo isset($row['image_type']) ? "<img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' border= '2px solid black' width='auto' height='50' />" : "<img src='front/img/defaultsmall.jpg' alt='Image par défaut'>";
                         echo "</td>";
-                        echo "<td>";
+                        echo "<td class='text-center' style='background-color:white; border: 1px solid black;'>";
                         echo "<div class='btn-group' role='group'>";
                         echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
                         echo "</div>";
@@ -299,7 +299,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                         <input type="file" class="form-control-file" id="nouvelle_image" name="nouvelle_image" accept="image/jpeg, image/jpg, image/png">
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-primary" name="modifier" onclick="showSuccessMessage()">Modifier</button>
+                    <button type="submit" class="btn btn-warning" name="modifier" onclick="showSuccessMessage()">Modifier</button>
                 </form>
             </div>
         </div>

@@ -37,15 +37,15 @@ function getHabitatDetails($habitat_id) {
     echo "<h2 class='text-center'>" . $habitat_row['nom'] . "</h2>";
     // Affichage de l'image de l'habitat avec une ombre
     if (!empty($habitat_row['image_data'])) {
-        echo "<img src='data:image/" . $habitat_row['image_type'] . ";base64," . base64_encode($habitat_row['image_data']) . "' alt='" . $habitat_row['nom'] . "' class='text-center img-fluid habitat-image' style='width: 800px; height: auto; border-radius: 20px;'>";
+        echo "<img src='data:image/" . $habitat_row['image_type'] . ";base64," . base64_encode($habitat_row['image_data']) . "' alt='" . $habitat_row['nom'] . "' class='text-center img-fluid habitat-image' style='width: 800px; border: 3px solid white; height: auto; border-radius: 20px;'>";
     } else {
-        echo "<img src='front/img/default.jpg' alt='Image par défaut' class='text-center img-fluid habitat-image' style='width: 800px; height: auto; border-radius: 20px;'>";
+        echo "<img src='front/img/default.jpg' alt='Image par défaut' class='text-center img-fluid habitat-image' style='width: 800px; border: 3px solid white; height: auto; border-radius: 20px;'>";
     }
     echo "<p class='lead text-center2'>";
     echo "<span class='d-none d-sm-block'><u>Description :</u></strong></span>"; // Ne pas afficher sur les smartphones
     echo "<span class='d-sm-none'><u><b>Desc. :</b></u></span>"; // Afficher uniquement sur les smartphones
-    echo "<pre class='d-inline d-sm-none habitat-description shadow' style='background-color: white; display: inline; padding: 10px; border-radius: 20px; text-align: center;'>" . wordwrap($habitat_row['description'], 22, "<br>", true) . "</pre>"; // Texte pour smartphones
-    echo "<pre class='d-none d-sm-inline habitat-description shadow' style='background-color: white; display: block; padding: 10px; border-radius: 20px; text-align: center; width: 570px; margin: 0 auto;'>" . wordwrap($habitat_row['description'], 50, "<br>", true) . "</pre>"; // Texte pour tablettes et PC
+    echo "<pre class='d-inline d-sm-none habitat-description shadow' style='background-color: white; border: 3px solid white; display: inline; padding: 10px; border-radius: 20px; text-align: center;'>" . wordwrap($habitat_row['description'], 22, "<br>", true) . "</pre>"; // Texte pour smartphones
+    echo "<pre class='d-none d-sm-inline habitat-description shadow' style='background-color: white; border: 3px solid white; display: block; padding: 10px; border-radius: 20px; text-align: center; width: 570px; margin: 0 auto;'>" . wordwrap($habitat_row['description'], 50, "<br>", true) . "</pre>"; // Texte pour tablettes et PC
 
 
     echo "</p>";
@@ -61,7 +61,7 @@ function getHabitatDetails($habitat_id) {
     while ($animal_row = $animaux_result->fetch_assoc()) {
         // Lien vers une page pour chaque animal avec une image et un appel à une fonction JavaScript onclick
         echo "<a href='les_habitats_3.php?animal_id=" . $animal_row['animal_id'] . "' class='m-2' onclick='handleAnimalClick(" . $animal_row['animal_id'] . ")'>";
-        echo "<div style='width: 150px; height: 150px; border-radius: 50%; overflow: hidden; position: relative;'>";
+        echo "<div style='width: 150px; height: 150px; border: 3px solid white; border-radius: 50%; overflow: hidden; position: relative;'>";
         if (!empty($animal_row['image_data'])) {
             echo "<img src='data:image/" . $animal_row['image_type'] . ";base64," . base64_encode($animal_row['image_data']) . "' alt='" . $animal_row['prenom'] . "' style='width: 100%; height: 100%; object-fit: cover;'>";
         } else {

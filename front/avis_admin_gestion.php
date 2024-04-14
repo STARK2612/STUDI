@@ -33,7 +33,7 @@ $sqlAvisValidesEtRejetes .= " LIMIT $indiceDepartValidesEtRejetes, $avisParPageV
 $resultAvisValidesEtRejetes = $connexion->query($sqlAvisValidesEtRejetes);
 ?>
 
-    <div class="container" id="background2">
+    <div class="container" id="background-color" style="border-radius: 10px; border: 3px solid white;">
         <div class="row">
             <div class="column left">
                 <br>
@@ -51,9 +51,9 @@ $resultAvisValidesEtRejetes = $connexion->query($sqlAvisValidesEtRejetes);
                             <tbody>
                                 <?php while ($row = $resultAttenteValidation->fetch_assoc()) : ?>
                                     <tr>
-                                        <td><?php echo $row['pseudo']; ?></td>
-                                        <td class="commentaire"><?php echo $row['commentaire']; ?></td>
-                                        <td>
+                                        <td class='text-center' style='background-color:white; border: 1px solid black;'><?php echo $row['pseudo']; ?></td>
+                                        <td class="commentaire text-center" style='background-color:white; border: 1px solid black;'><?php echo $row['commentaire']; ?></td>
+                                        <td class='text-center' style='background-color:white; border: 1px solid black;'>
                                             <form action="back/save_avis.php" method="GET">
                                                 <input type="hidden" name="id" value="<?php echo $row['avis_id']; ?>">
                                                 <button type="submit" class="btn btn-success" name="approve" value="1">Approuver</button>
@@ -81,7 +81,7 @@ $resultAvisValidesEtRejetes = $connexion->query($sqlAvisValidesEtRejetes);
                         </nav>
                     <?php endif; ?>
                 <?php else : ?>
-                    <p>Aucun avis en attente de validation.</p>
+                    <p class='text-center' style='background-color:white; border: 1px solid black;'>Aucun avis en attente de validation.</p>
                 <?php endif; ?>
             </div>
             <div class="column2">
@@ -102,10 +102,10 @@ $resultAvisValidesEtRejetes = $connexion->query($sqlAvisValidesEtRejetes);
                             <tbody>
                                 <?php while ($row = $resultAvisValidesEtRejetes->fetch_assoc()) : ?>
                                     <tr>
-                                        <td><?php echo $row['pseudo']; ?></td>
-                                        <td class="commentaire"><?php echo $row['commentaire']; ?></td>
-                                        <td><?php echo ($row['isVisible'] == 1) ? 'Approuvé' : 'Rejeté'; ?></td>
-                                        <td>
+                                        <td class='text-center' style='background-color:white; border: 1px solid black;'><?php echo $row['pseudo']; ?></td>
+                                        <td class="commentaire" style='background-color:white; border: 1px solid black;'><?php echo $row['commentaire']; ?></td>
+                                        <td class='text-center' style='background-color:white; border: 1px solid black;'><?php echo ($row['isVisible'] == 1) ? 'Approuvé' : 'Rejeté'; ?></td>
+                                        <td class='text-center' style='background-color:white; border: 1px solid black;'>
                                             <!-- Formulaire pour supprimer l'avis -->
                                             <form action="back/delete_avis.php" method="POST">
                                                 <input type="hidden" name="id" value="<?php echo $row['avis_id']; ?>">

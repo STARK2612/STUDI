@@ -112,11 +112,11 @@ while ($habitat_row = $habitats_result->fetch_assoc()) {
             echo "<a href='les_habitats_2.php?habitat_id=" . $habitat_row['habitat_id'] . "' class='m-2'>";
             if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], 'Mobile') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'Android') !== false)) {
                 // Si l'utilisateur est sur un smartphone
-                echo "<div style='width: 200px; height: 200px; border-radius: 50%; overflow: hidden; position: relative; margin: auto;'>";
+                echo "<div style='width: 200px; border: 3px solid white; height: 200px; border-radius: 50%; overflow: hidden; position: relative; margin: auto;'>";
                 $fontSize = "15px"; // Taille de police pour smartphone
             } else {
                 // Si l'utilisateur est sur une tablette ou un PC
-                echo "<div style='width: 500px; height: 500px; border-radius: 50%; overflow: hidden; position: relative; margin: auto;'>";
+                echo "<div style='width: 500px; border: 3px solid white; height: 500px; border-radius: 50%; overflow: hidden; position: relative; margin: auto;'>";
                 $fontSize = "30px"; // Taille de police pour tablette ou PC
             }
             echo "<img src='" . $image_src . "' alt='" . $habitat_row['nom'] . "' style='width: 100%; height: 100%; object-fit: cover;'>";

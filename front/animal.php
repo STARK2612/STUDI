@@ -80,7 +80,7 @@ function getAnimalDetails($animal_id) {
     echo '<div class="container custom-container" id="background-color">';
     echo '<br>';
     echo "<h1 class='text-center'>Détails de l'animal</h1>";
-    echo '<img src="' . $base64_image . '" alt="Image de l\'animal" width="auto" height="150" class="text-center rounded-image">';
+    echo '<img src="' . $base64_image . '" alt="Image de l\'animal" border="3px solid white" width="auto" height="150" class="text-center rounded-image">';
     echo "<h2 class='text-center'>" . $animal_row['prenom'] . "</h2>";
     if (!empty($race_row['label'])) {
         echo "<p class='text-center2'><u>Race :</u> <span style='background-color: white; padding: 2px 5px; border-radius: 5px; font-weight: normal;'>" . $race_row['label'] . "</span></p>";

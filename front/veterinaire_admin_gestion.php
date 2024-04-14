@@ -108,7 +108,7 @@ $result = $connexion->query($sql);
 // Traitement des résultats de la requête
 if ($result->num_rows > 0) {
     // Affichage du formulaire et des données des animaux
-    echo '<div class="container" id="background2">';
+    echo '<div class="container" id="background-color" style="border-radius: 10px; border: 3px solid white;">';
     echo '<br>';
     echo '<div class="row">';
     echo '<div class="col-md-4">';
@@ -187,7 +187,7 @@ if ($result->num_rows > 0) {
             </div>
             <br>
             <!-- Bouton pour enregistrer les modifications -->
-            <input type="submit" class="btn btn-primary" value="Enregistrer">
+            <input type="submit" class="btn btn-warning" value="Enregistrer">
             <br><br>
             <!-- Bouton pour retourner à la page appropriée en fonction du rôle de l'utilisateur -->
             <a href="<?php

@@ -151,7 +151,7 @@ if ($result_select_horaires->num_rows > 0) {
 
 ?>
 
-<div class="container" id="background2">
+<div class="container" id="background-color" style="border-radius: 10px; border: 3px solid white;">
     <div class="row">
         <div class="col-md-4">
             <br>
@@ -172,7 +172,7 @@ if ($result_select_horaires->num_rows > 0) {
                     <div id="fileSizeError" style="color: red;"></div>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-primary" name="ajouter">Ajouter</button>
+                <button type="submit" class="btn btn-warning" name="ajouter">Ajouter</button>
                 <br><br>
                 <a href="<?php
                     if ($_SESSION['role'] == 'Administrateur') {
@@ -204,11 +204,11 @@ if ($result_select_horaires->num_rows > 0) {
                         <?php
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
-                            echo "<td class='service_id hidden'>" . $row['service_id'] . "</td>";
-                            echo "<td class='nom'>" . $row['nom'] . "</td>";
-                            echo "<td class='description description-cell2'>" . $row['description'] . "</td>";
-                            echo isset($row['image_type']) ? "<td><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' width='auto' height='50' /></td>" : "<td><img src='front/img/defaultsmall.jpg' alt='Image par défaut'></td>";
-                            echo "<td>";
+                            echo "<td class='service_id hidden text-center' style='background-color:white; border: 1px solid black;'>" . $row['service_id'] . "</td>";
+                            echo "<td class='nom text-center' style='background-color:white; border: 1px solid black;'>" . $row['nom'] . "</td>";
+                            echo "<td class='description description-cell2 text-center' style='background-color:white; border: 1px solid black;'>" . $row['description'] . "</td>";
+                            echo isset($row['image_type']) ? "<td class='text-center' style='background-color:white; border: 1px solid black;'><img src='data:" . $row['image_type'] . ";base64," . base64_encode($row['image_data']) . "' border= '2px solid black' width='auto' height='50' /></td>" : "<td><img src='front/img/defaultsmall.jpg' alt='Image par défaut'></td>";
+                            echo "<td class='text-center' style='background-color:white; border: 1px solid black;'>";
                             echo "<div class='btn-group' role='group'>";
                             echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
                             echo "</div>";
@@ -250,7 +250,7 @@ if ($result_select_horaires->num_rows > 0) {
                 <input type="time" class="form-control" id="heure_fermeture" name="heure_fermeture" value="<?php echo $fin; ?>" required>
             </div>
                 <br>
-                <button type="submit" class="btn btn-primary" name="modifier_horaires">Modifier Horaires</button>
+                <button type="submit" class="btn btn-warning" name="modifier_horaires">Modifier Horaires</button>
             </form>
         </div>
     </div>
@@ -282,7 +282,7 @@ if ($result_select_horaires->num_rows > 0) {
                         <input type="file" class="form-control-file" id="new_image" name="new_image" accept="image/jpeg, image/jpg, image/png">
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-primary" name="modifier">Modifier</button>
+                    <button type="submit" class="btn btn-warning" name="modifier">Modifier</button>
                 </form>
             </div>
             <div id="successMessage" class="modal-footer" style="display: none;">

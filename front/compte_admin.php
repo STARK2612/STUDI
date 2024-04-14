@@ -52,7 +52,7 @@ $result = $stmt->get_result();
 ?>
 
 
-<div class="container" id="background2">
+<div class="container" id="background-color" style="border-radius: 10px; border: 3px solid white;">
     <div class="row">
         <div class="col-md-4 mt-4">
             <!-- Formulaire de création de compte utilisateur -->
@@ -83,7 +83,7 @@ $result = $stmt->get_result();
                     </select>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-primary btn-block">Créer le compte</button>
+                <button type="submit" class="btn btn-warning btn-block">Créer le compte</button>
                 <br><br>
             <a href="admin.php" class="btn btn-secondary btn-block">Retour</a>
             <br><br>
@@ -114,10 +114,10 @@ $result = $stmt->get_result();
                         continue; // Saute la première ligne où role_id est égal à 1
                     }
                     echo "<tr>";
-                    echo "<td class='username'>" . $row['username'] . "</td>";
-                    echo "<td class='nom'>" . $row['nom'] . "</td>";
-                    echo "<td class='prenom'>" . $row['prenom'] . "</td>";
-                    echo "<td class='role'>";
+                    echo "<td class='username text-center' style='background-color:white; border: 1px solid black;'>" . $row['username'] . "</td>";
+                    echo "<td class='nom text-center' style='background-color:white; border: 1px solid black;'>" . $row['nom'] . "</td>";
+                    echo "<td class='prenom text-center' style='background-color:white; border: 1px solid black;'>" . $row['prenom'] . "</td>";
+                    echo "<td class='role text-center' style='background-color:white; border: 1px solid black;'>";
                     // Mapper les rôles stockés dans la base de données aux libellés correspondants
                     switch ($row['role_id']) {
                         case 1:
@@ -135,7 +135,7 @@ $result = $stmt->get_result();
                     }
                     echo "</td>";
                     // Ajouter des boutons pour modifier et supprimer chaque ligne
-                    echo "<td>";
+                    echo "<td class='text-center' style='background-color:white; border: 1px solid black;'>";
                     echo "<div class='btn-group' role='group'>";
                     echo "<button class='btn btn-primary btn-sm edit-button'>Modifier</button>";
                     echo "<div style='margin-left: 10px;'></div>"; // Espace de 10px
@@ -194,7 +194,7 @@ $result = $stmt->get_result();
                         </select>
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-primary">Modifier</button>
+                    <button type="submit" class="btn btn-warning">Modifier</button>
                 </form>
             </div>
         </div>
