@@ -18,6 +18,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
     $nom = $_POST['nom'];
     $description = $_POST['description'];
 
+    // Vérification de la taille du fichier avant l'upload
+if(isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $imageSize = $_FILES['image']['size'];
+    $maxFileSize = 10 * 1024 * 1024; // 10 Mo
+    if($imageSize > $maxFileSize) {
+    } else {
+
     // Vérification de l'upload du fichier
     if(isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $imageData = file_get_contents($_FILES['image']['tmp_name']);
@@ -52,80 +59,75 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
         echo "Erreur lors de l'upload du fichier.";
     }
 }
-
+}}
 // Traitement du formulaire de modification d'un habitat
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier'])) {
+    // Assurez-vous que $habitat_id est défini
     $habitat_id = isset($_POST['habitat_id']) ? $_POST['habitat_id'] : null;
-    $nom = $_POST['nom'];
-    $description = $_POST['description'];
 
-    // Vérification de l'existence de l'habitat_id
+    // Vérifiez que $habitat_id est défini avant de continuer
     if ($habitat_id !== null) {
-        // Requête SQL pour la mise à jour de l'habitat
-        $sql = "UPDATE habitat SET nom=?, description=?";
-        $bindParams = array("ss", $nom, $description);
+        $nom = $_POST['nom'];
+        $description = $_POST['description'];
 
-        if ($_FILES['nouvelle_image']['error'] === UPLOAD_ERR_OK) {
-            // Traitement de l'image
-            $imageData = file_get_contents($_FILES['nouvelle_image']['tmp_name']);
-            $imageType = $_FILES['nouvelle_image']['type'];
+        // Vérification de la taille du fichier avant l'upload
+        if (isset($_FILES['nouvelle_image']) && $_FILES['nouvelle_image']['error'] === UPLOAD_ERR_OK) {
+            $imageSize = $_FILES['nouvelle_image']['size'];
+            $maxFileSize = 10 * 1024 * 1024; // 10 Mo
+            if ($imageSize > $maxFileSize) {
+                echo "Fichier trop lourd, 10 Mo maximum.";
+            } else {
+                // Traitement de l'image
+                $imageData = file_get_contents($_FILES['nouvelle_image']['tmp_name']);
+                $imageType = $_FILES['nouvelle_image']['type'];
 
-            // Types de fichiers autorisés
-            $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-            if (!in_array($imageType, $allowedTypes)) {
-                echo "Le fichier doit être au format JPEG, JPG ou PNG.";
-                exit;
+                // Types de fichiers autorisés
+                $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                if (!in_array($imageType, $allowedTypes)) {
+                    echo "Le fichier doit être au format JPEG, JPG ou PNG.";
+                    exit;
+                }
+
+                // Préparation de la requête pour l'insertion de l'image
+                $sqlInsertImage = "INSERT INTO image (image_data, image_type) VALUES (?, ?)";
+                $insertImage = $connexion->prepare($sqlInsertImage);
+                $insertImage->bind_param("ss", $imageData, $imageType);
+                if (!$insertImage->execute()) {
+                    echo "Erreur lors de l'insertion de l'image : " . $insertImage->error;
+                    exit;
+                }
+
+                // Récupération de l'ID de l'image insérée
+                $imageId = $insertImage->insert_id;
+
+                // Préparation de la requête pour la mise à jour de l'habitat avec l'ID de l'image
+                $sqlUpdateHabitat = "UPDATE habitat SET nom=?, description=?, image_id=? WHERE habitat_id=?";
+                $updateHabitat = $connexion->prepare($sqlUpdateHabitat);
+                $updateHabitat->bind_param("ssii", $nom, $description, $imageId, $habitat_id);
+                if ($updateHabitat->execute()) {
+                    echo "Habitat mis à jour avec succès";
+                } else {
+                    echo "Erreur lors de la mise à jour de l'habitat : " . $updateHabitat->error;
+                }
+                $updateHabitat->close();
             }
-
-            // Préparation de la requête pour l'insertion de l'image
-            $sqlInsertImage = "INSERT INTO image (image_data, image_type) VALUES (?, ?)";
-            $insertImage = $connexion->prepare($sqlInsertImage);
-            $insertImage->bind_param("ss", $imageData, $imageType);
-            if (!$insertImage->execute()) {
-                echo "Erreur lors de l'insertion de l'image : " . $insertImage->error;
-                exit;
-            }
-
-            // Récupération de l'ID de l'image insérée
-            $imageId = $insertImage->insert_id;
-
-            // Ajout de l'ID de l'image dans la requête de mise à jour
-            $sql .= ", image_id=?";
-            $bindParams[0] .= "i";
-            $bindParams[] = $imageId;
-        }
-
-        $sql .= " WHERE habitat_id=?";
-        $bindParams[0] .= "i";
-        $bindParams[] = $habitat_id;
-
-        // Préparation de la requête
-        $updateStatement = $connexion->prepare($sql);
-
-        if (!$updateStatement) {
-            echo "Erreur de préparation de la requête : " . $connexion->error;
-            exit;
-        }
-
-        // Liaison des paramètres
-        if (!$updateStatement->bind_param(...$bindParams)) {
-            echo "Erreur de liaison des paramètres : " . $updateStatement->error;
-            exit;
-        }
-
-        // Exécution de la requête
-        if ($updateStatement->execute()) {
-            echo "Habitat mis à jour avec succès";
         } else {
-            echo "Erreur lors de l'exécution de la requête : " . $updateStatement->error;
+            // Si aucune nouvelle image n'est téléchargée, mettez à jour uniquement les autres informations de l'habitat
+            $sqlUpdateHabitat = "UPDATE habitat SET nom=?, description=? WHERE habitat_id=?";
+            $updateHabitat = $connexion->prepare($sqlUpdateHabitat);
+            $updateHabitat->bind_param("ssi", $nom, $description, $habitat_id);
+            if ($updateHabitat->execute()) {
+                echo "Habitat mis à jour avec succès";
+            } else {
+                echo "Erreur lors de la mise à jour de l'habitat : " . $updateHabitat->error;
+            }
+            $updateHabitat->close();
         }
-
-        // Fermeture de la déclaration
-        $updateStatement->close();
     } else {
         echo "ID d'habitat non spécifié.";
     }
 }
+
 
 // Traitement de la suppression d'un habitat
 if (isset($_POST['supprimer'])) {
@@ -184,7 +186,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
         <!-- Formulaire d'ajout d'un nouvel habitat -->
         <div class="col-md-4">
             <br>
-            <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+            <form id="addHabitatForm" method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" onsubmit="return checkFileSize()">
                 <h3>Ajouter un Nouvel Habitat</h3>
                 <div class="form-group">
                     <label for="nom">Nom de l'Habitat:</label>
@@ -198,6 +200,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                     <br>
                     <label for="image">Image:</label>
                     <input type="file" class="form-control-file" id="image" name="image" accept="image/jpeg, image/jpg, image/png" required>
+                    <div id="fileSizeError" style="color: red;"></div>
                 </div>
                 <br>
                 <button type="submit" class="btn btn-warning" name="ajouter">Ajouter</button>
@@ -261,7 +264,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
             </div>
             <!-- Pagination -->
             <?php
-            echo "<ul class='pagination'>";
+            echo "<ul class='pagination overflow-auto'>";
             for ($i = 1; $i <= $totalPages; $i++) {
                 $activeClass = ($page == $i) ? "active" : "";
                 echo "<li class='page-item $activeClass'><a class='page-link' href='?page=$i'>$i</a></li>";
@@ -280,7 +283,7 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+                <form method="post" class="custom-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" onsubmit="return checkFileSizeModal()">
                     <input type="hidden" id="habitat_id" name="habitat_id">
                     <div class="form-group">
                         <label for="habitat_id">ID de l'habitat:</label>
@@ -297,9 +300,10 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
                     <div class="form-group">
                         <label for="nouvelle_image">Nouvelle Image:</label>
                         <input type="file" class="form-control-file" id="nouvelle_image" name="nouvelle_image" accept="image/jpeg, image/jpg, image/png">
+                        <div id="fileSizeErrorModal" style="color: red;"></div>
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-warning" name="modifier" onclick="showSuccessMessage()">Modifier</button>
+                    <button type="submit" class="btn btn-warning" name="modifier" onclick="return checkFileSizeModal() && showSuccessMessage()">Modifier</button>
                 </form>
             </div>
         </div>
@@ -360,10 +364,10 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
         var input = document.getElementById('image');
         if (input.files.length > 0) {
             var fileSize = input.files[0].size;
-            var maxSize = 1048576;
+            var maxSize = 10485760; // Taille maximale : 10 Mo (10 * 1024 * 1024)
 
             if (fileSize > maxSize) {
-                document.getElementById('fileSizeError').innerHTML = 'Fichier trop lourd, 1 Mo maximum.';
+                document.getElementById('fileSizeError').innerHTML = 'Fichier trop lourd, 10 Mo maximum.';
                 return false;
             } else {
                 document.getElementById('fileSizeError').innerHTML = '';
@@ -372,7 +376,28 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
         }
         return true;
     }
+    
+    function checkFileSizeModal() {
+    var input = document.getElementById('nouvelle_image');
+    if (input.files.length > 0) {
+        var fileSize = input.files[0].size;
+        var maxSize = 10485760; // Taille maximale : 10 Mo (10 * 1024 * 1024)
+
+        if (fileSize > maxSize) {
+            // Afficher le message d'erreur dans la modal
+            document.getElementById('fileSizeErrorModal').innerHTML = 'Fichier trop lourd, 10 Mo maximum.';
+            return false;
+        } else {
+            // Réinitialiser le message d'erreur s'il n'y a pas d'erreur
+            document.getElementById('fileSizeErrorModal').innerHTML = '';
+            return true;
+        }
+    }
+    return true;
+}
 </script>
+
+
 
 <!-- Affichage du message de succès pour la modification -->
 <script>

@@ -167,7 +167,7 @@ $result_animaux = $stmt->get_result();
                 <div class="form-group">
                     <label for="image">Photo de l'Animal:</label>
                     <input type="file" class="form-control-file" id="image" name="image" accept="image/jpeg, image/jpg, image/png" required>
-                    <div id="fileSizeError" style="color: red;"></div> <!-- Div pour afficher le message d'erreur -->
+                    <div id="fileSizeError" style="color: red;"></div>
                 </div>
                 <br>
                 <div class="form-group">
@@ -199,11 +199,11 @@ $result_animaux = $stmt->get_result();
                 <thead>
                 <tr>
                     <th class='hidden'>ID de l'Animal</th>
-                    <th>Prénom</th>
-                    <th>Photo</th>
-                    <th>Race</th>
-                    <th>Habitat</th>
-                    <th>Modifier/Supprimer</th>
+                    <th class='text-center'>Prénom</th>
+                    <th class='text-center'>Photo</th>
+                    <th class='text-center'>Race</th>
+                    <th class='text-center'>Habitat</th>
+                    <th class='text-center'>Modifier/Supprimer</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -235,7 +235,7 @@ $result_animaux = $stmt->get_result();
             </table>
             <!-- Pagination -->
             <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
+                <ul class="pagination justify-content-center overflow-auto">
                     <?php
                     // Nombre total de pages
                     $sql_total_animaux = "SELECT COUNT(*) AS total FROM animal";
@@ -243,7 +243,7 @@ $result_animaux = $stmt->get_result();
                     $row_total_animaux = $result_total_animaux->fetch_assoc();
                     $totalPages = ceil($row_total_animaux['total'] / $animauxParPage);
                     // Affichage des liens de pagination
-                    for ($i = 1; $i <= $totalPages; $i++) {
+                    for ($i = 0; $i <= $totalPages; $i++) {
                         // Vérifier si la page actuelle correspond à la page en cours de boucle
                         $activeClass = ($i == $page) ? 'active' : '';
                         echo "<li class='page-item $activeClass'><a class='page-link' href='?page=" . $i . "'>" . $i . "</a></li>";
@@ -295,9 +295,10 @@ $result_animaux = $stmt->get_result();
                     <div class="form-group">
                         <label for="image2">Photo de l'Animal:</label>
                         <input type="file" class="form-control-file" id="image2" name="image" accept="image/jpeg, image/jpg, image/png">
+                        <div id="fileSizeErrorModal" style="color: red;"></div>
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-warning" name="modifier">Modifier</button>
+                    <button type="submit" class="btn btn-warning" name="modifier" onclick="return checkFileSizeModal() && showSuccessMessage()">Modifier</button>
                 </form>
             </div>
         </div>
@@ -354,33 +355,51 @@ $result_animaux = $stmt->get_result();
     function confirmDelete(animal_id) {
         return confirm("Êtes-vous sûr de vouloir supprimer cet animal ?");
     }
+    </script>
+    <script>
+        function checkFileSize() {
+        var input = document.getElementById('image');
+        if (input.files.length > 0) {
+            var fileSize = input.files[0].size;
+            var maxSize = 10485760; // Taille maximale : 10 Mo (10 * 1024 * 1024)
 
-    // Vérifier la taille du fichier avant l'envoi
-    // Vérifier la taille du fichier avant de l'envoyer
-    function checkFileSize() {
-    var input, file;
-    var maxSize = 10 * 1024 * 1024; // 10 Mo
-    input = document.getElementById('image');
-    file = input.files[0];
-    if (file.size > maxSize) {
-        // Afficher un message à l'utilisateur pour lui demander de choisir un fichier plus petit
-        alert('La taille du fichier ne doit pas dépasser 10 Mo. Veuillez choisir un fichier plus petit.');
-        return false; // Annuler l'envoi du formulaire
-        var fileInput = document.getElementById('image');
-        var fileSize = fileInput.files[0].size; // Taille du fichier en octets
-        var maxSize = 2 * 1024 * 1024; // Taille maximale autorisée (2 Mo)
+            if (fileSize > maxSize) {
+                document.getElementById('fileSizeError').innerHTML = 'Fichier trop lourd, 10 Mo maximum.';
+                return false;
+            } else {
+                document.getElementById('fileSizeError').innerHTML = '';
+                return true;
+            }
+        }
+        return true;
+    }
+    function checkFileSizeModal() {
+    var input = document.getElementById('image2');
+    if (input.files.length > 0) {
+        var fileSize = input.files[0].size;
+        var maxSize = 10485760; // Taille maximale : 10 Mo (10 * 1024 * 1024)
 
-        // Vérifier si la taille du fichier dépasse la taille maximale autorisée
         if (fileSize > maxSize) {
-            document.getElementById('fileSizeError').innerText = "La taille du fichier ne doit pas dépasser 2 Mo.";
-            return false; // Empêcher l'envoi du formulaire
+            // Afficher le message d'erreur dans la modal
+            document.getElementById('fileSizeErrorModal').innerHTML = 'Fichier trop lourd, 10 Mo maximum.';
+            return false;
         } else {
-            return true; // Autoriser l'envoi du formulaire
+            // Réinitialiser le message d'erreur s'il n'y a pas d'erreur
+            document.getElementById('fileSizeErrorModal').innerHTML = '';
+            return true;
         }
     }
-    return true; // Autoriser l'envoi du formulaire si la taille du fichier est valide
+    return true;
 }
-
+    </script>
+    <script>
+        function showSuccessMessage() {
+        alert("Animal mis à jour avec succès");
+        var modal = document.getElementById('myModal');
+        modal.style.display = "none";
+    }
+    </script>
+    <script>
     // Modifier les données de l'animal sélectionné
     $('.edit-button').click(function () {
         var row = $(this).closest('tr'); // Récupérer la ligne du tableau

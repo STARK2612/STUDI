@@ -47,11 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
 
     } else {
         $_SESSION['error_message'] = "Erreur lors de l'upload du fichier";
-    }
-    // Rediriger l'utilisateur après le traitement du formulaire
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
+    }}
 
 
 // Traitement pour la modification d'un service existant
@@ -232,7 +228,7 @@ if ($result_select_horaires->num_rows > 0) {
             $totalServices = $row['totalServices'];
             $totalPages = ceil($totalServices / $servicesParPage);
 
-            echo "<ul class='pagination'>";
+            echo "<ul class='pagination overflow-auto'>";
             for ($i = 1; $i <= $totalPages; $i++) {
                 $activeClass = ($page == $i) ? "active" : "";
                 echo "<li class='page-item $activeClass'><a class='page-link' href='?page=$i'>$i</a></li>";
@@ -280,9 +276,10 @@ if ($result_select_horaires->num_rows > 0) {
                     <div class="form-group">
                         <label for="image">Nouvelle Image:</label>
                         <input type="file" class="form-control-file" id="new_image" name="new_image" accept="image/jpeg, image/jpg, image/png">
+                        <div id="fileSizeErrorModal" style="color: red;"></div>
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-warning" name="modifier">Modifier</button>
+                    <button type="submit" class="btn btn-warning" name="modifier" onclick="return checkFileSizeModal() && showSuccessMessage()">Modifier</button>
                 </form>
             </div>
             <div id="successMessage" class="modal-footer" style="display: none;">
@@ -338,10 +335,10 @@ if ($result_select_horaires->num_rows > 0) {
         var input = document.getElementById('image');
         if (input.files.length > 0) {
             var fileSize = input.files[0].size;
-            var maxSize = 1048576; // Taille maximale : 1 Mo
+            var maxSize = 10485760; // Taille maximale : 10 Mo (10 * 1024 * 1024)
 
             if (fileSize > maxSize) {
-                document.getElementById('fileSizeError').innerHTML = 'Fichier trop lourd, 1 Mo maximum.';
+                document.getElementById('fileSizeError').innerHTML = 'Fichier trop lourd, 10 Mo maximum.';
                 return false;
             } else {
                 document.getElementById('fileSizeError').innerHTML = '';
@@ -350,6 +347,24 @@ if ($result_select_horaires->num_rows > 0) {
         }
         return true;
     }
+    function checkFileSizeModal() {
+    var input = document.getElementById('new_image');
+    if (input.files.length > 0) {
+        var fileSize = input.files[0].size;
+        var maxSize = 10485760; // Taille maximale : 10 Mo (10 * 1024 * 1024)
+
+        if (fileSize > maxSize) {
+            // Afficher le message d'erreur dans la modal
+            document.getElementById('fileSizeErrorModal').innerHTML = 'Fichier trop lourd, 10 Mo maximum.';
+            return false;
+        } else {
+            // Réinitialiser le message d'erreur s'il n'y a pas d'erreur
+            document.getElementById('fileSizeErrorModal').innerHTML = '';
+            return true;
+        }
+    }
+    return true;
+}
 </script>
 
 <script>
