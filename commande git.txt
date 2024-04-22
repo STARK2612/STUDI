@@ -1,0 +1,34 @@
+COMMANDE GESTION DU MAIN (branche principale qui contien le code déployer) DE NOTRE REPOSITORY GITHUB:
+
+-ouvrir un terminal commande
+
+-allez dans le dossier ou transférer le git hub
+
+-entrer la commande'git clone https://adresse du repository
+
+-commande 'git status' à rentrer une fois le dossier repository 
+cloner pour vérifier les commit et les mise à jour
+
+-commande 'git add+le nom du nouveau fichier avec l'extension signalé par la commande 'git status'', permet de tracker le fichier pour le commiter
+
+-commande 'git add .'permet de tracker tous les fichiers à commiter
+
+-commande 'git commit -m "Description du commit"' pour créer un commit avec les modifications. Assurez-vous d'inclure une description significative pour chaque commit
+
+-commande 'git push -u origin main' permet de transférer le projet avec les modification vers le repository github
+
+COMMANDE GESTION DE LA BRANCHE DEVELOP (branche devellopeur qui contien le code pas encore prêt à être déployer avec des modifications, des bugs ou des tests à effectuer) DE NOTRE REPOSITORY GITHUB:
+
+-commande 'git branch develop' permet de creer la branche dévellopeur dans votre projet
+
+-commande 'git checkout develop' permet de passer sur la branche devellopeur
+
+-commande 'git push -u origin develop' permet de transférer la branche develop au projet avec les modification vers le repository github
+
+COMMANDE GESTION DE FUSION DES BRANCHES:
+
+-se placer sur la branche qui va recevoir les modifications (dans notre cas c'est la branche main)
+
+-commande 'git merge develop' permet de fusionner la branche develop avec la branche main
+
+-transférer le projet modifier vers le repository github
