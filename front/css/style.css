@@ -141,13 +141,13 @@ body.compte {
 }
 
 .custom-carousel {
-  max-width: 1300px; /* Changer cette valeur selon votre besoin */
+  max-width: 1300px;
   margin: auto; /* Pour centrer le carousel */
 }
 
 .rounded-image,
 .rounded-image-gestion {
-  border-radius: 10px; /* Adjust the value to change the degree of rounding */
+  border-radius: 10px;
 }
 
 .animal-button {

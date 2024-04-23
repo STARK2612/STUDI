@@ -89,6 +89,6 @@ function getHabitatDetails($habitat_id) {
         xhr.send();
         
         // Redirection vers une autre page après le clic
-        //window.location.href = 'animal.php?animal_id=' + animal_id;
+        window.location.href = 'animal.php?animal_id=' + animal_id;
     }
 </script>

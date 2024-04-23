@@ -7,7 +7,7 @@ $_SESSION = array();
 // Destruction de la session
 session_destroy();
 
-// Redirection vers la page de connexion ou une autre page selon votre besoin
+// Redirection vers la page de connexion 
 header("Location: ../connexion.php");
 exit();
 ?>

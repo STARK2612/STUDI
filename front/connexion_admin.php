@@ -11,7 +11,6 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                 </div>
                 <div class="card-body">
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                        <!-- Ajout du champ CSRF -->
                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
                         <div class="form-group">

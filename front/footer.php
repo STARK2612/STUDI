@@ -1,18 +1,6 @@
 <footer class="footer">
     <div class="container mt-5">
         <div class="row">
-            <!-- Colonne pour l'abonnement à la newsletter -->
-            <div class="col-md-4">
-                <br>
-                <h2>Abonnez-vous à notre Newsletter</h2>
-                <form>
-                    <div class="mb-3">
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Entrez votre e-mail">
-                    </div>
-                    <button type="submit" class="btn btn-success bg-custom">S'abonner</button>
-                </form>
-                <br>
-            </div>
             
             <!-- Colonne pour les réseaux sociaux -->
             <div class="col-md-4">

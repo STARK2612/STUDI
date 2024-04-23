@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Erreur lors de la modification du compte utilisateur.";
     }
 } else {
-    // Si le formulaire n'a pas été soumis via POST, rediriger vers une page appropriée
+    // Si le formulaire n'a pas été soumis via POST, rediriger vers la page compte
     header("Location: ../compte.php");
     exit;
 }

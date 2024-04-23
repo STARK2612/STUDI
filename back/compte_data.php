@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
     }
 } else {
-    // Si ce n'est pas une requête POST, rediriger vers une page d'erreur ou simplement ignorer
+    // Si ce n'est pas une requête POST, simplement ignorer
     header('Location: ../compte.php');
     exit;
 }
