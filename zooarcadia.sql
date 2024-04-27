@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS animal (
 -- Création de la table "avis"
 CREATE TABLE IF NOT EXISTS avis (
     avis_id INT AUTO_INCREMENT PRIMARY KEY,
-    commentaire VARCHAR(255),
+    commentaire VARCHAR(1000),
     isVisible TINYINT,
     pseudo VARCHAR(255)
 );
@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS avis (
 -- Création de la table "habitat"
 CREATE TABLE IF NOT EXISTS habitat (
     habitat_id INT AUTO_INCREMENT PRIMARY KEY,
-    commentaire_habitat VARCHAR(255),
-    description VARCHAR(255),
+    commentaire_habitat VARCHAR(1000),
+    description VARCHAR(1000),
     image_id INT,
     nom VARCHAR(255)
 );
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS race (
 CREATE TABLE IF NOT EXISTS rapport_veterinaire (
     rapport_veterinaire_id INT AUTO_INCREMENT PRIMARY KEY,
     date DATE,
-    detail VARCHAR(255)
+    detail VARCHAR(1000)
 );
 
 -- Création de la table "role"
@@ -71,7 +71,7 @@ CREATE TABLE horaire (
 -- Création de la table "service"
 CREATE TABLE IF NOT EXISTS service (
     service_id INT AUTO_INCREMENT PRIMARY KEY,
-    description VARCHAR(255),
+    description VARCHAR(1000),
     image_id INT,
     nom VARCHAR(255)
 );

@@ -8,12 +8,13 @@ function escape_string($connexion, $value) {
 }
 
 // Fonction pour mettre à jour les données de l'animal
-function updateAnimalData($connexion, $prenom, $avis_veterinaire, $detail_etat, $date_visite_veto) {
+function updateAnimalData($connexion, $prenom, $avis_veterinaire, $detail_etat, $date_visite_veto, $etat_animal) {
     // Échapper les valeurs pour éviter les injections SQL
     $prenom = escape_string($connexion, $prenom);
     $avis_veterinaire = escape_string($connexion, $avis_veterinaire);
     $detail_etat = escape_string($connexion, $detail_etat);
     $date_visite_veto = escape_string($connexion, $date_visite_veto);
+    $etat_animal = escape_string($connexion, $etat_animal);
 
     // Requête pour mettre à jour l'avis vétérinaire sur l'habitat
     $update_habitat_query = "UPDATE habitat 
@@ -39,6 +40,8 @@ function updateAnimalData($connexion, $prenom, $avis_veterinaire, $detail_etat, 
                 // Mettre à jour l'animal avec l'ID du rapport vétérinaire
                 updateAnimalWithRapportID($connexion, $prenom, $rapport_veterinaire_id);
             }
+            // Mettre à jour l'état de l'animal
+            updateAnimalState($connexion, $prenom, $etat_animal);
             // Afficher un message de succès
             echo '<script>alert("Les modifications ont été enregistrées avec succès.");</script>';
         } else {
@@ -84,14 +87,31 @@ function updateAnimalWithRapportID($connexion, $prenom, $rapport_veterinaire_id)
     }
 }
 
+// Fonction pour mettre à jour l'état de l'animal dans la table "animal"
+function updateAnimalState($connexion, $prenom, $etat_animal) {
+    // Échapper les valeurs pour éviter les injections SQL
+    $prenom = escape_string($connexion, $prenom);
+    $etat_animal = escape_string($connexion, $etat_animal);
+
+    // Requête pour mettre à jour l'état de l'animal
+    $update_animal_state_query = "UPDATE animal 
+                                  SET etat = '$etat_animal' 
+                                  WHERE prenom = '$prenom'";
+
+    // Exécution de la requête et gestion des erreurs
+    if ($connexion->query($update_animal_state_query) !== TRUE) {
+        echo "Erreur lors de la mise à jour de l'état de l'animal : " . $connexion->error;
+    }
+}
+
 // Vérifier si la requête est de type POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Vérifier si les données POST nécessaires sont présentes
-    if (isset($_POST['animal']) && isset($_POST['avis_veterinaire']) && isset($_POST['detail_etat']) && isset($_POST['date_visite_veto'])) {
+    if (isset($_POST['animal']) && isset($_POST['avis_veterinaire']) && isset($_POST['detail_etat']) && isset($_POST['date_visite_veto']) && isset($_POST['etat_animal'])) {
         // Récupérer la date de visite vétérinaire au format "aaaa-mm-jj"
         $date_visite_veto = date('Y-m-d', strtotime($_POST['date_visite_veto']));
         // Appeler la fonction pour mettre à jour les données de l'animal
-        updateAnimalData($connexion, $_POST['animal'], $_POST['avis_veterinaire'], $_POST['detail_etat'], $date_visite_veto);
+        updateAnimalData($connexion, $_POST['animal'], $_POST['avis_veterinaire'], $_POST['detail_etat'], $date_visite_veto, $_POST['etat_animal']);
     }
 }
 
@@ -147,10 +167,6 @@ if ($result->num_rows > 0) {
             <br>
             <!-- Affichage des informations de l'animal sélectionné -->
             <div class="form-group">
-                <label for="etat">Etat de l'animal:</label>
-                <input type="text" class="form-control" id="etat" name="etat" readonly><br>
-            </div>
-            <div class="form-group">
                 <label for="date_passage">Date de passage:</label>
                 <input type="text" class="form-control" id="date_passage" name="date_passage" readonly><br>
             </div>
@@ -181,6 +197,20 @@ if ($result->num_rows > 0) {
                 <label for="avis_veterinaire">Avis vétérinaire sur l'habitat:</label>
                 <textarea id="avis_veterinaire" class="form-control" name="avis_veterinaire" rows="10"></textarea><br>
             </div>
+            <!-- Sélection de l'état de l'animal -->
+            <div class="form-group">
+                <label for="etat_animal">État de l'animal:</label>
+                <select class="form-control" id="etat_animal" name="etat_animal">
+                    <option value="" disabled selected>Choisir un état</option>
+                    <option value="Bonne santé">En bonne santé</option>
+                    <option value="Maladie légère">Maladie légère</option>
+                    <option value="Blessure mineure">Blessure mineure</option>
+                    <option value="Convalescence">Convalescence</option>
+                    <option value="Préoccupation diététique">Préoccupation diététique</option>
+                    <option value="Trouble comportemental">Trouble comportemental</option>
+                </select>
+            </div>
+            <br>
             <div class="form-group">
                 <label for="detail_etat">Détail de l’état de l’animal:</label>
                 <textarea id="detail_etat" class="form-control" name="detail_etat" rows="10"></textarea><br>
@@ -211,16 +241,17 @@ if ($result->num_rows > 0) {
 
     function updateAnimalInfo(prenom) {
         // Mettre à jour les champs du formulaire avec les données de l'animal sélectionné
-        document.getElementById("etat").value = animalData[prenom].etat;
         document.getElementById("date_passage").value = animalData[prenom].date_nour;
         document.getElementById("heure_passage").value = animalData[prenom].heure_nour;
         document.getElementById("nourriture").value = animalData[prenom].nour;
-        document.getElementById("grammage").value = animalData[prenom].qte_nour + " g"; // Ajouter " g" pour l'unité de mesure
+        document.getElementById("grammage").value = animalData[prenom].qte_nour + " g";
         document.getElementById("habitat").value = animalData[prenom].habitat_nom;
         document.getElementById("avis_veterinaire").value = animalData[prenom].commentaire_habitat;
+        document.getElementById("etat_animal").value = animalData[prenom].etat;
         document.getElementById("detail_etat").value = animalData[prenom].rapport_detail;
         // Rendre les champs modifiables
         document.getElementById("avis_veterinaire").readOnly = false;
+        document.getElementById("etat_animal").readOnly = false;
         document.getElementById("detail_etat").readOnly = false;
     }
 </script>
