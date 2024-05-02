@@ -37,14 +37,13 @@ if (mysqli_num_rows($resultat_animaux) > 0) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupération des valeurs du formulaire
     $animal = isset($_POST['animal']) ? $_POST['animal'] : "";
-    $etat = isset($_POST['etat_animal']) ? $_POST['etat_animal'] : "";
     $nour = isset($_POST['nourriture_proposee']) ? $_POST['nourriture_proposee'] : "";
     $qte_nour = isset($_POST['quantite_nourriture']) ? $_POST['quantite_nourriture'] : "";
     $date_nour = isset($_POST['date_passage']) ? $_POST['date_passage'] : "";
     $heure_nour = isset($_POST['heure_passage']) ? $_POST['heure_passage'] : "";
 
     // Requête SQL pour mettre à jour les données de l'animal
-    $sql_animal = "UPDATE animal SET etat = '$etat', nour = '$nour', qte_nour = '$qte_nour', date_nour = '$date_nour', heure_nour = '$heure_nour' WHERE prenom = '$animal'";
+    $sql_animal = "UPDATE animal SET nour = '$nour', qte_nour = '$qte_nour', date_nour = '$date_nour', heure_nour = '$heure_nour' WHERE prenom = '$animal'";
     // Exécution de la requête SQL
     if (mysqli_query($connexion, $sql_animal)) {
         // Ne rien afficher ici
@@ -76,19 +75,6 @@ mysqli_close($connexion);
                         echo "<option value='$prenom'>" . $animal['prenom'] . " - Race: " . $animal['race_label'] . "</option>";
                     }
                     ?>
-                </select>
-            </div>
-            <!-- Sélection de l'état de l'animal -->
-            <div class="form-group">
-                <label for="etat_animal">État de l'animal:</label>
-                <select class="form-control" id="etat_animal" name="etat_animal">
-                    <option value="" disabled selected>Choisir un état</option>
-                    <option value="Bonne santé">En bonne santé</option>
-                    <option value="Maladie légère">Maladie légère</option>
-                    <option value="Blessure mineure">Blessure mineure</option>
-                    <option value="Convalescence">Convalescence</option>
-                    <option value="Préoccupation diététique">Préoccupation diététique</option>
-                    <option value="Trouble comportemental">Trouble comportemental</option>
                 </select>
             </div>
             <!-- Sélection de la nourriture proposée -->
@@ -147,14 +133,13 @@ mysqli_close($connexion);
     // Validation du formulaire côté client
     function validateForm(event) {
         var animal = document.getElementById("animal").value;
-        var etat = document.getElementById("etat_animal").value;
         var nourriture = document.getElementById("nourriture_proposee").value;
         var quantite = document.getElementById("quantite_nourriture").value;
         var date = document.getElementById("date_passage").value;
         var heure = document.getElementById("heure_passage").value;
 
         // Vérification si tous les champs sont remplis avant de soumettre le formulaire
-        if (animal === "" || etat === "" || nourriture === "" || quantite === "" || date === "" || heure === "") {
+        if (animal === "" || nourriture === "" || quantite === "" || date === "" || heure === "") {
             alert("Veuillez remplir tous les champs avant d'enregistrer.");
             event.preventDefault();
         } else {

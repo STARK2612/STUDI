@@ -243,11 +243,11 @@ $result_animaux = $stmt->get_result();
                     $row_total_animaux = $result_total_animaux->fetch_assoc();
                     $totalPages = ceil($row_total_animaux['total'] / $animauxParPage);
                     // Affichage des liens de pagination
-                    for ($i = 0; $i <= $totalPages; $i++) {
+                    for ($i = -1; $i <= $totalPages; $i++) {
                         // Vérifier si la page actuelle correspond à la page en cours de boucle
                         $activeClass = ($i == $page) ? 'active' : '';
                         echo "<li class='page-item $activeClass'><a class='page-link' href='?page=" . $i . "'>" . $i . "</a></li>";
-                    }
+                    }                    
                     ?>
                 </ul>
             </nav>

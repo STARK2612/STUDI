@@ -95,7 +95,7 @@ function getAnimalDetails($animal_id) {
     echo "<p class='text-center2'><u>Grammage de la nourriture :</u> <span style='background-color: white; padding: 2px 5px; border-radius: 5px; font-weight: normal;'>" . $animal_row['qte_nour'] . " gramme(s)</span></p>";
     
     // Formater et afficher la date de passage au format "dd/mm/yyyy"
-    $date_nour = date('d/m/Y', strtotime($animal_row['date_nour']));
+    $date_nour = !empty($animal_row['date_nour']) ? date('d/m/Y', strtotime($animal_row['date_nour'])) : '';
     echo "<p class='text-center2'><u>Date de passage :</u> <span style='background-color: white; padding: 2px 5px; border-radius: 5px; font-weight: normal;'>" . $date_nour . "</span></p>";    
 
 // Récupérer l'avis du vétérinaire s'il existe

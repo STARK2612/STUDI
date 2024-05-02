@@ -247,6 +247,7 @@ if ($result_select_horaires->num_rows > 0) {
             </div>
                 <br>
                 <button type="submit" class="btn btn-warning" name="modifier_horaires">Modifier Horaires</button>
+                <br><br>
             </form>
         </div>
     </div>
