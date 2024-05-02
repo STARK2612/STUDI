@@ -234,8 +234,8 @@ $result_animaux = $stmt->get_result();
                 </tbody>
             </table>
             <!-- Pagination -->
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center overflow-auto">
+            <nav aria-label="Page navigation example" style="width: 200vw; overflow-x: auto;">
+                <ul class="pagination justify-content-center">
                     <?php
                     // Nombre total de pages
                     $sql_total_animaux = "SELECT COUNT(*) AS total FROM animal";
@@ -243,14 +243,15 @@ $result_animaux = $stmt->get_result();
                     $row_total_animaux = $result_total_animaux->fetch_assoc();
                     $totalPages = ceil($row_total_animaux['total'] / $animauxParPage);
                     // Affichage des liens de pagination
-                    for ($i = -1; $i <= $totalPages; $i++) {
+                    for ($i = 1; $i <= $totalPages; $i++) {
                         // Vérifier si la page actuelle correspond à la page en cours de boucle
                         $activeClass = ($i == $page) ? 'active' : '';
                         echo "<li class='page-item $activeClass'><a class='page-link' href='?page=" . $i . "'>" . $i . "</a></li>";
-                    }                    
+                    }
                     ?>
                 </ul>
             </nav>
+
         </div>
         </div>
     </div>
