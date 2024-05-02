@@ -1,5 +1,5 @@
 body {
-  background-color: rgb(55, 110, 241); /* Couleur de fond de la page par défaut */
+  background-color: rgb(55, 110, 241);
 }
 
 .commentaire {
@@ -7,7 +7,7 @@ body {
 }
 
 body.compte {
-  background-color: #ffffff; /* Couleur de fond de la page compte.php */
+  background-color: #ffffff;
 }
 
 .social-icons {
@@ -16,8 +16,8 @@ body.compte {
 }
 
 .social-icons a img {
-  width: 50px; /* Changer la largeur selon vos besoins */
-  height: auto; /* Laisser la hauteur ajustable en fonction de la largeur */
+  width: 50px;
+  height: auto;
 }
 
 .info-container {
@@ -25,21 +25,21 @@ body.compte {
 }
 
 .connexion-image {
-  width: 50px; /* Largeur souhaitée */
-  height: auto; /* Hauteur automatique pour conserver les proportions */
+  width: 50px;
+  height: auto;
 }
 
 .description-cell,
 .description-cell2 {
-  max-width: 150px; /* Définir la largeur maximale selon vos besoins */
-  word-wrap: break-word; /* Activer le retour à la ligne automatique */
+  max-width: 150px;
+  word-wrap: break-word;
 }
 
 .container {
   flex-direction: row;
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Espace entre les colonnes */
+  gap: 20px;
 }
 
 .container2 {
@@ -57,7 +57,7 @@ body.compte {
 
 .column,
 .column2 {
-  flex: 1; /* Les colonnes prennent autant d'espace que nécessaire */
+  flex: 1;
 }
 
 .column2 {
@@ -66,24 +66,24 @@ body.compte {
 
 .form-container,
 .form-container2 {
-  margin: 20px 0; /* Espace entre le formulaire et les avis */
+  margin: 20px 0;
 }
 
 .connexion-button {
   display: inline-block;
-  text-decoration: none; /* Supprime le soulignement du lien */
-  color: #fff; /* Couleur du texte */
+  text-decoration: none;
+  color: #fff;
 }
 
 .connexion-button:hover {
-  color: #fff; /* Couleur du texte au survol */
-  text-decoration: none; /* Supprime le soulignement du lien au survol */
+  color: #fff;
+  text-decoration: none;
 }
 
 .connexion-image,
 .connexion-text {
-  vertical-align: middle; /* Alignement vertical */
-  margin-right: 10px; /* Marge à droite pour séparer l'image du texte */
+  vertical-align: middle;
+  margin-right: 10px;
 }
 
 .modal-content {
@@ -122,27 +122,37 @@ body.compte {
     margin-right: 0;
     margin-bottom: 20px;
   }
+
+  .pagination-container {
+    width: 200vw;
+    overflow-x: auto;
+}
+
+.pagination li {
+    flex: 0 0 auto;
+    width: auto;
+    white-space: nowrap;
+}
 }
 
 .text-center,
 .text-center2 {
   text-align: center;
-  margin: auto; /* Pour centrer verticalement si nécessaire */
+  margin: auto;
 }
 
 .text-center2 {
-  font-weight: bold; /* Pour ajouter le style en gras */
+  font-weight: bold;
 }
 
 .custom-container {
-  max-width: auto; /* Définissez la largeur maximale selon vos besoins */
-  margin: 0 auto; /* Centre le conteneur horizontalement */
-  /* Ajoutez d'autres styles personnalisés au besoin */
+  max-width: auto;
+  margin: 0 auto;
 }
 
 .custom-carousel {
   max-width: 1300px;
-  margin: auto; /* Pour centrer le carousel */
+  margin: auto;
 }
 
 .rounded-image,
@@ -158,14 +168,14 @@ body.compte {
 .table-container {
   overflow-x: auto;
   white-space: nowrap;
-  width: 100%; /* Vous pouvez ajuster cette valeur en fonction de vos besoins */
+  width: 100%; 
 }
 
 .custom-width {
-  max-width: 200px; /* Changer la valeur selon vos besoins */
-  width: auto; /* Pour permettre au bouton de s'adapter au contenu */
+  max-width: 200px; 
+  width: auto; 
 }
 
 .shadow {
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1); /* Réduire la transparence à 0.3 pour un effet plus léger */
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1); 
 }
