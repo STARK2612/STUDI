@@ -426,7 +426,7 @@ $result_animaux = $stmt->get_result();
     var idleTimer;
     function resetTimer() {
         clearTimeout(idleTimer);
-        idleTimer = setTimeout(logout, 10000); // 30 secondes
+        idleTimer = setTimeout(logout, 30000); // 30 secondes
     }
     resetTimer(); // Initialiser le timer
 
