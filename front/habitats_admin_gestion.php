@@ -396,9 +396,6 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
     return true;
 }
 </script>
-
-
-
 <!-- Affichage du message de succès pour la modification -->
 <script>
     function showSuccessMessage() {
@@ -406,4 +403,28 @@ $totalPages = ceil($totalHabitats / $servicesParPage);
         var modal = document.getElementById('myModal');
         modal.style.display = "none";
     }
+</script>
+<script>
+    function deconnexionAutomatique() {
+    var idleTimer;
+    function resetTimer() {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(logout, 10000); // 30 secondes
+    }
+    resetTimer(); // Initialiser le timer
+
+    // Réinitialiser le timer à chaque événement de souris ou de clavier
+    document.addEventListener("mousemove", resetTimer);
+    document.addEventListener("keypress", resetTimer);
+}
+
+// Fonction pour déconnecter l'utilisateur
+function logout() {
+    window.location.href = 'back/deconnexion.php'; // Page de déconnexion PHP
+}
+
+// Appeler la fonction de déconnexion automatique au chargement de la page
+window.onload = function() {
+    deconnexionAutomatique();
+};
 </script>
