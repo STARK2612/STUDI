@@ -47,13 +47,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter'])) {
 
     } else {
         $_SESSION['error_message'] = "Erreur lors de l'upload du fichier";
-    }}
+    }
+}
 
 
 // Traitement pour la modification d'un service existant
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier'])) {
     // Nettoyer et valider les données d'entrée
-    $service_id = htmlspecialchars($_POST['service_id']);
+    $service_id = intval($_POST['service_id']);
     $nom = htmlspecialchars($_POST['nom']);
     $description = htmlspecialchars($_POST['description']);
 
@@ -66,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier'])) {
         $updateImage = $connexion->prepare("UPDATE image SET image_data=?, image_type=? WHERE image_id=(SELECT image_id FROM service WHERE service_id=?)");
         $updateImage->bind_param("ssi", $new_image_data, $new_image_type, $service_id);
         if (!$updateImage->execute()) {
-            echo "Erreur lors de la mise à jour de l'image : " . $updateImage->error;
+            $_SESSION['error_message'] = "Erreur lors de la mise à jour de l'image : " . $updateImage->error;
         }
     }
 
@@ -77,40 +78,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier'])) {
     if ($updateService->execute()) {
         $_SESSION['success_message'] = "Service mis à jour avec succès";
     } else {
-        echo "Erreur lors de la mise à jour du service : " . $updateService->error;
+        $_SESSION['error_message'] = "Erreur lors de la mise à jour du service : " . $updateService->error;
     }
     $updateService->close();
 }
 
 // Traitement pour la suppression d'un service
 if (isset($_POST['supprimer'])) {
-    $service_id = $_POST['service_id'];
+    $service_id = intval($_POST['service_id']);
 
     // Sélectionner l'ID de l'image associée au service
-    $sql_select_image_id = "SELECT image_id FROM service WHERE service_id=$service_id";
-    $result_select_image_id = $connexion->query($sql_select_image_id);
+    $stmt_select_image_id = $connexion->prepare("SELECT image_id FROM service WHERE service_id=?");
+    $stmt_select_image_id->bind_param("i", $service_id);
+    $stmt_select_image_id->execute();
+    $result_select_image_id = $stmt_select_image_id->get_result();
 
     if ($result_select_image_id->num_rows > 0) {
         $row = $result_select_image_id->fetch_assoc();
         $image_id = $row['image_id'];
 
         // Supprimer le service
-        $sql_delete_service = "DELETE FROM service WHERE service_id=$service_id";
-        if ($connexion->query($sql_delete_service) === TRUE) {
+        $stmt_delete_service = $connexion->prepare("DELETE FROM service WHERE service_id=?");
+        $stmt_delete_service->bind_param("i", $service_id);
+        if ($stmt_delete_service->execute()) {
             // Supprimer l'image associée
-            $sql_delete_image = "DELETE FROM image WHERE image_id=$image_id";
-            if ($connexion->query($sql_delete_image) === TRUE) {
-                echo "<script>alert('Service et image associée supprimés avec succès');</script>";
+            $stmt_delete_image = $connexion->prepare("DELETE FROM image WHERE image_id=?");
+            $stmt_delete_image->bind_param("i", $image_id);
+            if ($stmt_delete_image->execute()) {
+                $_SESSION['success_message'] = "Service et image associée supprimés avec succès";
             } else {
-                echo "Erreur lors de la suppression de l'image : " . $connexion->error;
+                $_SESSION['error_message'] = "Erreur lors de la suppression de l'image : " . $stmt_delete_image->error;
             }
         } else {
-            echo "Erreur lors de la suppression du service : " . $connexion->error;
+            $_SESSION['error_message'] = "Erreur lors de la suppression du service : " . $stmt_delete_service->error;
         }
     } else {
-        echo "ID de service non trouvé.";
+        $_SESSION['error_message'] = "ID de service non trouvé.";
     }
 }
+
 // Traitement pour l'ajout des horaires d'ouverture et de fermeture
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier_horaires'])) {
     // Nettoyer et valider les données d'entrée
@@ -130,20 +136,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modifier_horaires'])) 
 
 // Pagination des services
 $servicesParPage = 1;
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $premierService = ($page - 1) * $servicesParPage;
-$sql = "SELECT service.*, image.image_type, image.image_data FROM service INNER JOIN image ON service.image_id = image.image_id LIMIT $premierService, $servicesParPage";
-$result = $connexion->query($sql);
+$stmt_pagination = $connexion->prepare("SELECT service.*, image.image_type, image.image_data FROM service INNER JOIN image ON service.image_id = image.image_id LIMIT ?, ?");
+$stmt_pagination->bind_param("ii", $premierService, $servicesParPage);
+$stmt_pagination->execute();
+$result = $stmt_pagination->get_result();
 
-
-$sql_select_horaires = "SELECT debut, fin FROM horaire WHERE id = 1";
-$result_select_horaires = $connexion->query($sql_select_horaires);
-
-if ($result_select_horaires->num_rows > 0) {
-    $row_horaires = $result_select_horaires->fetch_assoc();
-    $debut = $row_horaires['debut'];
-    $fin = $row_horaires['fin'];
-}
+$stmt_count_services = $connexion->prepare("SELECT COUNT(*) AS totalServices FROM service");
+$stmt_count_services->execute();
+$row = $stmt_count_services->get_result()->fetch_assoc();
+$totalServices = $row['totalServices'];
+$totalPages = ceil($totalServices / $servicesParPage);
 
 ?>
 

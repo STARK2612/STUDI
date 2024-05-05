@@ -43,13 +43,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $heure_nour = isset($_POST['heure_passage']) ? $_POST['heure_passage'] : "";
 
     // Requête SQL pour mettre à jour les données de l'animal
-    $sql_animal = "UPDATE animal SET nour = '$nour', qte_nour = '$qte_nour', date_nour = '$date_nour', heure_nour = '$heure_nour' WHERE prenom = '$animal'";
-    // Exécution de la requête SQL
-    if (mysqli_query($connexion, $sql_animal)) {
+    $sql_animal = "UPDATE animal SET nour = ?, qte_nour = ?, date_nour = ?, heure_nour = ? WHERE prenom = ?";
+    
+    // Préparation de la requête
+    $stmt = $connexion->prepare($sql_animal);
+    if ($stmt === false) {
+        echo "Erreur lors de la préparation de la requête: " . $connexion->error;
+        exit;
+    }
+
+    // Liaison des valeurs aux paramètres
+    $stmt->bind_param("sssss", $nour, $qte_nour, $date_nour, $heure_nour, $animal);
+
+    // Exécution de la requête
+    if ($stmt->execute()) {
         // Ne rien afficher ici
     } else {
         // Affichage d'un message en cas d'erreur lors de la mise à jour des données de l'animal
-        echo "Erreur lors de la mise à jour des données de l'animal: " . mysqli_error($connexion);
+        echo "Erreur lors de la mise à jour des données de l'animal: " . $stmt->error;
     }
 }
 
@@ -72,7 +83,7 @@ mysqli_close($connexion);
                     <?php
                     // Boucle pour afficher les options de sélection des animaux
                     foreach ($liste_animaux as $prenom => $animal) {
-                        echo "<option value='$prenom'>" . $animal['prenom'] . " - Race: " . $animal['race_label'] . "</option>";
+                        echo "<option value='" . htmlspecialchars($prenom) . "'>" . htmlspecialchars($animal['prenom']) . " - Race: " . htmlspecialchars($animal['race_label']) . "</option>";
                     }
                     ?>
                 </select>
