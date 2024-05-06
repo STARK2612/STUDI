@@ -271,7 +271,7 @@ if ($result->num_rows > 0) {
 
 // Fonction pour déconnecter l'utilisateur
 function logout() {
-    window.location.href = 'back/deconnexion.php'; // Page de déconnexion PHP
+    window.location.href = 'back/deconnexion.php'; 
 }
 
 // Appeler la fonction de déconnexion automatique au chargement de la page

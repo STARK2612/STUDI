@@ -135,7 +135,7 @@ if(!(isset($_GET['annee']) && !empty($_GET['annee']))) {
                     <?php 
                     // Vérifier si $result_stats est défini et non null avant de l'utiliser
                     if($result_stats !== null) {
-                        // Réinitialiser le pointeur de résultat
+                        
                         mysqli_data_seek($result_stats, 0);
                         while($row_stats = $result_stats->fetch_assoc()): ?>
                             <tr>

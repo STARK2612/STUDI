@@ -196,7 +196,7 @@ $totalPages = ceil($totalServices / $servicesParPage);
                             <th class='hidden'>ID du Service</th>
                             <th>Nom</th>
                             <th>Description</th>
-                            <th>Image</th> <!-- Nouvelle colonne pour afficher l'image -->
+                            <th>Image</th> 
                             <th>Modifier/Supprimer</th>
                         </tr>
                     </thead>
@@ -241,11 +241,11 @@ $totalPages = ceil($totalServices / $servicesParPage);
             ?>
             <h3>Horaires d'ouverture et fermeture du ZOO</h3>
             <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-            <div class="form-group col-md-2"> <!-- Ajoutez la classe col-md-6 pour réduire la largeur -->
+            <div class="form-group col-md-2"> 
                 <label for="heure_ouverture">Heure d'Ouverture:</label>
                 <input type="time" class="form-control" id="heure_ouverture" name="heure_ouverture" value="<?php echo $debut; ?>" required>
             </div>
-            <div class="form-group col-md-2"> <!-- Ajoutez la classe col-md-6 pour réduire la largeur -->
+            <div class="form-group col-md-2"> 
                 <label for="heure_fermeture">Heure de Fermeture:</label>
                 <input type="time" class="form-control" id="heure_fermeture" name="heure_fermeture" value="<?php echo $fin; ?>" required>
             </div>
